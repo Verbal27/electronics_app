@@ -1,7 +1,9 @@
-{% extends "/website/base_app.html" %}
+{% extends "base/website/base_app.html" %}
 
 {% block website_body %}
-    {% block website_content%}
+    {% include "inc/navbar.html" %}
+    {% block website_content %}
         
-    {%endblock%}
+    {% endblock %}
+    {% include "inc/footer.html" %}
 {% endblock  %}
