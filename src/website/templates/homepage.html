@@ -7,45 +7,16 @@
         <h3 class="text">Homepage</h3>
     </div>
     <div class="card-group">
+        {% for product in products %}
         <div class="card" style="width: 18rem;">
-            <img src="https://cdn.thewirecutter.com/wp-content/media/2025/09/BG-IPHONE-2048px_IPHONE-17-PRO-MAX_BACK.jpg?auto=webp&quality=75&width=1024" class="card-img-top" alt="...">
+            <img src="{{ product.image.url }}" class="card-img-top" alt="Product image">
             <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Price</p>
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-description" style="text-align:center;">{{ product.description}}</p>
+                <p class="card-text">Price: ${{product.price}}</p>
                 <a href="#" class="btn btn-primary btn-add-to-cart">Add to cart</a>
             </div>
         </div>
-        <div class="card" style="width: 18rem;">
-            <img src="https://cdn.thewirecutter.com/wp-content/media/2025/09/BG-IPHONE-2048px_IPHONE-17-PRO-MAX_BACK.jpg?auto=webp&quality=75&width=1024" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Price</p>
-                <a href="#" class="btn btn-primary btn-add-to-cart">Add to cart</a>
-            </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-            <img src="https://cdn.thewirecutter.com/wp-content/media/2025/09/BG-IPHONE-2048px_IPHONE-17-PRO-MAX_BACK.jpg?auto=webp&quality=75&width=1024" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Price</p>
-                <a href="#" class="btn btn-primary btn-add-to-cart">Add to cart</a>
-            </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-            <img src="https://cdn.thewirecutter.com/wp-content/media/2025/09/BG-IPHONE-2048px_IPHONE-17-PRO-MAX_BACK.jpg?auto=webp&quality=75&width=1024" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Price</p>
-                <a href="#" class="btn btn-primary btn-add-to-cart">Add to cart</a>
-            </div>
-        </div>
-        <div class="card" style="width: 18rem;">
-            <img src="https://cdn.thewirecutter.com/wp-content/media/2025/09/BG-IPHONE-2048px_IPHONE-17-PRO-MAX_BACK.jpg?auto=webp&quality=75&width=1024" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Price</p>
-                <a href="#" class="btn btn-primary btn-add-to-cart">Add to cart</a>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 {% endblock %}

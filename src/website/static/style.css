@@ -47,3 +47,13 @@
 .card-text{
     text-align:center;
 }
+.card-description{
+    text-align:center !important;
+}
+.card-body{
+    height: 50%;
+}
+.card-img-top{
+    height: 50%;
+    padding: 5%;
+}
