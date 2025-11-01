@@ -38,7 +38,7 @@
     color: black;
 }
 .btn-add-to-cart:hover{
-    background: gray;
+    background: var(--bs-highlight-color);
     border-color: white;
 }
 .card-title{
