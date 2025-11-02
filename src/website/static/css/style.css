@@ -1,59 +1,71 @@
 .container {
-    padding: 150px;
-    text-align: center;
-    background: var(--bs-highlight-color);
-    max-width: -webkit-fill-available;
+  padding: 150px;
+  text-align: center;
+  background: var(--bs-highlight-color);
+  max-width: -webkit-fill-available;
 }
-.heading{
-    color: white;
-    font-weight: bold;
+.heading {
+  color: white;
+  font-weight: bold;
 }
-.text{
-    color:white;
+.text {
+  color: white;
 }
-.card-group{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding-left: 250px;
-    padding-right: 250px;
-    margin: 20px;
+.card-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding-left: 250px;
+  padding-right: 250px;
+  margin: 20px;
 }
-.card{
-    flex: 1 1 calc(25% - 20px);
-    min-width: 300px;
-    max-width: 300px;
+.card {
+  flex: 1 1 calc(25% - 20px);
+  min-width: 300px;
+  max-width: 300px;
+  height: 30rem;
 }
-.card-body{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .btn-add-to-cart {
-    margin-left: 25%;
-    margin-right: 25%;
-    background: white;
-    border-color: black;
-    color: black;
+  margin-left: 25%;
+  margin-right: 25%;
+  background: white;
+  border-color: black;
+  color: black;
 }
-.btn-add-to-cart:hover{
-    background: var(--bs-highlight-color);
-    border-color: white;
+.btn-add-to-cart:hover {
+  background: var(--bs-highlight-color);
+  border-color: white;
 }
-.card-title{
-    text-align:center;
+.card-title {
+  text-align: center;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.card-text{
-    text-align:center;
+.card-text {
+  text-align: center;
 }
-.card-description{
-    text-align:center !important;
+.card-description {
+  text-align: center !important;
 }
-.card-body{
-    height: 50%;
+.card-body {
+  height: 50%;
 }
-.card-img-top{
-    height: 50%;
-    padding: 5%;
+.card-img-top {
+  height: 50%;
+  padding: 5%;
+}
+.py-5 {
+    background: whitesmoke;
+    height: -webkit-fill-available;
+}
+.text-body {
+  text-decoration: none;
 }
