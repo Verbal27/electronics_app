@@ -24,8 +24,8 @@
                                 {% if c.subcategories.all %}
                                     <ul class="dropdown-submenu list-unstyled ms-3">
                                         {% for sub in c.subcategories.all %}
-                                            <li><a class="dropdown-item"
-                                                   href="{% url 'subcategory_products' sub.id %}">{{ sub.name }}</a>
+                                            <li>
+                                                <a class="dropdown-item" href="{% url 'subcategory_products' sub.id %}">{{ sub.name }}</a>
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -36,7 +36,7 @@
                 </li>
             </ul>
         </div>
-        <a href="{% url "cart" %}" name="shopping_cart">
+        <a href="{% url 'cart' %}">
             <i class="fa-solid fa-cart-shopping"></i>
         </a>
     </div>
