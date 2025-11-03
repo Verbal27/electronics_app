@@ -71,12 +71,12 @@
                     </div>
                 </div>
 
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary" type="button">Add to Cart</button>
-                    <button class="btn btn-outline-secondary" type="button">
+            <div class="d-grid gap-2">
+                <a class="btn btn-primary" href="{% url 'add_to_cart' product.id %}" type="button">Add to Cart</a>
+                <button class="btn btn-outline-secondary" type="button">
                         <i class="far fa-heart me-2"></i>Add to Wishlist
-                    </button>
-                </div>
+                </button>
+            </div>
 
                 <div class="mt-4">
                     <div class="d-flex align-items-center mb-2">
