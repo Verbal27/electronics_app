@@ -96,3 +96,26 @@
 .quantity-mb {
   margin-bottom: 5px !important;
 }
+.cart-link {
+  width: 2rem !important;
+}
+.shopping-card-custom {
+  border: 1px solid lightgrey;
+  box-shadow: 0px 3px 4px 0px grey;
+}
+.shopping-card-discount-custom button {
+  width: 20%;
+}
+.card-payment {
+  display: flex;
+}
+.btn-custom { 
+  width: 30%;
+  align-items: center;
+}
+.card-body-cart {
+  align-items: center;
+}
+.fluid-container-custom {
+  height: 100vh;
+}
