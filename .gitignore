@@ -13,3 +13,5 @@ wheels/
 compose.yaml
 Dockerfile
 .DS_Store
+media/
+electronics_app/src/website/static/images/
