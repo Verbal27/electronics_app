@@ -4,7 +4,9 @@ from .category import Category
 
 class Subcategory(models.Model):
     name = models.CharField(max_length=120)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="subcategories"
+    )
 
     class Meta:
         verbose_name = "Subcategory"

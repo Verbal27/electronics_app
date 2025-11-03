@@ -1,5 +1,5 @@
 .container {
-  padding: 150px;
+  padding: 7.5rem;
   text-align: center;
   background: var(--bs-highlight-color);
   max-width: -webkit-fill-available;
@@ -25,6 +25,7 @@
   min-width: 300px;
   max-width: 300px;
   height: 30rem;
+  border: 2px solid lightgrey !important;
 }
 .card-body {
   display: flex;
@@ -49,11 +50,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.card-description {
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
 .card-text {
   text-align: center;
-}
-.card-description {
-  text-align: center !important;
 }
 .card-body {
   height: 50%;
@@ -63,9 +67,32 @@
   padding: 5%;
 }
 .py-5 {
-    background: whitesmoke;
-    height: -webkit-fill-available;
+  background: whitesmoke;
+  height: -webkit-fill-available;
 }
 .text-body {
   text-decoration: none;
+}
+.detail-card-img-top {
+  width: 50%;
+}
+.img-thumbnail {
+  margin-top: 1rem;
+}
+.colmn {
+  box-shadow: 2px 2px 6px rgb(80, 79, 79);
+  border: 2px solid lightgrey;
+  border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 0px !important;
+}
+
+.stars {
+  justify-content: center;
+}
+.big-row {
+  margin-top: 5%;
+}
+.quantity-mb {
+  margin-bottom: 5px !important;
 }
