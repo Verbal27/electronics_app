@@ -2,5 +2,22 @@
 
 
 {% block website_content %}
-    
+    <div class="container-fluid container">
+        <h1 class="heading" style="font-size:5rem;">Shop in style</h1>
+        <h3 class="text">Homepage</h3>
+    </div>
+    <div class="card-group">
+        {% for product in products %}
+        <div class="card" style="width: 18rem;">
+            <img src="{{ product.image.url }}" class="card-img-top" alt="Product image">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-description" style="text-align:center;">{{ product.description}}</p>
+                <p class="card-text">Price: ${{product.price}}</p>
+                <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary btn-add-to-cart">Details</a>
+                <a href="#" class="btn btn-primary btn-add-to-cart">Add to cart</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 {% endblock %}

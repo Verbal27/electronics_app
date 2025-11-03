@@ -1,1 +1,37 @@
-<h1>Navbar</h1>
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="--bs-navbar-padding-x: 15rem;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Electronics</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarNav" aria-controls="navbarNav"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+
+        <li class="nav-item dropdown" style="align-content: center;">
+          <button class="btn btn-white dropdown-toggle"  data-bs-toggle="dropdown" aria-expanded="false">
+            Categories
+          </button>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            {% for c in categories %}
+              <li>
+                <a class="dropdown-item" href="{% url 'category_products' c.id %}">{{ c.name }}</a>
+                {% if c.subcategories.all %}
+                  <ul class="dropdown-submenu list-unstyled ms-3">
+                    {% for sub in c.subcategories.all %}
+                      <li><a class="dropdown-item" href="{% url 'subcategory_products' sub.id %}">{{ sub.name }}</a></li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

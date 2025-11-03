@@ -12,3 +12,6 @@ wheels/
 .docker.env
 compose.yaml
 Dockerfile
+.DS_Store
+electronics_dump.sql
+media/
