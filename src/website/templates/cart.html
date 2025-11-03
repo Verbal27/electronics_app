@@ -11,8 +11,7 @@
                         <h3 class="fw-normal mb-0">Shopping Cart</h3>
                         <div>
                             <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">price
-                                <i
-                                        class="fas fa-angle-down mt-1"></i></a></p>
+                                <i class="fas fa-angle-down mt-1"></i></a></p>
                         </div>
                     </div>
                     {% if cart_items %}
@@ -21,9 +20,7 @@
                                 <div class="card-body p-4">
                                     <div class="row d-flex justify-content-between align-items-center">
                                         <div class="col-md-2 col-lg-2 col-xl-2">
-                                            <img
-                                                    src="{{ item.image.url }}"
-                                                    class="img-fluid rounded-3" alt="Product image">
+                                            <img src="{{ item.image.url }}" class="img-fluid rounded-3" alt="Product image">
                                         </div>
                                         <div class="col-md-3 col-lg-3 col-xl-3">
                                             <p class="lead fw-normal mb-2">{{ item.name }}</p>
@@ -40,7 +37,7 @@
                                             </form>
                                         </div>
                                         <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                            <h5 class="mb-0">${{ item.price }}</h5>
+                                            <h5 class="mb-0">$ {{ item.price }}</h5>
                                         </div>
                                         <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                             <form method="post" action="{% url 'remove_from_cart' item.id %}">
@@ -53,7 +50,7 @@
                                 </div>
                             </div>
                         {% endfor %}
-                        <h2>Total: ${{ total }} </h2>
+                        <h2>Total: $ {{ total }} </h2>
                         <div class="card-payment">
                             <div class="card-body card-body-cart">
                                 <form method="post" action="{% url 'clear_cart' %}">

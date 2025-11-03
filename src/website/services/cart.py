@@ -13,7 +13,6 @@ class Cart:
                 "price": price,
                 "quantity": quantity,
             }
-
         self.save()
 
     def remove(self, product_id):
