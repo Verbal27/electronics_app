@@ -1,5 +1,6 @@
 from django.views.generic import ListView
 from src.core.models import Product
+from src.core.components.website.cards import ProductCard
 
 
 class HomePageListView(ListView):
@@ -8,7 +9,8 @@ class HomePageListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["products"] = Product.objects.all()
+        products = Product.objects.all()
+        context["product_cards"] = [ProductCard(product) for product in products]
         return context
 
 
@@ -21,6 +23,12 @@ class CategoryListView(ListView):
         category_id = self.kwargs["category_id"]
         return Product.objects.filter(subcategory__category_id=category_id)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = context["products"]
+        context["product_cards"] = [ProductCard(product) for product in products]
+        return context
+
 
 class SubCategoryProductListView(ListView):
     model = Product
@@ -30,3 +38,9 @@ class SubCategoryProductListView(ListView):
     def get_queryset(self):
         subcategory_id = self.kwargs["subcategory_id"]
         return Product.objects.filter(subcategory_id=subcategory_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = context["products"]
+        context["product_cards"] = [ProductCard(product) for product in products]
+        return context

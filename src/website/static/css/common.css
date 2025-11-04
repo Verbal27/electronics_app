@@ -96,3 +96,30 @@
 .quantity-mb {
   margin-bottom: 5px !important;
 }
+
+.heading-large {
+  font-size: 5rem;
+}
+
+.empty-state-container {
+  min-height: 60vh;
+}
+
+.empty-state-content {
+  max-width: 500px;
+}
+
+.empty-state-icon {
+  font-size: 5rem;
+  opacity: 0.7;
+}
+
+.empty-state-title {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.empty-state-message {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
