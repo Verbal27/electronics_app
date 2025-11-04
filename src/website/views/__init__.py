@@ -1,6 +1,6 @@
 from .homepage import HomePageListView, CategoryListView, SubCategoryProductListView
 from .product_detail import ProductDetailView
-from .cart import cart_view, add_to_cart, remove_from_cart, update_cart, clear_cart
+from .cart import CartListView, add_to_cart, remove_from_cart, update_cart, clear_cart
 
 
 __all__ = (
@@ -8,7 +8,7 @@ __all__ = (
     "ProductDetailView",
     "CategoryListView",
     "SubCategoryProductListView",
-    "cart_view",
+    "CartListView",
     "add_to_cart",
     "remove_from_cart",
     "update_cart",
