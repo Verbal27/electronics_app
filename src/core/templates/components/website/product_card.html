@@ -1,0 +1,11 @@
+<div class="card product-card {{ css_classes }}">
+    <img src="{{ product_image_url }}" class="card-img-top" alt="Product image">
+    <div class="card-body">
+        <h5 class="card-title">{{ product_name }}</h5>
+        <p class="card-description">{{ product_description }}</p>
+        <p class="card-text">Price: ${{ product_price }}</p>
+        <a href="{{ product_detail_url }}" class="btn btn-primary btn-add-to-cart">Details</a>
+        <a href="#" class="btn btn-primary btn-add-to-cart">Add to cart</a>
+    </div>
+</div>
+
