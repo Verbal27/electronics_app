@@ -18,8 +18,7 @@ services:
     image: mysql:8.0
     container_name: electronics_db
     restart: always
-    env_file:
-      - .docker.env
+    env_file: .docker.env
     ports:
       - "3311:3306"
     volumes:
