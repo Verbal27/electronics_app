@@ -48,14 +48,14 @@ class CartAddView(View):
                 price=float(product.price),
                 quantity=quantity,
             )
+            print(messages.success(request, "Product added sucessfully"))
+            return redirect("homepage")
         except Exception as e:
             print(f"Error adding product to cart: {e}")
             messages.error(
                 request, "There was a problem adding this item to your cart."
             )
-            return redirect("cart")
-
-        return redirect("homepage")
+            return redirect("homepage")
 
 
 class CartRemoveItemView(View):
@@ -64,13 +64,14 @@ class CartRemoveItemView(View):
         product: Product = get_object_or_404(Product, pk=product_id)
         try:
             cart.remove(product_id=product.pk)
+            messages.success(request, "Item removed successfully!")
+            return redirect("cart")
         except Exception as e:
             print(f"Error removing product from cart: {e}")
             messages.error(
                 request, "There was a problem removing this item from your cart."
             )
             return redirect("cart")
-        return redirect("cart")
 
 
 class CartUpdateQuantityView(View):
@@ -81,17 +82,19 @@ class CartUpdateQuantityView(View):
 
         try:
             cart.update(product_id=product.pk, quantity=quantity)
+            messages.success(request, "Item quantity updated successfully!")
+            return redirect("cart")
         except Exception as e:
             print(f"Error updating product quantity from cart: {e}")
             messages.error(
                 request, "There was a problem updating this item in your cart."
             )
             return redirect("cart")
-        return redirect("cart")
 
 
 class CartDropView(View):
     def post(self, request):
         cart = Cart(request)
         cart.clear()
+        messages.success(request, "Cart cleared!")
         return redirect("homepage")

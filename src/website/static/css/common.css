@@ -175,3 +175,6 @@
 .btn-custom-modal {
   width: auto;
 }
+.container-alert {
+  justify-content: center;
+}
