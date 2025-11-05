@@ -4,6 +4,7 @@ class Cart:
         self.cart = self.session.get("cart", {})
 
     def add(self, product_id, name, price, quantity):
+        print("Before add:", self.session.get("cart"))
         product_id = str(product_id)
         if product_id in self.cart:
             self.cart[product_id]["quantity"] += quantity
@@ -13,6 +14,8 @@ class Cart:
                 "price": price,
                 "quantity": quantity,
             }
+
+        print("After add:", self.session.get("cart"))
         self.save()
 
     def remove(self, product_id):

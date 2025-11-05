@@ -56,6 +56,8 @@ class CartAddView(View):
             )
             return redirect("homepage")
 
+    def get(self, request, product_id):
+        return self.post(request, product_id)
 
 class CartRemoveItemView(View):
     def post(self, request, product_id):
@@ -71,6 +73,8 @@ class CartRemoveItemView(View):
             )
             return redirect("cart")
 
+    def get(self, request, product_id):
+        return self.post(request, product_id)
 
 class CartUpdateQuantityView(View):
     def post(self, request, product_id):
@@ -88,6 +92,8 @@ class CartUpdateQuantityView(View):
             )
             return redirect("cart")
 
+    def get(self, request, product_id):
+        return self.post(request, product_id)
 
 class CartDropView(View):
     def post(self, request):
@@ -95,3 +101,6 @@ class CartDropView(View):
         cart.clear()
         messages.success(request, "Cart cleared!")
         return redirect("homepage")
+
+    def get(self, request):
+        return self.post(request)
