@@ -32,15 +32,18 @@
                     {% csrf_token %}
                     <input id="form1" min="1" name="quantity" value="{{ item.quantity }}" type="number"
                           class="form-control form-control-sm" />
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-primary btn-update-cart">Update</button>
                   </form>
               </div>
               <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                 <h5 class="mb-0">${{ item.price }}</h5>
               </div>
               <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                {%load static%}
-                <a href="{% url 'remove_from_cart' item.id %}" class="text-danger"><img class="cart-link" src="{% static "images/657059.png"%}"></img></a>
+                <form method="post" action="{% url 'remove_from_cart' item.id%}">
+                  {%csrf_token%}
+                  {%load static%}
+                  <button type="submit" class="text-danger delete-btn" display="none"><img class="cart-link" src="{% static "images/657059.png"%}"></img></a>
+                </form>
               </div>
             </div>
           </div>
@@ -49,9 +52,12 @@
           <h2>Total: ${{ total}} </h2>
         <div class="card-payment">
             <div class="card-body card-body-cart">
-              <a href="{% url 'clear_cart' %}" class="btn btn-warning btn-block btn-lg btn-custom">
-                Clear Cart
-              </a>
+              <form method="post" action="{% url 'clear_cart' %}">
+                {%csrf_token%}
+                <button type="submit" class="btn btn-warning btn-block btn-lg ">
+                  Clear Cart
+                </button>
+              </form>
             </div>
             <div class="card-body card-body-cart">
               
@@ -70,7 +76,12 @@
                       This feature is going to be implemented soon!
                     </div>
                     <div class="modal-footer">
-                      <a href="{% url 'clear_cart' %}" class="btn btn-warning">Clear Cart &amp; Return Home</a>
+                      <form method="post" action="{% url 'clear_cart' %}">
+                        {%csrf_token%}
+                        <button type="submit" class="btn btn-warning btn-block btn-lg btn-custom-modal">
+                          Clear Cart &amp; Return Home
+                        </button>
+                      </form>
                     </div>
                   </div>
                 </div>

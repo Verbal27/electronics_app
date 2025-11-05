@@ -38,6 +38,7 @@
   background: white;
   border-color: black;
   color: black;
+  width: 50% !important;
 }
 .btn-add-to-cart:hover {
   background: var(--bs-highlight-color);
@@ -121,4 +122,29 @@
 }
 .update-quantity-form {
   display: flex !important;
+}
+.btn-detail {
+  width: 30%;
+}
+.homepage-add-detail-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.delete-btn {
+  border: none;
+  background: none;
+}
+.btn-update-cart {
+    background: white;
+    border-color: black;
+    color: black;
+}
+.btn-update-cart:hover {
+  background: var(--bs-highlight-color);
+  border-color: white;
+}
+.btn-custom-modal {
+  width: auto;
 }
