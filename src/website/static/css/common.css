@@ -159,6 +159,10 @@
   justify-content: center;
   align-items: center;
 }
+.delete-btn {
+  border: none;
+  background: none;
+}
 .btn-update-cart {
     background: white;
     border-color: black;
