@@ -14,11 +14,17 @@ urlpatterns = [
         views.SubCategoryProductListView.as_view(),
         name="subcategory_products",
     ),
-    path("cart/", views.CartListView.cart_view, name="cart"),
-    path("cart/add/<int:product_id>/", views.add_to_cart, name="add_to_cart"),
+    path("cart/", views.CartListView.as_view(), name="cart"),
+    path("cart/add/<int:product_id>/", views.CartAddView.as_view(), name="add_to_cart"),
     path(
-        "cart/remove/<int:product_id>/", views.remove_from_cart, name="remove_from_cart"
+        "cart/remove/<int:product_id>/",
+        views.CartRemoveItemView.as_view(),
+        name="remove_from_cart",
     ),
-    path("cart/update/<int:product_id>/", views.update_cart, name="update_cart"),
-    path("cart/clear/", views.clear_cart, name="clear_cart"),
+    path(
+        "cart/update/<int:product_id>/",
+        views.CartUpdateQuantityView.as_view(),
+        name="update_cart",
+    ),
+    path("cart/clear/", views.CartDropView.as_view(), name="clear_cart"),
 ]

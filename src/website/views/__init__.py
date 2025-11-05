@@ -1,6 +1,12 @@
 from .homepage import HomePageListView, CategoryListView, SubCategoryProductListView
 from .product_detail import ProductDetailView
-from .cart import CartListView, add_to_cart, remove_from_cart, update_cart, clear_cart
+from .cart import (
+    CartListView,
+    CartAddView,
+    CartRemoveItemView,
+    CartUpdateQuantityView,
+    CartDropView,
+)
 
 
 __all__ = (
@@ -9,8 +15,8 @@ __all__ = (
     "CategoryListView",
     "SubCategoryProductListView",
     "CartListView",
-    "add_to_cart",
-    "remove_from_cart",
-    "update_cart",
-    "clear_cart",
+    "CartAddView",
+    "CartRemoveItemView",
+    "CartUpdateQuantityView",
+    "CartDropView",
 )

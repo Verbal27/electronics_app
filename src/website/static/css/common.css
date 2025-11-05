@@ -146,3 +146,6 @@
 .fluid-container-custom {
   height: 100vh;
 }
+.update-quantity-form {
+  display: flex !important;
+}
