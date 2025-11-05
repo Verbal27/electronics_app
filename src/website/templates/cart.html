@@ -1,5 +1,5 @@
 {% extends "base/website/base.html" %}
-
+{%load static%}
 
 {% block website_content %}
 <section class="h-100">
@@ -41,8 +41,7 @@
               <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                 <form method="post" action="{% url 'remove_from_cart' item.id%}">
                   {%csrf_token%}
-                  {%load static%}
-                  <button type="submit" class="text-danger delete-btn" display="none"><img class="cart-link" src="{% static "images/657059.png"%}"></img></a>
+                  <button type="submit" class="text-danger delete-btn" display="none"><i class="fa-sharp fa-regular fa-delete-left"></i></button>
                 </form>
               </div>
             </div>
