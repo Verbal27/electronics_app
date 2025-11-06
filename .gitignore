@@ -15,3 +15,5 @@ Dockerfile
 .DS_Store
 electronics_dump.sql
 media/
+.idea
+/.idea
