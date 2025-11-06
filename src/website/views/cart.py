@@ -48,10 +48,9 @@ class CartAddView(View):
                 price=float(product.price),
                 quantity=quantity,
             )
-            print(messages.success(request, "Product added sucessfully"))
+            messages.success(request, "Product added sucessfully")
             return redirect("homepage")
-        except Exception as e:
-            print(f"Error adding product to cart: {e}")
+        except Exception:
             messages.error(
                 request, "There was a problem adding this item to your cart."
             )
@@ -66,8 +65,7 @@ class CartRemoveItemView(View):
             cart.remove(product_id=product.pk)
             messages.success(request, "Item removed successfully!")
             return redirect("cart")
-        except Exception as e:
-            print(f"Error removing product from cart: {e}")
+        except Exception:
             messages.error(
                 request, "There was a problem removing this item from your cart."
             )
@@ -84,8 +82,7 @@ class CartUpdateQuantityView(View):
             cart.update(product_id=product.pk, quantity=quantity)
             messages.success(request, "Item quantity updated successfully!")
             return redirect("cart")
-        except Exception as e:
-            print(f"Error updating product quantity from cart: {e}")
+        except Exception:
             messages.error(
                 request, "There was a problem updating this item in your cart."
             )
