@@ -8,23 +8,24 @@
     </div>
     <div class="card-group">
         {% for product in products %}
-        <div class="card" style="width: 18rem;">
-            <img src="{{ product.image.url }}" class="card-img-top" alt="Product image">
-            <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-description" style="text-align:center;">{{ product.description}}</p>
-                <p class="card-text">Price: ${{product.price}}</p>
-                <div class="homepage-add-detail-form">
-                    <a href="{% url 'product_detail' product.pk %}" type="submit" class="btn btn-primary btn-add-to-cart">Details</a>
-                </div>
-                <form action="{% url 'add_to_cart' product.pk%}" method="post">
-                    {%csrf_token%}
+            <div class="card" style="width: 18rem;">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="Product image">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-description" style="text-align:center;">{{ product.description }}</p>
+                    <p class="card-text">Price: ${{ product.price }}</p>
                     <div class="homepage-add-detail-form">
-                        <button type="submit" class="btn btn-primary btn-add-to-cart">Add to cart</button>
+                        <a href="{% url 'product_detail' product.pk %}" type="submit"
+                           class="btn btn-primary btn-add-to-cart">Details</a>
                     </div>
-                </form>
+                    <form action="{% url 'add_to_cart' product.pk %}" method="post">
+                        {% csrf_token %}
+                        <div class="homepage-add-detail-form">
+                            <button type="submit" class="btn btn-primary btn-add-to-cart">Add to cart</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
         {% endfor %}
     </div>
 {% endblock %}
