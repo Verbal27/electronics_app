@@ -35,7 +35,11 @@ Desktop.ini
 .ssh
 tags
 uploads/
+electronics_dump.sql
 media/
+.idea
+/.idea
+
 *.lock
 *.coverage
 .vscode
