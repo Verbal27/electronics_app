@@ -20,7 +20,7 @@ class CategoryListView(ListView):
     context_object_name = "products"
 
     def get_queryset(self):
-        category_id = self.kwargs["category_id"]
+        category_id = self.kwargs["pk"]
         return Product.objects.filter(subcategory__category_id=category_id)
 
     def get_context_data(self, **kwargs):
@@ -36,7 +36,7 @@ class SubCategoryProductListView(ListView):
     context_object_name = "products"
 
     def get_queryset(self):
-        subcategory_id = self.kwargs["subcategory_id"]
+        subcategory_id = self.kwargs["pk"]
         return Product.objects.filter(subcategory_id=subcategory_id)
 
     def get_context_data(self, **kwargs):
