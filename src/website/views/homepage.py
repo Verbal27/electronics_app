@@ -9,8 +9,10 @@ class HomePageListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = Product.objects.all()
-        context["product_cards"] = [ProductCard(product) for product in products]
+        products = context.get("products", Product.objects.all())
+        context["product_cards"] = [
+            ProductCard(request=self.request, product=product) for product in products
+        ]
         return context
 
 
@@ -26,7 +28,9 @@ class CategoryListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         products = context["products"]
-        context["product_cards"] = [ProductCard(product) for product in products]
+        context["product_cards"] = [
+            ProductCard(request=self.request, product=product) for product in products
+        ]
         return context
 
 
@@ -42,5 +46,7 @@ class SubCategoryProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         products = context["products"]
-        context["product_cards"] = [ProductCard(product) for product in products]
+        context["product_cards"] = [
+            ProductCard(request=self.request, product=product) for product in products
+        ]
         return context

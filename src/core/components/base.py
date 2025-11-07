@@ -1,5 +1,6 @@
 from django.forms.renderers import get_default_renderer
 from django.forms.widgets import Media
+from django.template.context_processors import csrf
 from django.utils.safestring import mark_safe
 
 
@@ -15,6 +16,10 @@ class RenderComponentMixin:
         renderer = renderer or get_default_renderer()
         template = template_name or self.template_name
         context = context or self.get_context()
+        if self.request:
+            context["csrf_token"] = csrf(self.request)["csrf_token"]
+        print(context)
+
         return mark_safe(renderer.render(template, context, self.request))
 
     def no_render(self):

@@ -1,12 +1,11 @@
 {% extends "base/website/base.html" %}
 
 {% block website_content %}
-    <div class="d-flex flex-column vh-100">
+    <div class="d-flex flex-column min-vh-100">
         <div class="container-fluid container">
             <h1 class="heading heading-large">Shop in style</h1>
             <h3 class="text">Homepage</h3>
         </div>
-
         {% if product_cards %}
             <div class="card-group">
                 {% for product_card in product_cards %}
