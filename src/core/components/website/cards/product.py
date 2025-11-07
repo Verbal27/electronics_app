@@ -10,9 +10,11 @@ class ProductCard(RenderComponentMixin, MediaDefiningComponent):
             'all': ('css/components/product_card.css',)
         }
 
-    def __init__(self, product, css_classes=None):
+    def __init__(self, request, product, css_classes=None):
         self.product = product
         self.css_classes = css_classes or ""
+        self.request = request
+
 
     def get_context(self):
         return {

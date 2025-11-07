@@ -1,0 +1,106 @@
+{% extends "base/website/base.html" %}
+{% load static %}
+
+{% block website_content %}
+    <section class="">
+        <div class="container min-vh-100 py-5 custom-container">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-10">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-normal mb-0">Shopping Cart</h3>
+                        <div>
+                            <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">price
+                                <i class="fas fa-angle-down mt-1"></i></a></p>
+                        </div>
+                    </div>
+                    {% if cart_items %}
+                        {% for item in cart_items %}
+                            <div class="shopping-card-custom rounded-3 mb-4">
+                                <div class="card-body p-4">
+                                    <div class="row d-flex justify-content-between align-items-center">
+                                        <div class="col-md-2 col-lg-2 col-xl-2">
+                                            <img src="{{ item.image.url }}" class="img-fluid rounded-3" alt="Product image">
+                                        </div>
+                                        <div class="col-md-3 col-lg-3 col-xl-3">
+                                            <p class="lead fw-normal mb-2">{{ item.name }}</p>
+                                        </div>
+                                        <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                            <form method="post" action="{% url 'update_cart' item.id %}"
+                                                  class="update-quantity-form" style="display:flex;">
+                                                {% csrf_token %}
+                                                <input id="form1" min="1" name="quantity" value="{{ item.quantity }}"
+                                                       type="number"
+                                                       class="form-control form-control-sm"/>
+                                                <button type="submit" class="btn btn-primary btn-update-cart">Update
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                            <h5 class="mb-0">$ {{item.price}}</h5>
+                                        </div>
+                                        <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                            <form method="post" action="{% url 'remove_from_cart' item.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="text-danger custom-delete-btn"><i
+                                                        class="fa-solid fa-trash"></i></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <h2>Total: $ {{ total }} </h2>
+                        <div class="card-payment">
+                            <div class="card-body card-body-cart">
+                                <form method="post" action="{% url 'clear_cart' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-warning btn-block btn-lg ">
+                                        Clear Cart
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="card-body card-body-cart">
+
+                                <button type="button" class="btn btn-warning btn-block btn-lg btn-custom"
+                                        data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Checkout
+                                </button>
+
+                                <div class="modal fade" id="exampleModal" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">To be
+                                                    implemented</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                This feature is going to be implemented soon!
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form method="post" action="{% url 'clear_cart' %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit"
+                                                            class="btn btn-warning btn-block btn-lg btn-custom-modal">
+                                                        Clear Cart &amp; Return Home
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="fluid-container-custom">
+                            <h1>Card is empty</h1>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
