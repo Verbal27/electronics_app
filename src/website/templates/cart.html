@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block website_content %}
-    <section class="h-100">
-        <div class="container h-100 py-5 custom-container">
+    <section class="">
+        <div class="container min-vh-100 py-5 custom-container">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-10">
 
@@ -37,7 +37,7 @@
                                             </form>
                                         </div>
                                         <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                            <h5 class="mb-0">$ {{ item.price }}</h5>
+                                            <h5 class="mb-0">$ {{item.price}}</h5>
                                         </div>
                                         <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                             <form method="post" action="{% url 'remove_from_cart' item.id %}">
