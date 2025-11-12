@@ -30,6 +30,9 @@ ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
 
 AUTH_USER_MODEL = "users.CustomUser"
 
+
+LOGIN_REDIRECT_URL = "homepage"
+LOGOUT_REDIRECT_URL = 'homepage'
 # Application definition
 
 INSTALLED_APPS = [
@@ -43,6 +46,8 @@ INSTALLED_APPS = [
     "src.core",
     "src.users",
     "src.website",
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -56,6 +61,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "electronics_app.urls"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 TEMPLATES = [
     {

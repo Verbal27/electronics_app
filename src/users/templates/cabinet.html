@@ -1,0 +1,20 @@
+{% extends "base/website/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block website_content %}
+    <div class="d-flex flex-column min-vh-100" style="display:flex;justify-content: center;">
+        <div class="container-fluid container" style="background-color: white;text-align: left;width:auto;border: 1px solid gray;border-radius: 10px;margin: 3rem;">
+            {% if context %}
+                {{ context }}
+
+            <form method="POST" action="{% url "logout" %}">
+                {% csrf_token %}
+                <button class="btn btn-primary btn-lg btn-block" type="submit">logout</button>
+            </form>
+            {% else %}
+            <h1>You are not logged in</h1>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

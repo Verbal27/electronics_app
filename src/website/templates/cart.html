@@ -61,36 +61,37 @@
                                 </form>
                             </div>
                             <div class="card-body card-body-cart">
+                                <form method="get" action="{% url 'checkout'%}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-warning btn-block btn-lg ">Checkout
+                                    </button>
+                                </form>
 
-                                <button type="button" class="btn btn-warning btn-block btn-lg btn-custom"
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    Checkout
-                                </button>
 
-                                <div class="modal fade" id="exampleModal" tabindex="-1"
-                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">To be
-                                                    implemented</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                This feature is going to be implemented soon!
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form method="post" action="{% url 'clear_cart' %}">
-                                                    {% csrf_token %}
-                                                    <button type="submit"
-                                                            class="btn btn-warning btn-block btn-lg btn-custom-modal">
-                                                        Clear Cart &amp; Return Home
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
+{#                                <div class="modal fade" id="exampleModal" tabindex="-1"#}
+{#                                     aria-labelledby="exampleModalLabel" aria-hidden="true">#}
+{#                                    <div class="modal-dialog">#}
+{#                                        <div class="modal-content">#}
+{#                                            <div class="modal-header">#}
+{#                                                <h1 class="modal-title fs-5" id="exampleModalLabel">To be#}
+{#                                                    implemented</h1>#}
+{#                                                <button type="button" class="btn-close" data-bs-dismiss="modal"#}
+{#                                                        aria-label="Close"></button>#}
+{#                                            </div>#}
+{#                                            <div class="modal-body">#}
+{#                                                This feature is going to be implemented soon!#}
+{#                                            </div>#}
+{#                                            <div class="modal-footer">#}
+{#                                                <form method="post" action="{% url 'checkout' cart_items %}">#}
+{#                                                    {% csrf_token %}#}
+{#                                                    <button type="submit"#}
+{#                                                            class="btn btn-warning btn-block btn-lg btn-custom-modal">#}
+{#                                                        Clear Cart &amp; Return Home#}
+{#                                                    </button>#}
+{#                                                </form>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
                                 </div>
                             </div>
                         </div>

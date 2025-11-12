@@ -1,3 +1,4 @@
+from .checkout import CheckoutCreateView
 from .homepage import HomePageListView, CategoryListView, SubCategoryProductListView
 from .product_detail import ProductDetailView
 from .cart import (
@@ -19,4 +20,5 @@ __all__ = (
     "CartRemoveItemView",
     "CartUpdateQuantityView",
     "CartDropView",
+    "CheckoutCreateView",
 )

@@ -5,6 +5,10 @@
     max-width: -webkit-fill-available;
 }
 
+.container-checkout{
+    background: none;
+}
+
 .heading {
     color: white;
     font-weight: bold;
@@ -211,4 +215,16 @@
 
 .container-alert {
     justify-content: center;
+}
+.col-md-8 {
+    padding-right: 5%;
+    padding-left: 5%;
+    margin-bottom: 3%;
+}
+
+.card-promo {
+    height: auto;
+}
+.checkout-row {
+    padding: 7rem;
 }
