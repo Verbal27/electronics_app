@@ -5,13 +5,13 @@
 {% block website_content %}
     <div class="d-flex flex-column min-vh-100" style="display:flex;justify-content: center;">
         <div class="container-fluid container" style="background-color: white;text-align: left;width:auto;border: 1px solid gray;border-radius: 10px;margin: 3rem;">
-            {% if context %}
-                {{ context }}
-
-            <form method="POST" action="{% url "logout" %}">
-                {% csrf_token %}
-                <button class="btn btn-primary btn-lg btn-block" type="submit">logout</button>
-            </form>
+            {% if user.is_authenticated %}
+                <p><strong>Welcome, {{ user.first_name }} {{ user.last_name }}</strong></p>
+                <p>Email: {{ user.email }}</p>
+                <form method="POST" action="{% url "logout" %}">
+                    {% csrf_token %}
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">logout</button>
+                </form>
             {% else %}
             <h1>You are not logged in</h1>
             {% endif %}

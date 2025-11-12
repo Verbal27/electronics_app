@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 
-from src.users.models import CustomUser
 from src.website.forms import RegisterForm, LoginForm
 
 
@@ -34,18 +34,21 @@ class UserLoginView(LoginView):
 
 
 class UserLogoutView(LogoutView):
-    success_url = reverse_lazy("homepage")
+    next_page = reverse_lazy("homepage")
 
 
 
-class CabinetTemplateView(TemplateView):
+class CabinetTemplateView(LoginRequiredMixin, TemplateView):
     template_name = "cabinet.html"
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         user = self.request.user
-        context = CustomUser.objects.get(pk=user.pk)
-        user_context = {
-            "user": context,
-        }
-        return user_context
+        context.update({
+            "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+        })
+        return context
 
