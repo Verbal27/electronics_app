@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, redirect_to_login
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 
@@ -41,14 +41,19 @@ class UserLogoutView(LogoutView):
 class CabinetTemplateView(LoginRequiredMixin, TemplateView):
     template_name = "cabinet.html"
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        context.update({
-            "username": user.username,
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "email": user.email,
-        })
-        return context
+        if user.is_authenticated:
+            context.update({
+                "username": user.username,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+            })
+            return context
+        else:
+            return redirect_to_login(self.login_url)
+
 

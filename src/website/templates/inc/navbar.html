@@ -36,8 +36,13 @@
                 </li>
             </ul>
         </div>
-        <a href="{% url 'cart' %}">
-            <i class="fa-solid fa-cart-shopping"></i>
-        </a>
+        <div class="links">
+            <a href="{% url 'cart' %}" class="link">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+            <a href="{% url 'cabinet' %}" class="link">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
     </div>
 </nav>

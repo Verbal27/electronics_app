@@ -228,3 +228,10 @@
 .checkout-row {
     padding: 7rem;
 }
+.links {
+    display: flex;
+    flex-wrap: wrap;
+}
+.link:last-child {
+    margin-left: 1rem !important;
+}
