@@ -1,7 +1,8 @@
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, redirect_to_login
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 
@@ -15,9 +16,15 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        login(self.request, user)
-        messages.success(self.request, "User created successfully")
-        return super().form_valid(form)
+        password = form.cleaned_data.get("password1")
+        auth_user = authenticate(self.request, username=user.username, password=password)
+        if user is not None:
+            login(self.request, auth_user)
+            messages.success(self.request, "User created successfully")
+            return redirect(reverse_lazy("homepage"))
+        else:
+            messages.error(self.request, "Authentication Failed")
+            return super().form_valid(form)
 
     def form_invalid(self, form):
         messages.error(self.request, "There was an error.")
@@ -47,7 +54,6 @@ class CabinetTemplateView(LoginRequiredMixin, TemplateView):
         user = self.request.user
         if user.is_authenticated:
             context.update({
-                "username": user.username,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
                 "email": user.email,

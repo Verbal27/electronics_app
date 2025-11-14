@@ -14,4 +14,24 @@
             }, false);
         });
     }, false);
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+        const cardSection = document.querySelector('.card-details');
+
+        function toggleCardSection() {
+            const selected = document.querySelector('input[name="payment_method"]:checked');
+            if (selected && (selected.value === 'debit' || selected.value === 'credit')) {
+                cardSection.style.display = 'block';
+            } else {
+                cardSection.style.display = 'none';
+            }
+        }
+
+        toggleCardSection();
+
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', toggleCardSection);
+        });
+    });
 })();

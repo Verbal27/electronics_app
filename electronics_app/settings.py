@@ -66,7 +66,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "electronics_app.urls"
 
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
 
 TEMPLATES = [
     {
@@ -139,6 +139,9 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = []
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKS = ['bootstrap5']
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"

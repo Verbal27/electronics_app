@@ -50,11 +50,7 @@
             </div>
             <div class="col-md-8 order-md-1">
                 <h4 class="mb-3">Customer Details</h4>
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form|crispy }}
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
-                    </form>
+                {% crispy form %}
             </div>
         </div>
     {% endif %}
@@ -62,6 +58,6 @@
 {% endblock %}
 {% block js %}
     {{ block.super }}
-    <script src="{% static  'src/website/static/js/checkout.js' %}"></script>
+    <script src="{% static 'js/checkout.js' %}"></script>
 {% endblock %}
 

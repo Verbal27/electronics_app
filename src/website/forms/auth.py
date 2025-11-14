@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.views import RedirectURLMixin
 
 from src.users.models import CustomUser
 

@@ -10,6 +10,8 @@
                 {{ form|crispy }}
             <button class="btn btn-primary btn-lg btn-block" type="submit">Log In</button>
             </form>
+            <p>Not yet registred?</p>
+            <a class="btn btn-primary btn-lg btn-block" href="{% url 'register' %}">Register</a>
         </div>
     </div>
 {% endblock %}

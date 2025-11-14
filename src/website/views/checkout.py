@@ -11,7 +11,7 @@ from src.website.services import Cart
 class CheckoutCreateView(LoginRequiredMixin,CreateView):
     form_class = OrderModelForm
     template_name = "checkout.html"
-    success_url = reverse_lazy("checkout_confirm")
+    success_url = reverse_lazy("homepage")
 
     def get_initial(self):
         user = self.request.user
@@ -25,6 +25,7 @@ class CheckoutCreateView(LoginRequiredMixin,CreateView):
         cart = Cart(self.request)
         kwargs = super().get_form_kwargs()
         kwargs['cart_items'] = cart.items()
+        kwargs['total'] = cart.get_total()
         kwargs['user'] = self.request.user
         return kwargs
 
@@ -38,10 +39,8 @@ class CheckoutCreateView(LoginRequiredMixin,CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cart = Cart(self.request)
-        user = self.request.user
 
         context["cart_items"] = cart.items()
         context["total"] = cart.get_total()
-        context["user"] = user
 
         return context

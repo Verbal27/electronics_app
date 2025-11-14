@@ -10,10 +10,14 @@ User = get_user_model()
 
 class Order(models.Model):
     user = models.ForeignKey(User, related_name="orders", on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=255, default="")
     address = models.CharField(max_length=255)
     payment = models.OneToOneField(Payment, on_delete=models.CASCADE)
     status = models.PositiveSmallIntegerField(choices=OrderStatus.choices)
     created_at = models.DateField(auto_now_add=True)
+    phone = models.CharField(max_length=15)
 
     class Meta:
         verbose_name = "Order"

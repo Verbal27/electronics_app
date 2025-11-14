@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
@@ -9,6 +8,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(max_length=100, unique=True)
     address = models.CharField(max_length=255)
     phone = models.CharField(max_length=15)
+
 
     REQUIRED_FIELDS = ["username"]
     USERNAME_FIELD = "email"

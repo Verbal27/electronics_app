@@ -1,11 +1,15 @@
 from django import forms
 from datetime import date
+
+from django.contrib.admin import action
 from django.forms import ModelForm, TypedChoiceField
+from django.urls import reverse_lazy
 from phonenumber_field.formfields import PhoneNumberField
 from src.core.constants import OrderStatus
 from src.core.models import Order, Payment, OrderItem
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Fieldset, Row, Column
+from crispy_forms.layout import Layout, Submit, Fieldset, Row, Column, Field
+
 
 
 class OrderModelForm(ModelForm):
@@ -14,18 +18,20 @@ class OrderModelForm(ModelForm):
     email = forms.EmailField()
     address = forms.CharField()
     phone = PhoneNumberField(region="MD")
-    payment_method = TypedChoiceField(widget=forms.RadioSelect, choices=[("cash","Cash"),("debit","Debit Card"),("credit","Credit Card")])
+    payment_method = TypedChoiceField(widget=forms.RadioSelect, choices=[("1","Cash"),("2","Debit Card"),("3","Credit Card")],initial="1")
     name_on_card = forms.CharField(
         widget=forms.TextInput(),
+        required=False,
     )
-    card_no = forms.CharField(max_length=16, widget=forms.TextInput())
+    card_no = forms.CharField(max_length=16, widget=forms.TextInput(),required=False)
     expiration_date = forms.TypedChoiceField(
-    choices=[(i, f"{i:02}") for i in range(1, 13)],
-    coerce=int
+        choices=[(i, f"{i:02}") for i in range(1, 13)],
+        coerce=int,
+        required=False,
     )
     current = date.today().year
     expiration_year = TypedChoiceField(
-        choices=[(y, str(y)) for y in range(current, current + 15)], coerce=int
+        choices=[(y, str(y)) for y in range(current, current + 15)], coerce=int, required=False
     )
 
 
@@ -36,52 +42,63 @@ class OrderModelForm(ModelForm):
     def __init__(self, *args, cart_items=None, **kwargs):
             self.cart_items = cart_items
             self.user = kwargs.pop('user', None)
+            self.total = kwargs.pop('total')
             super().__init__(*args, **kwargs)
             self.helper = FormHelper()
             self.helper.form_method = "post"
+            self.helper.form_action = 'checkout'
             self.helper.form_class = "needs-validation"
             self.helper.attrs = {"novalidate":""}
             self.helper.layout = Layout(
                 Fieldset(
                     "Personal Information",
-                    Row(Column("first_name", default=self.user.first_name), Column("last_name",default=self.user.last_name)),
+                    Row(
+                        Column("first_name", css_class="form-group col-md-6 mb-0"),
+                        Column("last_name", css_class="form-group col-md-6 mb-0"),
+                    ),
                     "email",
                     "address",
-                    "phone",
+                    Field("phone", css_class="phone"),
                 ),
                 Fieldset(
                     "Payment Information",
-                    "payment_method",
-                    Row(Column("name_on_card"), Column("card_no")),
-                    Row(Column("expiration_date"), Column("expiration_year")),
+                    Field("payment_method", css_class="method-radio"),
+                    Fieldset(
+                        "Card Details",
+                        Row(
+                            Column("name_on_card", css_class="form-group col-md-6 mb-0"),
+                            Column("card_no", css_class="form-group col-md-6 mb-0"),
+                        ),
+                        Row(
+                            Column("expiration_date", css_class="form-group col-md-6 mb-0"),
+                            Column("expiration_year", css_class="form-group col-md-6 mb-0"),
+                        ),css_class="card-details"),
                 ),
                 Submit("submit", "Checkout", css_class="btn btn-primary btn-lg"),
             )
+
 
     def save(self, commit=True):
             order = super().save(commit=False)
             if self.user:
                 order.user = self.user
             if commit:
-                order.save()
-                total = order.get_total()
+                total = self.total
                 payment = Payment.objects.create(
-
-                    method=self.cleaned_data['payment_method'],
-                    amount=total,
-                    status='pending'
-                )
+                        payment_method=self.cleaned_data['payment_method'],
+                        amount=total,
+                        status='1'
+                    )
                 order.payment = payment
                 order.status = OrderStatus.PENDING
                 order.save()
-
                 for item in self.cart_items:
                     OrderItem.objects.create(
-                        order=order,
-                        product=item.product,
-                        product_name=item.product_name,
-                        quantity=item.quantity,
-                        price=item.price,
+                        order_id=order.id,
+                        product_id=int(item['pid']),
+                        product_name=item['name'],
+                        quantity=item['quantity'],
+                        price=item['price'],
                     )
 
             return order

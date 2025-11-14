@@ -9,11 +9,11 @@ class Cart:
             self.cart[product_id]["quantity"] += quantity
         else:
             self.cart[product_id] = {
+                "pid": product_id,
                 "name": name,
                 "price": price,
                 "quantity": quantity,
             }
-
         self.save()
 
     def remove(self, product_id):
