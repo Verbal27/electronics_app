@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 
+from src.core.models import Order, OrderItem, Payment
 from src.website.forms import RegisterForm, LoginForm
 
 
@@ -52,12 +53,13 @@ class CabinetTemplateView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        if user.is_authenticated:
-            context.update({
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "email": user.email,
-            })
+        if user:
+            orders = (
+                Order.objects.filter(user=user)
+                .select_related("payment")
+                .prefetch_related("items")
+            )
+            context["orders"] = orders
             return context
         else:
             return redirect_to_login(self.login_url)

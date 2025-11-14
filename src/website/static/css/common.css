@@ -235,3 +235,9 @@
 .link:last-child {
     margin-left: 1rem !important;
 }
+.order-box {
+    border: 1px solid lightgrey !important;
+    border-radius: 0.3rem;
+    margin: 1rem;
+    padding: 1rem;
+}

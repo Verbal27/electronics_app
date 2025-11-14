@@ -8,6 +8,20 @@
             {% if user.is_authenticated %}
                 <p><strong>Welcome, {{ user.first_name }} {{ user.last_name }}</strong></p>
                 <p>Email: {{ user.email }}</p>
+                {% for order in orders %}
+                <div class="order-box d-flex flex-column justify-content-center align-items-center">
+                    <ul>
+                        <li>Order No: {{ order.id }}</li>
+                        <li>Ordered for: {{ order.first_name }} {{ order.last_name }}</li>
+                        <li>Address: {{ order.address }}</li>
+                        <li>Order Date: {{ order.created_at }}</li>
+                        {% for item in order.items.all %}
+                            <li>Product: {{ item.product_name }}</li>
+                        {% endfor %}
+                        <li>Total paid: {{ order.payment.amount }}</li>
+                    </ul>
+                </div>
+                {% endfor %}
                 <form method="POST" action="{% url "logout" %}">
                     {% csrf_token %}
                     <button class="btn btn-primary btn-lg btn-block" type="submit">logout</button>
