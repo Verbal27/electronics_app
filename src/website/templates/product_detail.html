@@ -1,7 +1,7 @@
 {% extends "base/website/base.html" %}
 
 {% block website_content %}
-<div class="container py-5">
+<div class="container py-5 min-vh-100">
     <div class="row big-row">
         <div class="col-md-6 mb-4 colmn">
             <div class="detail-card">
@@ -46,17 +46,17 @@
 
             <p class="mb-4">{{ product.description }}</p>
 
-            <div class="mb-4">
-                <h6 class="mb-2">Color</h6>
-                <div class="btn-group" role="group">
-                    <input type="radio" class="btn-check" name="color" id="silver" checked>
-                    <label class="btn btn-outline-secondary" for="silver">Silver</label>
-                    <input type="radio" class="btn-check" name="color" id="gold">
-                    <label class="btn btn-outline-secondary" for="gold">Gold</label>
-                    <input type="radio" class="btn-check" name="color" id="black">
-                    <label class="btn btn-outline-secondary" for="black">Black</label>
-                </div>
-            </div>
+{#            <div class="mb-4">#}
+{#                <h6 class="mb-2">Color</h6>#}
+{#                <div class="btn-group" role="group">#}
+{#                    <input type="radio" class="btn-check" name="color" id="silver" checked>#}
+{#                    <label class="btn btn-outline-secondary" for="silver">Silver</label>#}
+{#                    <input type="radio" class="btn-check" name="color" id="gold">#}
+{#                    <label class="btn btn-outline-secondary" for="gold">Gold</label>#}
+{#                    <input type="radio" class="btn-check" name="color" id="black">#}
+{#                    <label class="btn btn-outline-secondary" for="black">Black</label>#}
+{#                </div>#}
+{#            </div>#}
 
             <form method="post" action="{% url 'add_to_cart' product.id %}">
                 {% csrf_token %}

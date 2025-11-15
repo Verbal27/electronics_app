@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 
-from src.core.models import Order, OrderItem, Payment
+from src.core.models import Order
 from src.website.forms import RegisterForm, LoginForm
 
 

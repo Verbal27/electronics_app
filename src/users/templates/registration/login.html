@@ -8,10 +8,11 @@
             <form method="POST">
                 {% csrf_token %}
                 {{ form|crispy }}
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Log In</button>
+                <div class="login-register-btns">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Log In</button>
+                    <a class="btn btn-primary btn-lg btn-block" href="{% url 'register' %}">Register</a>
+                </div>
             </form>
-            <p>Not yet registred?</p>
-            <a class="btn btn-primary btn-lg btn-block" href="{% url 'register' %}">Register</a>
         </div>
     </div>
 {% endblock %}

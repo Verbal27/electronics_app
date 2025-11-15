@@ -21,7 +21,7 @@
 
         function toggleCardSection() {
             const selected = document.querySelector('input[name="payment_method"]:checked');
-            if (selected && (selected.value === 'debit' || selected.value === 'credit')) {
+            if (selected && (selected.value === '2' || selected.value === '3')) {
                 cardSection.style.display = 'block';
             } else {
                 cardSection.style.display = 'none';

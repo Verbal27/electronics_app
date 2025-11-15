@@ -240,4 +240,37 @@
     border-radius: 0.3rem;
     margin: 1rem;
     padding: 1rem;
+    text-wrap: wrap;
+    width: 40%;
+    min-height: 20rem !important;
+}
+.login-register-btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+.login-register-btns:first-child {
+    margin-left: 1rem !important;
+}
+.flex-container-orders {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+}
+.container {
+    padding: 5rem !important;
+}
+.logout-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+.btn-logout {
+    margin-left: 1rem !important;
 }
