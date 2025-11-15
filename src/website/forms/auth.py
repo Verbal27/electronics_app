@@ -15,6 +15,18 @@ class RegisterForm(UserCreationForm):
             raise forms.ValidationError("A user with that email already exists.")
         return email
 
+    def clean(self):
+        cleaned_data = super().clean()
+        first_name = cleaned_data.get("first_name")
+        last_name = cleaned_data.get("last_name")
+
+        if first_name and first_name != first_name.capitalize():
+            self.add_error("first_name", "First name must be capitalized.")
+
+        if last_name and last_name != last_name.capitalize():
+            self.add_error("last_name", "Last name must be capitalized.")
+
+        return cleaned_data
 
 
     def save(self, commit=True):
