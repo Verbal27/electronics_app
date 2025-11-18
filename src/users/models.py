@@ -10,8 +10,6 @@ class CustomUser(AbstractUser):
     phone = models.CharField(max_length=15)
 
 
-    REQUIRED_FIELDS = ["username"]
-    USERNAME_FIELD = "email"
 
     def __str__(self):
         return self.email
