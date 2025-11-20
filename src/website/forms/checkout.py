@@ -1,9 +1,9 @@
+from decimal import Decimal
+
 from django import forms
 from datetime import date
 
-from django.contrib.admin import action
 from django.forms import ModelForm, TypedChoiceField
-from django.urls import reverse_lazy
 from phonenumber_field.formfields import PhoneNumberField
 from src.core.constants import OrderStatus
 from src.core.models import Order, Payment, OrderItem
@@ -40,9 +40,9 @@ class OrderModelForm(ModelForm):
         exclude = ('payment','status','user')
 
     def __init__(self, *args, cart_items=None, **kwargs):
-            self.cart_items = cart_items
+            self.cart_items = kwargs.pop('cart_items', [])
             self.user = kwargs.pop('user', None)
-            self.total = kwargs.pop('total')
+            self.total = kwargs.pop('total', None)
             super().__init__(*args, **kwargs)
             self.helper = FormHelper()
             self.helper.form_method = "post"
@@ -86,7 +86,7 @@ class OrderModelForm(ModelForm):
                 total = self.total
                 payment = Payment.objects.create(
                         payment_method=self.cleaned_data['payment_method'],
-                        amount=total,
+                        amount=Decimal(total),
                         status='1'
                     )
                 order.payment = payment

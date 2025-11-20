@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -13,20 +12,30 @@ class CheckoutCreateView(LoginRequiredMixin,CreateView):
     template_name = "checkout.html"
     success_url = reverse_lazy("homepage")
 
+
     def get_initial(self):
         user = self.request.user
-        return {
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "email": user.email,
-        }
+        initial = super().get_initial()
+        initial.update(
+            {
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+            }
+        )
+        return initial
+
 
     def get_form_kwargs(self):
-        cart = Cart(self.request)
         kwargs = super().get_form_kwargs()
-        kwargs['cart_items'] = cart.items()
-        kwargs['total'] = cart.get_total()
-        kwargs['user'] = self.request.user
+        cart = Cart(self.request)
+        kwargs.update(
+            {
+                "cart_items": cart.items(),
+                "total": cart.get_total(),
+                "user": self.request.user,
+            }
+        )
         return kwargs
 
     def form_valid(self, form):

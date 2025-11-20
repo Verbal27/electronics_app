@@ -3,33 +3,30 @@
 {% load crispy_forms_tags %}
 
 {% block website_content %}
-    <div class="d-flex flex-column min-vh-100" style="display:flex;justify-content: center;">
-        <div class="container-fluid container" style="background-color: white;text-align: left;width:auto;border: 1px solid gray;border-radius: 10px;margin: 3rem;">
+    <div class="d-flex d-flex-center flex-column min-vh-100">
+        <div class="container-fluid container cabinet-container">
             {% if user.is_authenticated %}
                 <p><strong>Welcome, {{ user.first_name }} {{ user.last_name }}</strong></p>
                 <p>Email: {{ user.email }}</p>
                 <div class="flex-container-orders">
                     {% for order in orders %}
-                <div class="order-box d-flex flex-column justify-content-center align-items-center">
-                    <ul>
-                        <li>Order No: {{ order.id }}</li>
-                        <li>Ordered for: {{ order.first_name }} {{ order.last_name }}</li>
-                        <li>Address: {{ order.address }}</li>
-                        <li>Order Date: {{ order.created_at }}</li>
-                        {% for item in order.items.all %}
-                            <li>Product: {{ item.product_name }}</li>
-                        {% endfor %}
-                        <li>Total paid: {{ order.payment.amount }}</li>
-                    </ul>
+                        <div class="order-box d-flex flex-column justify-content-center align-items-center">
+                            <ul>
+                                <li>Order No: {{ order.id }}</li>
+                                <li>Ordered for: {{ order.first_name }} {{ order.last_name }}</li>
+                                <li>Address: {{ order.address }}</li>
+                                <li>Order Date: {{ order.created_at }}</li>
+                                {% for item in order.items.all %}
+                                    <li>Product: {{ item.product_name }}</li>
+                                {% endfor %}
+                                <li>Total paid: {{ order.payment.amount }}</li>
+                            </ul>
+                        </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-                </div>
-                <form method="POST" class="logout-form" action="{% url "logout" %}">
-                    {% csrf_token %}
-                    <button class="btn btn-logout btn-primary btn-lg btn-block" type="submit">Logout</button>
-                </form>
+                {% crispy form %}
             {% else %}
-            <h1>You are not logged in</h1>
+                <h1>You are not logged in</h1>
             {% endif %}
         </div>
     </div>

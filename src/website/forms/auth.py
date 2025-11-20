@@ -1,5 +1,7 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Submit, Fieldset, Row, Column, Field, Div, HTML
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 from src.users.models import CustomUser
 
@@ -8,6 +10,27 @@ class RegisterForm(UserCreationForm):
     first_name = forms.CharField(widget=forms.TextInput,max_length=100,required=True)
     last_name = forms.CharField(widget=forms.TextInput,max_length=100,required=True)
     email = forms.EmailField(widget=forms.EmailInput)
+
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_action = "register"
+        self.helper.form_class = "needs-validation"
+        self.helper.attrs = {"novalidate": ""}
+        self.helper.layout = Layout(
+            Fieldset(
+                "Registration form",
+                Row(
+                    Column("first_name", css_class="form-group col-md-6 mb-0"),
+                    Column("last_name", css_class="form-group col-md-6 mb-0"),
+                ),
+                "email",
+                "password1",
+                "password2"
+            ),
+            Submit("submit", "Register", css_class="btn btn-primary btn-lg"),
+        )
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -41,6 +64,41 @@ class RegisterForm(UserCreationForm):
         fields = ["first_name", "last_name", "email"]
 
 
-class LoginForm(AuthenticationForm):
-    email = forms.EmailField(widget=forms.EmailInput)
-    password = forms.CharField(widget=forms.PasswordInput)
+class UserLoginForm(AuthenticationForm):
+    username = forms.EmailField(label="Email", widget=forms.EmailInput())
+
+    def __init__(self, *args, **kwargs):
+        print("USING MY LOGINFORM!")
+        super().__init__(*args, **kwargs)
+
+        self.fields["username"].widget.attrs.update({"placeholder": "Email"})
+        self.fields["password"].widget.attrs.update({"placeholder": "Password"})
+
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_class = "needs-validation"
+        self.helper.attrs = {"novalidate": ""}
+
+        self.helper.layout = Layout(
+            HTML("<h3 class='mb-3'>Login form</h3>"),
+            Div(Field("username"), css_class="form-group"),
+            Div(Field("password", wrapper_class="pt-3"), css_class="form-group"),
+            Div(
+                Submit("login", "Login", css_class="btn btn-primary my-2 w-30 "),
+            HTML("<p class='mb-3'>Not yet registered ?</p>"),
+                Submit("register", "Register", css_class="btn btn-primary my-2 w-30"),
+                css_class="form-group d-flex justify-content-between",)
+        )
+
+    def confirm_login_allowed(self, user):
+        return super().confirm_login_allowed(user)
+
+class LogoutForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(LogoutForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_action = "logout"
+        self.helper.layout = Layout(
+            Submit("logout", "Logout"),
+        )

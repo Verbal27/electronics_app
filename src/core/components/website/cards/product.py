@@ -1,19 +1,24 @@
 from django.urls import reverse
 from src.core.components.base import RenderComponentMixin, MediaDefiningComponent
+from src.website.forms.cart import AddToCartForm
 
 
 class ProductCard(RenderComponentMixin, MediaDefiningComponent):
     template_name = "components/website/product_card.html"
+    form_class = AddToCartForm
 
     class Media:
         css = {
             'all': ('css/components/product_card.css',)
         }
 
-    def __init__(self, request, product, css_classes=None):
+    def __init__(self, request, product, form_class=None, css_classes=None):
         self.product = product
         self.css_classes = css_classes or ""
         self.request = request
+        self.form_class = form_class or self.form_class
+        self.form = self.form_class(product_id=product.id)
+
 
 
     def get_context(self):
@@ -25,4 +30,5 @@ class ProductCard(RenderComponentMixin, MediaDefiningComponent):
             "product_image_url": self.product.image.url,
             "product_detail_url": reverse("product_detail", args=[self.product.pk]),
             "css_classes": self.css_classes,
+            "form": self.form,
         }

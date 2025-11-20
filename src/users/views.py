@@ -7,7 +7,8 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 
 from src.core.models import Order
-from src.website.forms import RegisterForm, LoginForm
+from src.website.forms import RegisterForm, UserLoginForm
+from src.website.forms.auth import LogoutForm
 
 
 class RegisterView(CreateView):
@@ -19,10 +20,10 @@ class RegisterView(CreateView):
         user = form.save()
         password = form.cleaned_data.get("password1")
         auth_user = authenticate(self.request, username=user.username, password=password)
-        if user is not None:
+        if auth_user is not None:
             login(self.request, auth_user)
             messages.success(self.request, "User created successfully")
-            return redirect(reverse_lazy("homepage"))
+            return redirect(self.get_success_url())
         else:
             messages.error(self.request, "Authentication Failed")
             return super().form_valid(form)
@@ -33,21 +34,27 @@ class RegisterView(CreateView):
 
 
 class UserLoginView(LoginView):
-    template_name = "login.html"
-    form_class = LoginForm
+    template_name = "registration/login.html"
+    authentication_form = UserLoginForm
     redirect_authenticated_user = True
+
 
     def get_success_url(self):
         return reverse_lazy("homepage")
+
+    def post(self, request, *args, **kwargs):
+        if "register" in request.POST:
+            return redirect("register")
+        return super().post(request, *args, **kwargs)
 
 
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy("homepage")
 
 
-
 class CabinetTemplateView(LoginRequiredMixin, TemplateView):
     template_name = "cabinet.html"
+    form_class = LogoutForm
 
 
     def get_context_data(self, **kwargs):
@@ -60,6 +67,7 @@ class CabinetTemplateView(LoginRequiredMixin, TemplateView):
                 .prefetch_related("items")
             )
             context["orders"] = orders
+            context["form"] = LogoutForm()
             return context
         else:
             return redirect_to_login(self.login_url)

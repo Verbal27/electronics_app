@@ -33,9 +33,10 @@ class Cart:
             self.save()
 
     def get_total(self):
-        return round(
+        total = round(
             sum(item["price"] * item["quantity"] for item in self.cart.values()), 2
         )
+        return f"{total:,.2f}"
 
     def items(self):
         return self.cart.values()

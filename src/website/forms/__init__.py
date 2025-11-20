@@ -1,4 +1,4 @@
-from .auth import RegisterForm, LoginForm
+from .auth import RegisterForm, UserLoginForm
 from .checkout import OrderModelForm
 
-__all__ = ["RegisterForm", "LoginForm", "OrderModelForm"]
+__all__ = ["RegisterForm", "UserLoginForm", "OrderModelForm"]
