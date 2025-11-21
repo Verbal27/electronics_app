@@ -18,7 +18,7 @@ class RenderComponentMixin:
         context = context or self.get_context()
         if self.request:
             context["csrf_token"] = csrf(self.request)["csrf_token"]
-        print(context)
+
 
         return mark_safe(renderer.render(template, context, self.request))
 

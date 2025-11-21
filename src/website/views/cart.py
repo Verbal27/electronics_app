@@ -1,12 +1,24 @@
+from decimal import Decimal
+
+from django.db.models.functions import Round
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import TemplateView, View
 from src.core.models import Product
 from django.contrib import messages
+
+from src.website.forms.cart import (
+    AddToCartForm,
+    RemoveFromCartForm,
+    UpdateCart,
+    DropCart,
+    CheckoutForm,
+)
 from src.website.services import Cart
 
 
 class CartListView(TemplateView):
     template_name = "cart.html"
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -28,17 +40,25 @@ class CartListView(TemplateView):
                         "quantity": item["quantity"],
                         "image": product.image,
                         "description": product.description,
+                        "remove_form": RemoveFromCartForm(product_id=pid),
+                        "update_form": UpdateCart(product_id=pid, quantity=item["quantity"]),
                     }
                 )
 
         context["cart_items"] = cart_items_with_products
+        for item in cart_items_with_products:
+            item["price"] = Decimal(item["price"]).quantize(Decimal(".00"))
+        context["drop_form"] = DropCart()
+        context["checkout_form"] = CheckoutForm()
         context["total"] = cart.get_total()
         return context
 
 
 class CartAddView(View):
+
     def post(self, request, product_id):
         cart = Cart(request)
+        form = AddToCartForm(request.POST, product_id=product_id)
         product: Product = get_object_or_404(Product, pk=product_id)
         quantity = int(request.POST.get("quantity", 1))
         try:
@@ -58,8 +78,11 @@ class CartAddView(View):
 
 
 class CartRemoveItemView(View):
+    form_class = RemoveFromCartForm
+
     def post(self, request, product_id):
         cart = Cart(request)
+        form = RemoveFromCartForm(request.POST, product_id=product_id)
         product: Product = get_object_or_404(Product, pk=product_id)
         try:
             cart.remove(product_id=product.pk)
@@ -75,6 +98,7 @@ class CartRemoveItemView(View):
 class CartUpdateQuantityView(View):
     def post(self, request, product_id):
         cart = Cart(request)
+        form = UpdateCart(request.POST, product_id=product_id)
         product: Product = get_object_or_404(Product, pk=product_id)
         quantity = int(request.POST.get("quantity", 1))
 
@@ -90,8 +114,11 @@ class CartUpdateQuantityView(View):
 
 
 class CartDropView(View):
+    form_class = DropCart
+
     def post(self, request):
         cart = Cart(request)
+        form = self.form_class(request.POST)
         cart.clear()
         messages.success(request, "Cart cleared!")
         return redirect("homepage")

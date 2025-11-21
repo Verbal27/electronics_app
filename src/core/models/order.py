@@ -10,10 +10,14 @@ User = get_user_model()
 
 class Order(models.Model):
     user = models.ForeignKey(User, related_name="orders", on_delete=models.CASCADE)
-    address = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=100,null=True)
+    last_name = models.CharField(max_length=100,null=True)
+    email = models.EmailField(max_length=255,null=True)
+    address = models.CharField(max_length=255,null=True)
     payment = models.OneToOneField(Payment, on_delete=models.CASCADE)
     status = models.PositiveSmallIntegerField(choices=OrderStatus.choices)
     created_at = models.DateField(auto_now_add=True)
+    phone = models.CharField(max_length=15,null=True)
 
     class Meta:
         verbose_name = "Order"
@@ -25,7 +29,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
 
     class Meta:
         verbose_name = "OrderItem"

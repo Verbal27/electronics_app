@@ -5,6 +5,10 @@
     max-width: -webkit-fill-available;
 }
 
+.container-checkout {
+    background: none;
+}
+
 .heading {
     color: white;
     font-weight: bold;
@@ -118,30 +122,30 @@
 }
 
 .heading-large {
-  font-size: 5rem;
+    font-size: 5rem;
 }
 
 .empty-state-container {
-  min-height: 60vh;
+    min-height: 60vh;
 }
 
 .empty-state-content {
-  max-width: 500px;
+    max-width: 500px;
 }
 
 .empty-state-icon {
-  font-size: 5rem;
-  opacity: 0.7;
+    font-size: 5rem;
+    opacity: 0.7;
 }
 
 .empty-state-title {
-  font-size: 2rem;
-  font-weight: 600;
+    font-size: 2rem;
+    font-weight: 600;
 }
 
 .empty-state-message {
-  font-size: 1.1rem;
-  line-height: 1.6;
+    font-size: 1.1rem;
+    line-height: 1.6;
 }
 
 .cart-link {
@@ -211,4 +215,110 @@
 
 .container-alert {
     justify-content: center;
+}
+
+.col-md-8 {
+    padding-right: 5%;
+    padding-left: 5%;
+    margin-bottom: 3%;
+}
+
+.card-promo {
+    height: auto;
+}
+
+.checkout-row {
+    padding: 7rem;
+}
+
+.links {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.link:last-child {
+    margin-left: 1rem !important;
+}
+
+.order-box {
+    border: 1px solid lightgrey !important;
+    border-radius: 0.3rem;
+    margin: 1rem;
+    padding: 1rem;
+    text-wrap: wrap;
+    width: 40%;
+    min-height: 20rem !important;
+}
+
+.login-register-btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.login-register-btns:first-child {
+    margin-left: 1rem !important;
+}
+
+.flex-container-orders {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+}
+
+.container {
+    padding: 5rem !important;
+}
+
+.logout-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.d-flex-center {
+    justify-content: center;
+}
+
+.cabinet-container {
+    background-color: white;
+    text-align: left;
+    width: auto;
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin: 3rem;
+}
+
+.container-login {
+    background-color: white !important;
+    text-align: left;
+    width: auto;
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin: 3rem;
+    padding: 3rem;
+
+}
+.navbar {
+    --bs-navbar-padding-x: 15rem;
+}
+.copyright {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.nav-item {
+    align-content: center;
+}
+
+.fa-cart-shopping {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    margin-top: 60%;
 }
