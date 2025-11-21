@@ -6,7 +6,7 @@ from crispy_forms.layout import Submit, Layout, Div, Field, HTML
 
 
 class AddToCartForm(forms.Form):
-    def __init__(self, *args,product_id=None, **kwargs):
+    def __init__(self, *args, product_id=None, **kwargs):
         super(AddToCartForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
@@ -19,7 +19,7 @@ class AddToCartForm(forms.Form):
 class AddToCartDetailForm(forms.Form):
     quantity = forms.ChoiceField(initial=1, choices=[("1","1"),("2","2"),("3","3"),("4","4"),("5","5")])
 
-    def __init__(self, *args,product_id=None, **kwargs):
+    def __init__(self, *args, product_id=None, **kwargs):
         super(AddToCartDetailForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"

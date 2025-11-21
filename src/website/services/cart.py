@@ -1,3 +1,6 @@
+from decimal import Decimal, getcontext
+
+
 class Cart:
     def __init__(self, request):
         self.session = request.session
@@ -5,6 +8,7 @@ class Cart:
 
     def add(self, product_id, name, price, quantity):
         product_id = str(product_id)
+        price = str(price)
         if product_id in self.cart:
             self.cart[product_id]["quantity"] += quantity
         else:
@@ -33,10 +37,10 @@ class Cart:
             self.save()
 
     def get_total(self):
-        total = round(
-            sum(item["price"] * item["quantity"] for item in self.cart.values()), 2
+        total = Decimal(
+            sum(Decimal(item["price"]) * Decimal(item["quantity"]) for item in self.cart.values())
         )
-        return f"{total:,.2f}"
+        return total.quantize(Decimal(".01"))
 
     def items(self):
         return self.cart.values()
@@ -44,5 +48,3 @@ class Cart:
     def save(self):
         self.session["cart"] = self.cart
         self.session.modified = True
-
-

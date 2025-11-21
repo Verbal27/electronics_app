@@ -1,5 +1,7 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg bg-body-tertiary" >
+
+{% load crispy_forms_tags %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'homepage' %}">Electronics</a>
 
@@ -25,7 +27,8 @@
                                     <ul class="dropdown-submenu list-unstyled ms-3">
                                         {% for sub in c.subcategories.all %}
                                             <li>
-                                                <a class="dropdown-item" href="{% url 'subcategory_products' sub.id %}">{{ sub.name }}</a>
+                                                <a class="dropdown-item"
+                                                   href="{% url 'subcategory_products' sub.id %}">{{ sub.name }}</a>
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -40,9 +43,39 @@
             <a href="{% url 'cart' %}" class="link">
                 <i class="fa-solid fa-cart-shopping"></i>
             </a>
-            <a href="{% url 'cabinet' %}" class="link">
-                <i class="fa-solid fa-user"></i>
-            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ user.first_name }} {{ user.last_name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'cabinet' %}">
+                                        Personal Cabinet
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    {% crispy logout_form %}
+                                </li>
+                            </ul>
+                        </li>
+
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{% url 'login' %}" class="btn btn-primary">
+                                Login
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
         </div>
     </div>
 </nav>

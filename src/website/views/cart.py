@@ -6,7 +6,6 @@ from django.views.generic import TemplateView, View
 from src.core.models import Product
 from django.contrib import messages
 
-from src.website.forms import OrderModelForm
 from src.website.forms.cart import (
     AddToCartForm,
     RemoveFromCartForm,
@@ -37,7 +36,7 @@ class CartListView(TemplateView):
                     {
                         "id": pid,
                         "name": item["name"],
-                        "price": float(item["price"]),
+                        "price": item["price"],
                         "quantity": item["quantity"],
                         "image": product.image,
                         "description": product.description,
@@ -47,6 +46,8 @@ class CartListView(TemplateView):
                 )
 
         context["cart_items"] = cart_items_with_products
+        for item in cart_items_with_products:
+            item["price"] = Decimal(item["price"]).quantize(Decimal(".00"))
         context["drop_form"] = DropCart()
         context["checkout_form"] = CheckoutForm()
         context["total"] = cart.get_total()

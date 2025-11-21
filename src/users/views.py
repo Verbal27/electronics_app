@@ -6,9 +6,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 
-from src.core.models import Order
-from src.website.forms import RegisterForm, UserLoginForm
-from src.website.forms.auth import LogoutForm
+from src.website.forms import RegisterForm, UserLoginForm, UserLogoutForm
 
 
 class RegisterView(CreateView):
@@ -48,28 +46,11 @@ class UserLoginView(LoginView):
         return super().post(request, *args, **kwargs)
 
 
-class UserLogoutView(LogoutView):
+class UserLogoutView(LoginRequiredMixin,LogoutView):
     next_page = reverse_lazy("homepage")
+    form_class = UserLogoutForm
 
-
-class CabinetTemplateView(LoginRequiredMixin, TemplateView):
-    template_name = "cabinet.html"
-    form_class = LogoutForm
-
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = self.request.user
-        if user:
-            orders = (
-                Order.objects.filter(user=user)
-                .select_related("payment")
-                .prefetch_related("items")
-            )
-            context["orders"] = orders
-            context["form"] = LogoutForm()
-            return context
-        else:
-            return redirect_to_login(self.login_url)
-
+    def get_context_data(self, context,  **kwargs):
+        context['logout_form'] = UserLogoutForm()
+        return context
 

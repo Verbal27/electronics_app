@@ -1,15 +1,17 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
 
-from src.users.views import RegisterView, CabinetTemplateView, UserLoginView
+from src.users.views import RegisterView, UserLoginView
+
 from src.website import views
+
 
 urlpatterns = [
     path("", views.HomePageListView.as_view(), name="homepage"),
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", UserLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
-    path("cabinet/", CabinetTemplateView.as_view(), name="cabinet"),
+    path("cabinet/", views.CabinetTemplateView.as_view(), name="cabinet"),
     path("<int:pk>/",include([
         path("product/", views.ProductDetailView.as_view(), name="product_detail"),
         path("category/",views.CategoryListView.as_view(),name="category_products",),

@@ -68,7 +68,6 @@ class UserLoginForm(AuthenticationForm):
     username = forms.EmailField(label="Email", widget=forms.EmailInput())
 
     def __init__(self, *args, **kwargs):
-        print("USING MY LOGINFORM!")
         super().__init__(*args, **kwargs)
 
         self.fields["username"].widget.attrs.update({"placeholder": "Email"})
@@ -90,15 +89,13 @@ class UserLoginForm(AuthenticationForm):
                 css_class="form-group d-flex justify-content-between",)
         )
 
-    def confirm_login_allowed(self, user):
-        return super().confirm_login_allowed(user)
 
-class LogoutForm(forms.Form):
+class UserLogoutForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        super(LogoutForm, self).__init__(*args, **kwargs)
+        super(UserLogoutForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.form_action = "logout"
         self.helper.layout = Layout(
-            Submit("logout", "Logout"),
+            Submit("logout", "Logout", css_class="dropdown-item"),
         )

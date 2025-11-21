@@ -282,10 +282,6 @@
     justify-content: right;
 }
 
-.btn-logout {
-    margin-left: 1rem !important;
-}
-
 .d-flex-center {
     justify-content: center;
 }
@@ -317,4 +313,12 @@
 }
 .nav-item {
     align-content: center;
+}
+
+.fa-cart-shopping {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    margin-top: 60%;
 }
