@@ -2,6 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Fieldset, Row, Column, Field, Div, HTML
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.urls import reverse
 
 from src.users.models import CustomUser
 
@@ -95,7 +96,7 @@ class UserLogoutForm(forms.Form):
         super(UserLogoutForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_action = "logout"
+        self.helper.form_action = reverse("logout")
         self.helper.layout = Layout(
             Submit("logout", "Logout", css_class="dropdown-item"),
         )

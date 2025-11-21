@@ -49,8 +49,3 @@ class UserLoginView(LoginView):
 class UserLogoutView(LoginRequiredMixin,LogoutView):
     next_page = reverse_lazy("homepage")
     form_class = UserLogoutForm
-
-    def get_context_data(self, context,  **kwargs):
-        context['logout_form'] = UserLogoutForm()
-        return context
-
