@@ -15,16 +15,16 @@ class RegisterView(CreateView):
     success_url = reverse_lazy("homepage")
 
     def form_valid(self, form):
-        user = form.save()
+        self.object = form.save()
+        user = self.object
         password = form.cleaned_data.get("password1")
         auth_user = authenticate(self.request, username=user.username, password=password)
         if auth_user is not None:
             login(self.request, auth_user)
             messages.success(self.request, "User created successfully")
-            return redirect(self.get_success_url())
         else:
             messages.error(self.request, "Authentication Failed")
-            return super().form_valid(form)
+        return redirect(self.get_success_url())
 
     def form_invalid(self, form):
         messages.error(self.request, "There was an error.")

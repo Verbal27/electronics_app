@@ -13,7 +13,7 @@ class HomePageListView(ListView):
         context = super().get_context_data(**kwargs)
         products = context.get("products", Product.objects.all())
         context["product_cards"] = [
-            ProductCard(request=self.request, product=product, form_class=self.form_class) for product in products
+            ProductCard(request=self.request, product=product) for product in products
         ]
         return context
 

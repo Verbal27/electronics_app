@@ -1,9 +1,11 @@
 from django.urls import reverse
 from src.core.components.base import RenderComponentMixin, MediaDefiningComponent
+from src.website.forms.cart import AddToCartForm
 
 
 class ProductCard(RenderComponentMixin, MediaDefiningComponent):
     template_name = "components/website/product_card.html"
+    form_class = AddToCartForm
 
     class Media:
         css = {
