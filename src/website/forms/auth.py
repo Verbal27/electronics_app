@@ -10,7 +10,7 @@ from src.users.models import CustomUser
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(widget=forms.TextInput,max_length=100,required=True)
     last_name = forms.CharField(widget=forms.TextInput,max_length=100,required=True)
-    email = forms.EmailField(widget=forms.EmailInput)
+    email = forms.EmailField(widget=forms.EmailInput,required=True)
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
@@ -35,6 +35,7 @@ class RegisterForm(UserCreationForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
+        email = email.lower()
         if CustomUser.objects.filter(email=email).exists():
             raise forms.ValidationError("A user with that email already exists.")
         return email
