@@ -1,17 +1,19 @@
 from django.views.generic import ListView
 from src.core.models import Product
 from src.core.components.website.cards import ProductCard
+from src.website.forms.cart import AddToCartForm
 
 
 class HomePageListView(ListView):
     model = Product
+    form_class = AddToCartForm
     template_name = "homepage.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         products = context.get("products", Product.objects.all())
         context["product_cards"] = [
-            ProductCard(request=self.request, product=product) for product in products
+            ProductCard(request=self.request, product=product, form_class=self.form_class) for product in products
         ]
         return context
 

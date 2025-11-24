@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from decouple import config
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,6 +32,10 @@ ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
 
 AUTH_USER_MODEL = "users.CustomUser"
 
+
+LOGIN_REDIRECT_URL = "homepage"
+LOGOUT_REDIRECT_URL = 'homepage'
+LOGIN_URL = reverse_lazy('login')
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,6 +45,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "phonenumber_field",
     "src.admin_panel",
     "src.core",
     "src.users",
@@ -57,6 +66,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "electronics_app.urls"
 
+
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -68,7 +79,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "src.core.context_processors.categories_processor",
+                "src.core.context_processors.logout",
                 "django.contrib.messages.context_processors.messages",
+
             ],
         },
     },
@@ -128,6 +141,9 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = []
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKS = ['bootstrap5']
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"

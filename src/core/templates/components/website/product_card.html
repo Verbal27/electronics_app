@@ -1,3 +1,4 @@
+{% load crispy_forms_tags %}
 <div class="card product-card {{ css_classes }}">
     <img src="{{ product_image_url }}" class="card-img-top" alt="Product image">
     <div class="card-body">
@@ -5,10 +6,7 @@
         <p class="card-description">{{ product_description }}</p>
         <p class="card-text">Price: ${{ product_price }}</p>
         <a href="{{ product_detail_url }}" class="btn btn-primary btn-add-to-cart">Details</a>
-        <form method="post" action="{% url 'add_to_cart' product.id %}">
-            {% csrf_token %}
-            <button class="btn btn-primary btn-add-to-cart" type="submit">Add to cart</button>
-        </form>
+        {% crispy form %}
     </div>
 </div>
 

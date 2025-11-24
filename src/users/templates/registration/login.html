@@ -1,0 +1,15 @@
+{% extends "base/website/base.html" %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block website_content %}
+
+    <div class="d-flex d-flex-center flex-column min-vh-100">
+        <div class="container-login container-fluid ">
+            {% crispy form %}
+        </div>
+    </div>
+
+{% endblock %}
