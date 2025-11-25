@@ -49,7 +49,11 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown"
                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ user.first_name }} {{ user.last_name }}
+                                {% if user.first_name and user.last_name %}
+                                    {{ user.first_name }} {{ user.last_name }}
+                                {% else %}
+                                    {{ user.username }}
+                                {% endif %}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li>

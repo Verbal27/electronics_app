@@ -95,12 +95,14 @@ class UserLoginForm(AuthenticationForm):
     def clean(self):
         username = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
-
-        user_obj = CustomUser.objects.get(username=username)
-
+        try:
+            user_obj = CustomUser.objects.get(email=username)
+        except CustomUser.DoesNotExist:
+            raise forms.ValidationError("User with that email does not exist.")
+        user_name = user_obj.username
         if user_obj is not None and password:
             self.user_cache = authenticate(
-                self.request, username=username, password=password
+                self.request, username=user_name, password=password
             )
             if self.user_cache is None:
                 raise self.get_invalid_login_error()
