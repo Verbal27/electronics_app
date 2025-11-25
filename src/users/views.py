@@ -1,11 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView, LogoutView, redirect_to_login
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView
 
 from src.website.forms import RegisterForm, UserLoginForm, UserLogoutForm
 
@@ -14,7 +13,6 @@ class RegisterView(CreateView):
     template_name = "register.html"
     form_class = RegisterForm
     success_url = reverse_lazy("homepage")
-
 
     def form_valid(self, form):
         self.object = form.save()
@@ -38,7 +36,6 @@ class UserLoginView(LoginView):
     authentication_form = UserLoginForm
     redirect_authenticated_user = True
 
-
     def get_success_url(self):
         return reverse_lazy("homepage")
 
@@ -48,6 +45,6 @@ class UserLoginView(LoginView):
         return super().post(request, *args, **kwargs)
 
 
-class UserLogoutView(LoginRequiredMixin,LogoutView):
+class UserLogoutView(LoginRequiredMixin, LogoutView):
     next_page = reverse_lazy("homepage")
     form_class = UserLogoutForm

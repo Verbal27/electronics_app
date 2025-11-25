@@ -8,15 +8,18 @@ from src.core.models import Order
 class CabinetTemplateView(LoginRequiredMixin, TemplateView):
     template_name = "cabinet.html"
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         if user:
             orders = (
-                Order.objects.filter(user=user)
-                .select_related("payment")
-                .prefetch_related("items")
+                Order.objects.filter(
+                    user=user
+                ).select_related(
+                    "payment"
+                ).prefetch_related(
+                    "items"
+                )
             )
             context["orders"] = orders
             return context

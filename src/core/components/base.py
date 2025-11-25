@@ -19,7 +19,6 @@ class RenderComponentMixin:
         if self.request:
             context["csrf_token"] = csrf(self.request)["csrf_token"]
 
-
         return mark_safe(renderer.render(template, context, self.request))
 
     def no_render(self):

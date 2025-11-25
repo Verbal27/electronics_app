@@ -7,11 +7,10 @@ from src.website.forms.checkout import OrderModelForm
 from src.website.services import Cart
 
 
-class CheckoutCreateView(LoginRequiredMixin,CreateView):
+class CheckoutCreateView(LoginRequiredMixin, CreateView):
     form_class = OrderModelForm
     template_name = "checkout.html"
     success_url = reverse_lazy("homepage")
-
 
     def get_initial(self):
         user = self.request.user
@@ -24,7 +23,6 @@ class CheckoutCreateView(LoginRequiredMixin,CreateView):
             }
         )
         return initial
-
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

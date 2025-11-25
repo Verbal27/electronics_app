@@ -1,6 +1,7 @@
 from django.views.generic import DetailView
+
 from src.core.models import Product
-from src.website.forms.cart import AddToCartForm, AddToCartDetailForm
+from src.website.forms.cart import AddToCartDetailForm
 
 
 class ProductDetailView(DetailView):

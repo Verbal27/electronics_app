@@ -1,8 +1,7 @@
-
-from django import forms
-from django.urls import reverse, reverse_lazy
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Div, Field, HTML
+from django import forms
+from django.urls import reverse
 
 
 class AddToCartForm(forms.Form):
@@ -10,31 +9,30 @@ class AddToCartForm(forms.Form):
         super(AddToCartForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_action = reverse("add_to_cart",args=[product_id])
+        self.helper.form_action = reverse("add_to_cart", args=[product_id])
         self.helper.layout = Layout(
             Submit("add_to_cart", "Add To Cart", css_class="btn btn-primary btn-add-to-cart"),
         )
 
 
 class AddToCartDetailForm(forms.Form):
-    quantity = forms.ChoiceField(initial=1, choices=[("1","1"),("2","2"),("3","3"),("4","4"),("5","5")])
+    quantity = forms.ChoiceField(initial=1, choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")])
 
     def __init__(self, *args, product_id=None, **kwargs):
         super(AddToCartDetailForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_action = reverse("add_to_cart",args=[product_id])
+        self.helper.form_action = reverse("add_to_cart", args=[product_id])
         self.helper.layout = Layout(
+            Div(
                 Div(
-                    Div(
-                        Field("quantity"),
-                      css_class="d-flex d-flex-center align-items-center"
-                    ),
-                    css_class="mb-4"
+                    Field("quantity"),
+                    css_class="d-flex d-flex-center align-items-center"
                 ),
+                css_class="mb-4"
+            ),
             Submit("add_to_cart", "Add To Cart", css_class="btn btn-primary btn-add-to-cart"),
         )
-
 
 
 class RemoveFromCartForm(forms.Form):
@@ -42,7 +40,7 @@ class RemoveFromCartForm(forms.Form):
         super(RemoveFromCartForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_action = reverse("remove_from_cart",args=[product_id])
+        self.helper.form_action = reverse("remove_from_cart", args=[product_id])
         self.helper.layout = Layout(
             HTML("""
                 <button type="submit" class="btn custom-delete-btn text-danger">
@@ -53,7 +51,7 @@ class RemoveFromCartForm(forms.Form):
 
 
 class UpdateCart(forms.Form):
-    quantity = forms.IntegerField(min_value=1,required=False)
+    quantity = forms.IntegerField(min_value=1, required=False)
 
     def __init__(self, *args, product_id=None, quantity=None, **kwargs):
         self.product_id = product_id

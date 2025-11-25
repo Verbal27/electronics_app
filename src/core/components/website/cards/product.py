@@ -19,8 +19,6 @@ class ProductCard(RenderComponentMixin, MediaDefiningComponent):
         self.form_class = form_class or self.form_class
         self.form = self.form_class(product_id=product.id)
 
-
-
     def get_context(self):
         return {
             "product": self.product,

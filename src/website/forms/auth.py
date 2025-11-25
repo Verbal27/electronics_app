@@ -9,9 +9,9 @@ from src.users.models import CustomUser
 
 
 class RegisterForm(UserCreationForm):
-    first_name = forms.CharField(widget=forms.TextInput,max_length=100,required=True)
-    last_name = forms.CharField(widget=forms.TextInput,max_length=100,required=True)
-    email = forms.EmailField(widget=forms.EmailInput,required=True)
+    first_name = forms.CharField(widget=forms.TextInput, max_length=100, required=True)
+    last_name = forms.CharField(widget=forms.TextInput, max_length=100, required=True)
+    email = forms.EmailField(widget=forms.EmailInput, required=True)
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
@@ -54,7 +54,6 @@ class RegisterForm(UserCreationForm):
 
         return cleaned_data
 
-
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
         user.username = user.email
@@ -87,9 +86,9 @@ class UserLoginForm(AuthenticationForm):
             Div(Field("password", wrapper_class="pt-3"), css_class="form-group"),
             Div(
                 Submit("login", "Login", css_class="btn btn-primary my-2 w-30 "),
-            HTML("<p class='mb-3'>Not yet registered ?</p>"),
+                HTML("<p class='mb-3'>Not yet registered ?</p>"),
                 Submit("register", "Register", css_class="btn btn-primary my-2 w-30"),
-                css_class="form-group d-flex justify-content-between",)
+                css_class="form-group d-flex justify-content-between", )
         )
 
     def clean(self):

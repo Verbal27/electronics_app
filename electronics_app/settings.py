@@ -66,8 +66,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "electronics_app.urls"
 
-
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

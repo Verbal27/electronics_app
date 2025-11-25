@@ -1,0 +1,4 @@
+[flake8]
+exclude = .tox, .venv, build, dist, migrations, tests, venv, my_package_to_ignore, other_dir/*
+max-line-length = 120
+# You can add other options here too
