@@ -1,4 +1,12 @@
-.container {
+body {
+    background: #e8e8e8;
+}
+
+.bg-primary {
+    background: #aac1f2 !important;
+}
+
+.container-bg {
     padding: 7.5rem;
     text-align: center;
     background: var(--bs-highlight-color);
