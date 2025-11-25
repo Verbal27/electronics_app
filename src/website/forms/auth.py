@@ -1,6 +1,7 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Fieldset, Row, Column, Field, Div, HTML
 from django import forms
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.urls import reverse
 
@@ -90,6 +91,23 @@ class UserLoginForm(AuthenticationForm):
                 Submit("register", "Register", css_class="btn btn-primary my-2 w-30"),
                 css_class="form-group d-flex justify-content-between",)
         )
+
+    def clean(self):
+        username = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
+
+        user_obj = CustomUser.objects.get(username=username)
+
+        if user_obj is not None and password:
+            self.user_cache = authenticate(
+                self.request, username=username, password=password
+            )
+            if self.user_cache is None:
+                raise self.get_invalid_login_error()
+            else:
+                self.confirm_login_allowed(self.user_cache)
+
+        return self.cleaned_data
 
 
 class UserLogoutForm(forms.Form):
