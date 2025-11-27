@@ -26,6 +26,7 @@ class ProductCard(RenderComponentMixin, MediaDefiningComponent):
             "product_description": self.product.description,
             "product_price": self.product.price,
             "product_image_url": self.product.image.url,
+            "product_subcategory": self.product.subcategory,
             "product_detail_url": reverse("product_detail", args=[self.product.pk]),
             "css_classes": self.css_classes,
             "form": self.form,

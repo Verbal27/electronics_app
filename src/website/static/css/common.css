@@ -1,15 +1,27 @@
 body {
-    background: #e8e8e8;
+    background: #F7FBFC;
 }
 
 .bg-primary {
     background: #aac1f2 !important;
 }
 
+.bg-blue {
+    background: #3959FA;
+}
+
+.bg-secondary {
+    background: linear-gradient(45deg, #3959FA, #931EF9);
+}
+
+.custom-section {
+    background: #0E172B !important;
+}
+
 .container-bg {
-    padding: 7.5rem;
+    padding: 5rem;
     text-align: center;
-    background: var(--bs-highlight-color);
+    background: linear-gradient(45deg, #111A35, #1C3A8D);
     max-width: -webkit-fill-available;
 }
 
@@ -36,12 +48,38 @@ body {
     margin: 20px;
 }
 
-.card {
-    flex: 1 1 calc(25% - 20px);
-    min-width: 300px;
-    max-width: 300px;
-    height: 30rem;
-    border: 2px solid lightgrey !important;
+.hero-section {
+    width: 90%;
+    height: 27rem;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background: transparent;
+    padding: 1rem;
+    border-radius: 10px;
+    bottom: 0;
+    height: 30%;
+    position: absolute !important;
+    align-items: center;
+}
+
+.overlay {
+    background: white !important;
+    border-radius: 5px;
+}
+
+.custom-badge {
+    color: black;
+    width: 6rem;
 }
 
 .card-body {
@@ -51,12 +89,9 @@ body {
 }
 
 .btn-add-to-cart {
-    margin-left: 25%;
-    margin-right: 25%;
-    background: white;
+    background: black;
     border-color: black;
-    color: black;
-    width: 50% !important;
+    color: white;
 }
 
 .btn-add-to-cart:hover {
@@ -280,10 +315,6 @@ body {
 
 }
 
-.container {
-    padding: 5rem !important;
-}
-
 .logout-form {
     display: flex;
     flex-direction: row;
@@ -313,12 +344,15 @@ body {
     padding: 3rem;
 
 }
+
 .navbar {
     --bs-navbar-padding-x: 15rem;
 }
+
 .copyright {
     background-color: rgba(0, 0, 0, 0.05);
 }
+
 .nav-item {
     align-content: center;
 }
@@ -329,4 +363,17 @@ body {
     justify-content: center;
     justify-items: center;
     margin-top: 60%;
+}
+
+.icon-blur-bg {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }

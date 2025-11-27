@@ -1,7 +1,6 @@
-from django.contrib.auth.views import LogoutView
 from django.urls import include, path
 
-from src.users.views import RegisterView, UserLoginView
+from src.users.views import RegisterView, UserLoginView, LogoutView
 from src.website import views
 
 urlpatterns = [
@@ -10,6 +9,7 @@ urlpatterns = [
     path("login/", UserLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("cabinet/", views.CabinetTemplateView.as_view(), name="cabinet"),
+    path("search/", views.SearchListView.as_view(), name="search"),
     path("<int:pk>/", include([
         path("product/", views.ProductDetailView.as_view(), name="product_detail"),
         path("category/", views.CategoryListView.as_view(), name="category_products", ),
