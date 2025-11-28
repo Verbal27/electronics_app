@@ -22,3 +22,29 @@
 .product-card:hover .product-img {
     transform: scale(1.07);
 }
+
+.card.product-card.default {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    background: white;
+}
+
+.card.product-card.large {
+    border-radius: 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    padding: 0.3rem;
+    width: 23rem !important;
+}
+
+.card.card-body.large {
+    height: 20% !important;
+    padding: 0.4rem;
+}
+
+.card.product-card.flat {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    background: transparent;
+}

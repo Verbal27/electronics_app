@@ -5,6 +5,7 @@ from src.website import views
 
 urlpatterns = [
     path("", views.HomePageListView.as_view(), name="homepage"),
+    path("products/", views.ProductsListView.as_view(), name="products"),
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", UserLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),

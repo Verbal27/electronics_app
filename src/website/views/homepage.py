@@ -15,15 +15,17 @@ class HomePageListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = context.get("products", Product.objects.all())
-        context["product_cards"] = [
-            ProductCard(request=self.request, product=product) for product in products
+        featured = Product.objects.annotate(
+            total_sold=Sum("orderitem__quantity")
+        ).order_by("-total_sold", "-created_at")[:4]
+        context['featured'] = [
+            ProductCard(request=self.request, product=product, css_classes="default") for product in featured
         ]
         trending = Product.objects.annotate(
             total_sold=Sum("orderitem__quantity")
-        ).order_by("-total_sold", "-created_at")[:4]
-        context['trending'] = [
-            ProductCard(request=self.request, product=product) for product in trending
+        ).order_by("-total_sold", "-created_at")[:3]
+        context["trending"] = [
+            ProductCard(request=self.request, product=product, css_classes="large") for product in trending
         ]
         try:
             latest = Product.objects.latest("created_at")
@@ -37,47 +39,41 @@ class HomePageListView(ListView):
         context['search_btn'] = Search()
         categories_obj = Subcategory.objects.filter()
         context["categs"] = [
-            {"category_name": categories_obj[0].name, "icon": "fa-solid fa-computer"},
-            {"category_name": categories_obj[1].name, "icon": "fa-solid fa-mobile"},
-            {"category_name": categories_obj[2].name, "icon": "fa-solid fa-tv"},
-            {"category_name": categories_obj[3].name, "icon": "fa-solid fa-tv"},
-            {"category_name": categories_obj[4].name, "icon": "fa-solid fa-tv"},
-            {"category_name": categories_obj[5].name, "icon": "fa-solid fa-tv"},
-        ]
-        return context
-
-
-class CategoryListView(ListView):
-    model = Product
-    template_name = "homepage.html"
-    context_object_name = "products"
-
-    def get_queryset(self):
-        category_id = self.kwargs["pk"]
-        return Product.objects.filter(subcategory__category_id=category_id)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        products = context["products"]
-        context["product_cards"] = [
-            ProductCard(request=self.request, product=product) for product in products
-        ]
-        return context
-
-
-class SubCategoryProductListView(ListView):
-    model = Product
-    template_name = "homepage.html"
-    context_object_name = "products"
-
-    def get_queryset(self):
-        subcategory_id = self.kwargs["pk"]
-        return Product.objects.filter(subcategory_id=subcategory_id)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        products = context["products"]
-        context["product_cards"] = [
-            ProductCard(request=self.request, product=product) for product in products
+            {
+                "category_name": categories_obj[0].name,
+                "icon": "fa-solid fa-mobile",
+                "text_color": "text-first",
+                "bg_color": "bg-first"
+             },
+            {
+                "category_name": categories_obj[1].name,
+                "icon": "fa-solid fa-clock",
+                "text_color": "text-second",
+                "bg_color": "bg-second"
+            },
+            {
+                "category_name": categories_obj[2].name,
+                "icon": "fa-solid fa-tablet",
+                "text_color": "text-third",
+                "bg_color": "bg-third"
+            },
+            {
+                "category_name": categories_obj[3].name,
+                "icon": "fa-solid fa-coffee",
+                "text_color": "text-fourth",
+                "bg_color": "bg-fourth"
+            },
+            {
+                "category_name": categories_obj[4].name,
+                "icon": "fa-solid fa-tablet",
+                "text_color": "text-fifth",
+                "bg_color": "bg-fifth"
+            },
+            {
+                "category_name": categories_obj[5].name,
+                "icon": "fa-solid fa-tv",
+                "text_color": "text-sixth",
+                "bg_color": "bg-sixth"
+            },
         ]
         return context

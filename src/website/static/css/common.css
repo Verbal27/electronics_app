@@ -1,3 +1,48 @@
+:root {
+    --color-first:  #0054FC;
+    --color-second: #9100F9;
+    --color-third:  #009F00;
+    --color-fourth: #F53600;
+    --color-fifth:  #E8007C;
+    --color-sixth:  #2600F5;
+
+    --color-first-light:  color-mix(in srgb, var(--color-first),  white 75%);
+    --color-second-light: color-mix(in srgb, var(--color-second), white 75%);
+    --color-third-light:  color-mix(in srgb, var(--color-third),  white 75%);
+    --color-fourth-light: color-mix(in srgb, var(--color-fourth), white 75%);
+    --color-fifth-light:  color-mix(in srgb, var(--color-fifth),  white 75%);
+    --color-sixth-light:  color-mix(in srgb, var(--color-sixth), white 75%);
+}
+
+@media (max-width: 768px) {
+    .hero-right {
+        width: 100% !important;
+        text-align: center;
+    }
+
+    .hero-overlay {
+        flex-direction: column;
+        height: auto;
+        bottom: 0;
+    }
+
+    .overlay {
+        width: 90%;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .custom-badge {
+        width: auto;
+        font-size: 0.8rem;
+    }
+
+    .btn-primary, .btn-light, .btn-dark {
+        width: 100%;
+        margin-top: 1rem;
+    }
+}
+
 body {
     background: #F7FBFC;
 }
@@ -21,8 +66,63 @@ body {
 .container-bg {
     padding: 5rem;
     text-align: center;
-    background: linear-gradient(45deg, #111A35, #1C3A8D);
     max-width: -webkit-fill-available;
+}
+
+.hero-gradient {
+    background: linear-gradient(120deg, #0A1C4F 10%, #2c4595 50%, #0A1C4FFF 100%);
+}
+
+.hero-text {
+    height: -webkit-fill-available !important;
+}
+
+.text-first {
+    color: var(--color-first);
+}
+
+.text-second {
+    color: var(--color-second);
+}
+
+.text-third {
+    color: var(--color-third);
+}
+
+.text-fourth {
+    color: var(--color-fourth);
+}
+
+.text-fifth {
+    color: var(--color-fifth);
+}
+
+.text-sixth {
+    color: var(--color-sixth);
+}
+
+.bg-first {
+    background-color: var(--color-first-light) !important;
+}
+
+.bg-second {
+    background-color: var(--color-second-light) !important;
+}
+
+.bg-third {
+    background-color: var(--color-third-light) !important;
+}
+
+.bg-fourth {
+    background-color: var(--color-fourth-light) !important;
+}
+
+.bg-fifth {
+    background-color: var(--color-fifth-light) !important;
+}
+
+.bg-sixth {
+    background-color: var(--color-sixth-light) !important;
 }
 
 .container-checkout {
@@ -38,15 +138,6 @@ body {
     color: white;
 }
 
-.card-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding-left: 250px;
-    padding-right: 250px;
-    margin: 20px;
-}
 
 .hero-section {
     width: 90%;
@@ -82,12 +173,6 @@ body {
     width: 6rem;
 }
 
-.card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 .btn-add-to-cart {
     background: black;
     border-color: black;
@@ -97,34 +182,6 @@ body {
 .btn-add-to-cart:hover {
     background: var(--bs-highlight-color);
     border-color: white;
-}
-
-.card-title {
-    text-align: center;
-    font-size: 1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.card-description {
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: clip;
-}
-
-.card-text {
-    text-align: center;
-}
-
-.card-body {
-    height: 50%;
-}
-
-.card-img-top {
-    height: 50%;
-    padding: 5%;
 }
 
 .py-5 {
@@ -376,4 +433,30 @@ body {
     justify-content: center;
     align-items: center;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.product-img {
+    transition: transform 0.4s ease;
+}
+
+.hover-card:hover .product-img {
+    transform: scale(1.07);
+}
+
+.hover-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.product-title {
+    min-height: 48px;
+}
+
+.card-body {
+    position: relative;
+    z-index: 3;
 }
