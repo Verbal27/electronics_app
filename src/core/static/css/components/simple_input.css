@@ -1,0 +1,5 @@
+.search-bar {
+    border: none !important;
+    color: grey !important;
+    min-width: max-content !important;
+}

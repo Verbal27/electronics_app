@@ -33,8 +33,10 @@ class HomePageListView(ListView):
         except Product.DoesNotExist:
             context["hero_product"] = None
         context['search_bar'] = SimpleInput(
+            input_type="search",
             name='search',
-            placeholder="Search items"
+            placeholder="Search for products...",
+            css_classes="search-bar",
         )
         context['search_btn'] = Search()
         categories_obj = Subcategory.objects.filter()

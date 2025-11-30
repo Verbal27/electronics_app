@@ -460,3 +460,7 @@ body {
     position: relative;
     z-index: 3;
 }
+
+.footer-links {
+    text-decoration: none !important;
+}

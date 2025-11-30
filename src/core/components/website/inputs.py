@@ -22,5 +22,5 @@ class SimpleInput(RenderComponentMixin, MediaDefiningComponent):
             "value": self.value,
             "placeholder": self.placeholder,
             "input_type": self.input_type,
-            "css_classes": self.css_classes
+            "css_classes": self.css_classes,
         }
