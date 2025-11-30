@@ -2,103 +2,105 @@
 {% load crispy_forms_tags %}
 
 <nav class="navbar navbar-expand-lg bg-white shadow-sm">
-    <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'homepage' %}">
+        <div class="border rounded-3 p-2 bg-blue text-white me-2 d-inline-flex">
+            <i class="fa-solid fa-bolt"></i>
+        </div>
+        <span class="fw-normal">TechHub</span>
+    </a>
 
-        <a class="navbar-brand d-flex align-items-center" href="{% url 'homepage' %}">
-            <div class="border rounded-3 p-2 bg-blue text-white me-2 d-inline-flex">
-                <i class="fa-solid fa-bolt"></i>
-            </div>
-            <span class="fw-normal">TechHub</span>
-        </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#mainNavbar" aria-controls="mainNavbar"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <div class="collapse navbar-collapse" id="mainNavbar">
 
-        <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'products' %}">Products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/">Deals</a>
+            </li>
 
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'products' %}">Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/">Deals</a>
-                </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button"
+                   data-bs-toggle="dropdown">
+                    Categories
+                </a>
+                <ul class="dropdown-menu">
+                    {% for c in categories %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'category_products' c.id %}">
+                                {{ c.name }}
+                            </a>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button"
-                       data-bs-toggle="dropdown">
-                        Categories
-                    </a>
-                    <ul class="dropdown-menu">
-                        {% for c in categories %}
-                            <li>
-                                <a class="dropdown-item" href="{% url 'category_products' c.id %}">
-                                    {{ c.name }}
-                                </a>
+                            {% if c.subcategories.all %}
+                                <ul class="list-unstyled ps-3">
+                                    {% for sub in c.subcategories.all %}
+                                        <li>
+                                            <a class="dropdown-item"
+                                               href="{% url 'subcategory_products' sub.id %}">
+                                                {{ sub.name }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
 
-                                {% if c.subcategories.all %}
-                                    <ul class="list-unstyled ps-3">
-                                        {% for sub in c.subcategories.all %}
-                                            <li>
-                                                <a class="dropdown-item"
-                                                   href="{% url 'subcategory_products' sub.id %}">
-                                                    {{ sub.name }}
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/">About</a>
+            </li>
+        </ul>
 
-                <li class="nav-item">
-                    <a class="nav-link active" href="/">About</a>
-                </li>
-            </ul>
-
-            <form class="d-flex mx-lg-auto my-2 my-lg-0 w-100 justify-content-center">
-                <div class="input-group justify-content-center">
+        <form class="d-flex mx-lg-auto my-2 my-lg-0 w-100 justify-content-center">
+            <div class="input-group justify-content-center">
                     <span class="input-group-text  border-0 mx-5 w-100 py-0">
                         <i class="fa-solid fa-magnifying-glass text-secondary"></i>
                     {{ search_bar }}
                     </span>
+            </div>
+        </form>
+
+        <ul class="navbar-nav ms-lg-3">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown"
+                   role="button" data-bs-toggle="dropdown">
+                    <i class="fa-solid fa-user"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    {% if user.is_authenticated %}
+                        <li><a class="dropdown-item" href="{% url 'cabinet' %}">Personal Cabinet</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>{% crispy logout_form %}</li>
+                    {% else %}
+                        <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'cart' %}" class="nav-link position-relative">
+                <div class="overlay">
+                    <i class="fa-solid fa-cart-shopping mt-0"></i>
+                    {% if cart_count > 0 %}
+                        <span class="cart-badge">{{ cart_count }}</span>
+                    {% endif %}
                 </div>
-            </form>
-
-            <ul class="navbar-nav ms-lg-3">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown"
-                       role="button" data-bs-toggle="dropdown">
-                        <i class="fa-solid fa-user"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        {% if user.is_authenticated %}
-                            <li><a class="dropdown-item" href="{% url 'cabinet' %}">Personal Cabinet</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>{% crispy logout_form %}</li>
-                        {% else %}
-                            <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
-                        {% endif %}
-                    </ul>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{% url 'cart' %}" class="nav-link position-relative">
-                        <i class="fa-solid fa-cart-shopping mt-0"></i>
-                    </a>
-                </li>
-            </ul>
-        </div>
+                </a>
+            </li>
+        </ul>
     </div>
 </nav>

@@ -28,7 +28,7 @@
                                     Shop Now<i class="fa-solid fa-arrow-right"></i></button>
                             </div>
                             <label class="d-inline-flex justify-content-start ">
-                                <input name="" class="border border-0 rounded-2 p-2 px-3 form-input w-75"/>
+                                <input name="input" class="border border-0 rounded-2 p-2 px-3 form-input w-75"/>
                             </label>
                         </div>
                         <div class="row mt-5">
@@ -76,15 +76,17 @@
                 <div class="text-secondary">Find exacly what tou are looking for</div>
             </div>
             <div class="bg-transparent w-100 d-flex flex-wrap d-flex-center">
-                {% for category in categs %}
+                {% for subcategory in subcategs %}
                     <div class="col-md-1 bg-white px-4 py-4 rounded-3 mx-4 mt-3">
-                        <div class="text-center d-flex align-items-center justify-content-center flex-column">
-                            <div class="{{ category.bg_color }} p-2 rounded-3 d-flex align-items-center justify-content-center ">
-                                <i class="{{ category.icon }} h4 m-0 {{ category.text_color }}"></i>
-                            </div>
-                            <div class="badge badge-primary text-wrap custom-badge mt-2">
-                                {{ category.category_name }}
-                            </div>
+                        <div class="text-center d-flex flex-column align-items-center justify-content-center">
+                            <a href="{% url 'subcategory_products' subcategory.id %}" class="text-decoration-none ">
+                                <div class="{{ subcategory.bg_color }} p-2 rounded-3 d-inline-block align-items-center justify-content-center ">
+                                    <i class="{{ subcategory.icon }} h4 m-0 {{ subcategory.text_color }}"></i>
+                                </div>
+                                <div class="badge badge-primary text-wrap custom-badge mt-2">
+                                    {{ subcategory.category_name }}
+                                </div>
+                            </a>
                         </div>
                     </div>
                 {% endfor %}
@@ -98,7 +100,8 @@
                         <p>Our most popular items this month</p>
                     </div>
                     <div class="d-inline-block ">
-                        <a href="{% url 'products' %}" class="btn btn-white border border-1 rounded-2 h-auto px-3">View all</a>
+                        <a href="{% url 'products' %}" class="btn btn-white border border-1 rounded-2 h-auto px-3">View
+                            all</a>
                     </div>
                 </div>
                 <div class="row w-100 d-flex justify-content-around align-items-center ">
@@ -157,15 +160,16 @@
         </div>
         <div class="container-fluid  d-flex flex-column justify-content-center align-items-center w-75">
             <div class="container-fluid d-flex flex-column align-items-center p-5">
-            <div class="d-flex justify-content-between w-100">
-                <div class="d-flex justify-content-start flex-column ">
-                    <h5 class="h5">Trending Now</h5>
-                    <p>What's how in tech this week</p>
+                <div class="d-flex justify-content-between w-100">
+                    <div class="d-flex justify-content-start flex-column ">
+                        <h5 class="h5">Trending Now</h5>
+                        <p>What's how in tech this week</p>
+                    </div>
+                    <div class="d-inline-block">
+                        <a href="{% url 'products' %}" class="btn btn-light border border-1 rounded-2 h-auto px-3">See
+                            more</a>
+                    </div>
                 </div>
-                <div class="d-inline-block">
-                    <a href="{% url 'products' %}" class="btn btn-light border border-1 rounded-2 h-auto px-3">See more</a>
-                </div>
-            </div>
                 <div class="row w-100 d-flex justify-content-around align-items-center gap-2">
                     {% for product in trending %}
                         <div class="col-auto col-xxl-3">
