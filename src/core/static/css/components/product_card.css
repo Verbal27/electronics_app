@@ -48,3 +48,12 @@
     padding: 0;
     background: transparent;
 }
+
+@media (max-width: 767.98px) {
+    .card.product-card.large {
+        width: auto !important;
+    }
+    .prod-card {
+        width: 100% !important;
+    }
+}
