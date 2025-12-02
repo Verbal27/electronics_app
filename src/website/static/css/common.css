@@ -526,6 +526,25 @@ body {
     width: 100%;
 }
 
+.subcategory-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    height: 10rem;
+}
+
+.subcategory-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.custom-badge {
+    background: transparent !important;
+    color: black;
+    font-size: 0.85rem;
+    white-space: normal;
+    line-height: 1.2;
+}
+
 @media (max-width: 767.98px) {
     .container-bg {
         padding: 2.5rem 1rem !important;
@@ -581,7 +600,8 @@ body {
         flex-direction: column;
         justify-content: center;
     }
-    .hero-btn{
+
+    .hero-btn {
         width: 50%;
     }
 
@@ -591,6 +611,19 @@ body {
 
     .h-overlay {
         padding: .5rem !important;
+    }
+
+    .cart-badge {
+        position: relative;
+        top: -12px;
+        right: 5px;
+        background: #595959;
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 4px;
+        border-radius: 75%;
+        font-weight: bold;
+        line-height: 1;
     }
 }
 
@@ -603,10 +636,35 @@ body {
         min-height: 16rem;
     }
 
+    .cart-badge {
+        position: relative;
+        top: -12px;
+        right: 5px;
+        background: #595959;
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 4px;
+        border-radius: 75%;
+        font-weight: bold;
+        line-height: 1;
+    }
 }
 
 @media (min-width: 992px) {
     .container-bg {
         padding: 5rem 3rem !important;
+    }
+
+    .cart-badge {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        background: #595959;
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 4px;
+        border-radius: 75%;
+        font-weight: bold;
+        line-height: 1;
     }
 }
