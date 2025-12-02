@@ -10,7 +10,7 @@
                     <div class="col-12 col-md-6">
                         <div class="hero-right d-flex flex-column text-white">
                             <div class="mb-4 d-flex">
-                                <div class="p5 border-0 rounded-pill small bg-blue px-2 py-1 d-inline-block">
+                                <div class="p5 border-0 rounded-pill small bg-blue p-2 d-inline-block">
                                     New Arrival
                                 </div>
                             </div>
@@ -62,9 +62,9 @@
                                      style="background-image: url('{{ hero_product.image.url }}');"></div>
 
                                 <div class="hero-overlay mb-3">
-                                    <div class="overlay d-flex justify-content-between align-items-center p-2 w-100">
+                                    <div class="overlay h-overlay d-flex justify-content-between align-items-center p-4 w-100">
                                         <div class="hero-content text-start">
-                                            <h5 class="text-dark fw-bold">Starting At</h5>
+                                            <h5 class="text-dark fw-light">Starting at</h5>
                                             <p class="text-dark fs-5 mb-0">${{ hero_product.price }}</p>
                                         </div>
                                         <a href="{% url 'product_detail' hero_product.id %}" class="btn btn-dark px-4">
