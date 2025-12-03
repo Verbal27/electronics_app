@@ -1,0 +1,12 @@
+.search-bar {
+    background: transparent !important;
+    border: none !important;
+    color: grey !important;
+    min-width: max-content !important;
+}
+
+.search-bar:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}

@@ -1,0 +1,15 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<div class="custom-section py-5 text-white">
+    <div class="container text-center">
+        <div class="mb-3 border border-0 rounded-circle bg-blue d-inline-flex p-3 align-items-center justify-content-center">
+            <i class="fa-solid fa-envelope h2 "></i>
+        </div>
+        <h4 class="fw-bold">Join Our Newsletter</h4>
+        <p class="text-white mb-4">
+            Get the latest deals, new arrivals, and exclusive offers delivered to your inbox.
+        </p>
+        {% crispy newsletter %}
+        <small class="d-block mt-3 text-secondary">We respect your privacy. Unsubscribe at any time.</small>
+    </div>
+</div>

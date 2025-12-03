@@ -78,6 +78,9 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "src.core.context_processors.categories_processor",
                 "src.core.context_processors.logout",
+                "src.core.context_processors.cart_count",
+                "src.core.context_processors.search_bar",
+                "src.core.context_processors.newsletter",
                 "django.contrib.messages.context_processors.messages",
 
             ],

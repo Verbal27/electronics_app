@@ -1,0 +1,47 @@
+{% extends "base/website/base.html" %}
+
+{% block website_content %}
+    <div class="container py-5 min-vh-100">
+
+        {% if query %}
+            <h4 class="mb-4">Search results for "{{ query }}"</h4>
+
+            {% if products %}
+                <div class="row">
+                    {% for product in products %}
+                        <div class="col-md-3 mb-4">
+                            {{ product }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No products found.</p>
+            {% endif %}
+
+        {% else %}
+
+            {% if product_cards %}
+                <div class="row gy-4">
+                    {% for product_card in product_cards %}
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center">
+                            {{ product_card }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="d-flex justify-content-center align-items-center py-5">
+                    <div class="text-center">
+                        <i class="fas fa-box-open mb-4 text-muted" style="font-size: 4rem;"></i>
+                        <h2 class="mb-3">No Products Available</h2>
+                        <p class="text-muted mb-0">
+                            We're currently updating our inventory. Please check back soon!
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+    {% include "inc/newsletter.html" %}
+{% endblock %}
