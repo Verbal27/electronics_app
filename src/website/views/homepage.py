@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.db.models import Sum
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, View
 
 from src.core.models import Product, Subcategory
 from src.core.components.website.cards import ProductCard
 from src.website.forms.cart import AddToCartForm
 from src.website.forms.newsletter import NewsletterForm
+from src.website.forms.search import Search
 
 
 class HomePageListView(ListView):
@@ -33,7 +34,6 @@ class HomePageListView(ListView):
             context["hero_product"] = latest
         except Product.DoesNotExist:
             context["hero_product"] = None
-        context["newsletter"] = NewsletterForm()
         categories_obj = Subcategory.objects.filter()
         context["subcategs"] = [
             {
@@ -94,3 +94,26 @@ class SubscribeView(View):
         else:
             messages.error(self.request, "Please enter a valid email.")
         return redirect("homepage")
+
+
+class SearchView(View):
+    template_name = "products.html"
+
+    def get(self, request):
+        form = Search(request.GET or None)
+        products = []
+        products = Product.objects.none()
+
+        if form.is_valid():
+            query = form.cleaned_data["query"]
+            products_qs = Product.objects.filter(name__icontains=query)  # filter by name
+            products = [
+                ProductCard(request=request, product=p, css_classes="default") for p in products_qs
+            ]
+
+        context = {
+            "search_form": form,
+            "products": products,
+            "query": form.cleaned_data.get("query", "") if form.is_valid() else ""
+        }
+        return render(request, "products.html", context)

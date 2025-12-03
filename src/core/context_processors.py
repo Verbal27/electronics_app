@@ -1,6 +1,7 @@
 
 from src.core.models.category import Category
 from src.website.forms import UserLogoutForm
+from src.website.forms.newsletter import NewsletterForm
 from src.website.forms.search import Search
 
 
@@ -27,3 +28,7 @@ def cart_count(request):
 
 def search_bar(request):
     return {"search": Search()}
+
+
+def newsletter(request):
+    return {"newsletter": NewsletterForm()}

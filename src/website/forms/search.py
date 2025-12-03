@@ -6,6 +6,7 @@ from src.core.components.website.inputs import Component, SimpleInput
 
 
 class Search(forms.Form):
+    query = forms.CharField()
 
     def __init__(self, *args, **kwargs):
         super(Search, self).__init__(*args, **kwargs)
@@ -21,5 +22,6 @@ class Search(forms.Form):
                     css_classes="search-bar border-0 bg-transparent",
                     input_type="text",
                 ),
+                field_name="query",
             )
         )

@@ -80,6 +80,7 @@ TEMPLATES = [
                 "src.core.context_processors.logout",
                 "src.core.context_processors.cart_count",
                 "src.core.context_processors.search_bar",
+                "src.core.context_processors.newsletter",
                 "django.contrib.messages.context_processors.messages",
 
             ],

@@ -2,7 +2,7 @@ from django.urls import include, path
 
 from src.users.views import RegisterView, UserLoginView, LogoutView
 from src.website import views
-from src.website.views.homepage import SubscribeView
+from src.website.views.homepage import SubscribeView, SearchView
 
 urlpatterns = [
     path("", views.HomePageListView.as_view(), name="homepage"),
@@ -12,6 +12,7 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(), name="logout"),
     path("cabinet/", views.CabinetTemplateView.as_view(), name="cabinet"),
     path("subscribe/", SubscribeView.as_view(), name="subscribe"),
+    path("search/", SearchView.as_view(), name="search"),
     path("<int:pk>/", include([
         path("product/", views.ProductDetailView.as_view(), name="product_detail"),
         path("category/", views.CategoryListView.as_view(), name="category_products", ),
