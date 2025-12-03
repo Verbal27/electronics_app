@@ -608,11 +608,7 @@ body {
     }
 
     .hero-btn {
-        width: 50%;
-    }
-
-    .hero-input {
-        width: 50%;
+        display: inline-block;
     }
 
     .h-overlay {
