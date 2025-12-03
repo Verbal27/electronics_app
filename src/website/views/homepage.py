@@ -1,11 +1,12 @@
+from django.contrib import messages
 from django.db.models import Sum
-from django.views.generic import ListView
+from django.shortcuts import redirect
+from django.views.generic import ListView, View
 
-from src.core.components.website.inputs import SimpleInput
 from src.core.models import Product, Subcategory
 from src.core.components.website.cards import ProductCard
 from src.website.forms.cart import AddToCartForm
-from src.website.forms.search import Search
+from src.website.forms.newsletter import NewsletterForm
 
 
 class HomePageListView(ListView):
@@ -32,13 +33,7 @@ class HomePageListView(ListView):
             context["hero_product"] = latest
         except Product.DoesNotExist:
             context["hero_product"] = None
-        context['search_bar'] = SimpleInput(
-            input_type="search",
-            name='search',
-            placeholder="Search for products...",
-            css_classes="search-bar",
-        )
-        context['search_btn'] = Search()
+        context["newsletter"] = NewsletterForm()
         categories_obj = Subcategory.objects.filter()
         context["subcategs"] = [
             {
@@ -85,3 +80,17 @@ class HomePageListView(ListView):
             },
         ]
         return context
+
+
+class SubscribeView(View):
+
+    def post(self, request, *args, **kwargs):
+        form = NewsletterForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            # Temporally print email, in future use it for sending emails middleware
+            print(email)
+            messages.success(self.request, "Thank you for subscribing!")
+        else:
+            messages.error(self.request, "Please enter a valid email.")
+        return redirect("homepage")

@@ -1,5 +1,7 @@
 {% extends "base/website/base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block website_content %}
     <div class="d-flex flex-column min-vh-100">
         <section
@@ -205,10 +207,7 @@
                 <p class="text-white mb-4">
                     Get the latest deals, new arrivals, and exclusive offers delivered to your inbox.
                 </p>
-                <form class="newsletter-form d-inline-flex justify-content-center gap-2">
-                    <input type="email" class="form-control " placeholder="Enter your email"/>
-                    <button class="btn btn-primary">Subscribe</button>
-                </form>
+                {% crispy newsletter %}
                 <small class="d-block mt-3 text-secondary">We respect your privacy. Unsubscribe at any time.</small>
             </div>
         </div>

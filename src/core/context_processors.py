@@ -1,6 +1,7 @@
 
 from src.core.models.category import Category
 from src.website.forms import UserLogoutForm
+from src.website.forms.search import Search
 
 
 def categories_processor(request):
@@ -22,3 +23,7 @@ def cart_count(request):
             total_qty += int(item)
 
     return {"cart_count": total_qty}
+
+
+def search_bar(request):
+    return {"search": Search()}

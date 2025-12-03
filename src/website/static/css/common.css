@@ -198,7 +198,7 @@ body {
     margin-top: 1rem;
 }
 
-.colmn {
+.column {
     box-shadow: 2px 2px 6px rgb(80, 79, 79);
     border: 2px solid lightgrey;
     border-radius: 5px;
@@ -543,6 +543,12 @@ body {
     font-size: 0.85rem;
     white-space: normal;
     line-height: 1.2;
+}
+
+.newsletter-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 @media (max-width: 767.98px) {

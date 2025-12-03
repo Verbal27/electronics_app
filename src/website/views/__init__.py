@@ -9,7 +9,6 @@ from .cart import (
     CartUpdateQuantityView,
     CartDropView,
 )
-from .search import SearchListView
 from .products import ProductsListView, CategoryListView, SubCategoryProductListView
 
 
@@ -25,6 +24,5 @@ __all__ = (
     "CartDropView",
     "CheckoutCreateView",
     "CabinetTemplateView",
-    "SearchListView",
     "ProductsListView",
 )

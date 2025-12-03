@@ -1,6 +1,8 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit
+from crispy_forms.layout import Layout
 from django import forms
+
+from src.core.components.website.inputs import Component, SimpleInput
 
 
 class Search(forms.Form):
@@ -10,6 +12,14 @@ class Search(forms.Form):
         self.helper = FormHelper()
         self.helper.form_method = "GET"
         self.helper.form_action = "search"
+        self.helper.form_class = "w-100 border-0 bg-transparent"
         self.helper.layout = Layout(
-            Submit("search", "Search"),
+            Component(
+                component=SimpleInput(
+                    name="query",
+                    placeholder="Search items...",
+                    css_classes="search-bar border-0 bg-transparent",
+                    input_type="text",
+                ),
+            )
         )

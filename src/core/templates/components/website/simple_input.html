@@ -1,7 +1,27 @@
-<input
-    type="{{ input_type }}"
-    name="{{ name }}"
-    value="{{ value }}"
-    placeholder="{{ placeholder }}"
-    class="{{ css_classes }} form-control bg-light shadow-none"
-/>
+{% if field %}
+    <input
+        type="{{ input_type }}"
+        name="{{ field.name }}"
+        {% if field.value %}
+            value="{{ field.value }}"
+        {% endif %}
+        placeholder="{{ placeholder }}"
+        class="form-control {{ css_classes }} {% if field.errors %}is-invalid{% endif %}"
+    >
+
+    {% if field.errors %}
+        <div class="invalid-feedback d-block">
+            {{ field.errors|striptags }}
+        </div>
+    {% endif %}
+{% else %}
+    <input
+        type="{{ input_type }}"
+        name="{{ name }}"
+        {% if field.value %}
+            value="{{ field.value }}"
+        {% endif %}
+        placeholder="{{ placeholder }}"
+        class="form-control {{ css_classes }}"
+    >
+{% endif %}
