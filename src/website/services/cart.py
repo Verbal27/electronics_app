@@ -1,12 +1,13 @@
 from decimal import Decimal
 
 
+
 class Cart:
     def __init__(self, request):
         self.session = request.session
         self.cart = self.session.get("cart", {})
 
-    def add(self, product_id, name, price, quantity):
+    def add(self, product_id, name, price, quantity, subcategory):
         product_id = str(product_id)
         price = str(price)
         if product_id in self.cart:
@@ -17,6 +18,7 @@ class Cart:
                 "name": name,
                 "price": price,
                 "quantity": quantity,
+                "subcategory": int(subcategory),
             }
         self.save()
 

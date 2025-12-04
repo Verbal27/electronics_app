@@ -4,12 +4,13 @@ from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import TemplateView, View
 
-from src.core.models import Product
+from src.core.models import Product, Subcategory
 from src.website.forms.cart import (
     RemoveFromCartForm,
     UpdateCart,
     DropCart,
     CheckoutForm,
+    PromoForm,
 )
 from src.website.services import Cart
 
@@ -24,30 +25,68 @@ class CartListView(TemplateView):
         product_ids = cart.cart.keys()
         products = Product.objects.filter(pk__in=product_ids)
         products_map = {str(p.pk): p for p in products}
-
         cart_items_with_products = []
+
         for pid, item in cart.cart.items():
             product = products_map.get(pid)
-            if product:
-                cart_items_with_products.append(
-                    {
-                        "id": pid,
-                        "name": item["name"],
-                        "price": item["price"],
-                        "quantity": item["quantity"],
-                        "image": product.image,
-                        "description": product.description,
-                        "remove_form": RemoveFromCartForm(product_id=pid),
-                        "update_form": UpdateCart(product_id=pid, quantity=item["quantity"]),
-                    }
-                )
 
+            if not product:
+                continue
+
+            sub = Subcategory.objects.get(pk=item["subcategory"])
+
+            cart_items_with_products.append(
+                {
+                    "id": pid,
+                    "name": item["name"],
+                    "price": item["price"],
+                    "quantity": item["quantity"],
+                    "image": product.image,
+                    "description": product.description,
+                    "subcategory": sub,
+                    "remove_form": RemoveFromCartForm(product_id=pid),
+                    "update_form": UpdateCart(
+                        product_id=pid, quantity=item["quantity"]
+                    ),
+                }
+            )
         context["cart_items"] = cart_items_with_products
+        context["promo_form"] = PromoForm()
+        count = 0
         for item in cart_items_with_products:
             item["price"] = Decimal(item["price"]).quantize(Decimal(".00"))
+            quantity = item["quantity"] - 1
+            count+=1
+            count = count+quantity
+            item["subtotal"] = item["price"] * item["quantity"]
+            product = Product.objects.get(pk=item["id"])
+            if product.quantity > 10:
+                item["stock"] = "In stock"
+            elif product.quantity < 10:
+                item["stock"] = "Low Stock"
+            else:
+                item["stock"] = "Not Available"
+        context["cart_count"] = count
+        if count==1:
+            num_items = "item"
+        else:
+            num_items = "items"
+        context["num_items"] = num_items
         context["drop_form"] = DropCart()
         context["checkout_form"] = CheckoutForm()
         context["total"] = cart.get_total()
+        if context["total"]>50:
+            context["shipping"] = "FREE"
+        else:
+            context["shipping"] = "Standard charge"
+
+        subtotal = Decimal(context["total"]).quantize(Decimal(".00"))
+        tax_rate = 0.08
+        tax = subtotal * Decimal(tax_rate)
+        grand_total = subtotal + tax
+
+        context["tax"] = round(tax, 2)
+        context["grand_total"] = round(grand_total, 2)
         return context
 
 
@@ -57,12 +96,15 @@ class CartAddView(View):
         cart = Cart(request)
         product: Product = get_object_or_404(Product, pk=product_id)
         quantity = int(request.POST.get("quantity", 1))
+        if not self.check_stock(request, product, quantity):
+            return redirect("product_detail", pk=product_id)
         try:
             cart.add(
                 product_id=product.pk,
                 name=product.name,
                 price=float(product.price),
                 quantity=quantity,
+                subcategory=product.subcategory_id,
             )
             messages.success(request, "Product added sucessfully")
             return redirect("homepage")
@@ -71,6 +113,13 @@ class CartAddView(View):
                 request, "There was a problem adding this item to your cart."
             )
             return redirect("homepage")
+
+    @staticmethod
+    def check_stock(request, product, quantity):
+        if product.quantity < quantity:
+            messages.error(request, f"Not enough stock available, only {product.quantity} available.")
+            return False
+        return True
 
 
 class CartRemoveItemView(View):
@@ -95,7 +144,8 @@ class CartUpdateQuantityView(View):
         cart = Cart(request)
         product: Product = get_object_or_404(Product, pk=product_id)
         quantity = int(request.POST.get("quantity", 1))
-
+        if not self.check_stock(request, product, quantity):
+            return redirect("cart")
         try:
             cart.update(product_id=product.pk, quantity=quantity)
             messages.success(request, "Item quantity updated successfully!")
@@ -105,6 +155,16 @@ class CartUpdateQuantityView(View):
                 request, "There was a problem updating this item in your cart."
             )
             return redirect("cart")
+
+    @staticmethod
+    def check_stock(request, product, quantity):
+        if product.quantity < quantity:
+            messages.error(
+                request,
+                f"Not enough stock available, only {product.quantity} available.",
+            )
+            return False
+        return True
 
 
 class CartDropView(View):

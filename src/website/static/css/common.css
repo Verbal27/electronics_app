@@ -551,6 +551,10 @@ body {
     border: none !important;
 }
 
+.cart-section {
+    width: 97% !important;
+}
+
 @media (max-width: 767.98px) {
     .container-bg {
         padding: 2.5rem 1rem !important;
