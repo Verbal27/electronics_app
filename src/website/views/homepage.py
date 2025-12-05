@@ -3,8 +3,9 @@ from django.db.models import Sum
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, View
 
-from src.core.models import Product, Subcategory
+from src.core.models import Product
 from src.core.components.website.cards import ProductCard
+from src.core.utils.subcategory_list import list_subcategories
 from src.website.forms.cart import AddToCartForm
 from src.website.forms.newsletter import NewsletterForm
 from src.website.forms.search import Search
@@ -34,51 +35,7 @@ class HomePageListView(ListView):
             context["hero_product"] = latest
         except Product.DoesNotExist:
             context["hero_product"] = None
-        categories_obj = Subcategory.objects.filter()
-        context["subcategs"] = [
-            {
-                "category_name": categories_obj[0].name,
-                "id": categories_obj[0].id,
-                "icon": "fa-solid fa-mobile",
-                "text_color": "text-first",
-                "bg_color": "bg-first"
-             },
-            {
-                "category_name": categories_obj[1].name,
-                "id": categories_obj[1].id,
-                "icon": "fa-solid fa-clock",
-                "text_color": "text-second",
-                "bg_color": "bg-second"
-            },
-            {
-                "category_name": categories_obj[2].name,
-                "id": categories_obj[2].id,
-                "icon": "fa-solid fa-tablet",
-                "text_color": "text-third",
-                "bg_color": "bg-third"
-            },
-            {
-                "category_name": categories_obj[3].name,
-                "id": categories_obj[3].id,
-                "icon": "fa-solid fa-coffee",
-                "text_color": "text-fourth",
-                "bg_color": "bg-fourth"
-            },
-            {
-                "category_name": categories_obj[4].name,
-                "id": categories_obj[4].id,
-                "icon": "fa-solid fa-tablet",
-                "text_color": "text-fifth",
-                "bg_color": "bg-fifth"
-            },
-            {
-                "category_name": categories_obj[5].name,
-                "id": categories_obj[5].id,
-                "icon": "fa-solid fa-tv",
-                "text_color": "text-sixth",
-                "bg_color": "bg-sixth"
-            },
-        ]
+        context["subcategories"] = list_subcategories(self.request)
         return context
 
 

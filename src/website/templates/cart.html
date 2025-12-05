@@ -5,55 +5,57 @@
 {% block website_content %}
     <section>
         <div class="container min-vh-100 py-5 custom-container">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="cart-section col-12">
+            {% if cart_items %}
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="cart-section col-12">
 
-                    <div class="d-flex justify-content-between align-items-center w-100 mb-4">
-                        <div class="d-flex align-items-center">
-                            <h3 class="fw-normal mb-0">Shopping Cart</h3>
-                            <h3 class="fw-normal mb-0 ms-2">({{ cart_count }} {{ num_items }})</h3>
+                        <div class="d-flex justify-content-between align-items-center w-100 mb-4">
+                            <div class="d-flex align-items-center">
+                                <h3 class="fw-normal mb-0">Shopping Cart</h3>
+                                <h3 class="fw-normal mb-0 ms-2">({{ cart_count }} {{ num_items }})</h3>
+                            </div>
                         </div>
 
-                        <div>
-                            <p class="mb-0">
-                                <span class="text-muted">Sort by:</span>
-                                <a href="#" class="text-body">price
-                                    <i class="fas fa-angle-down mt-1"></i>
-                                </a>
-                            </p>
-                        </div>
-                    </div>
 
-                    {% if cart_items %}
-
-                        <div class="row gap-2">
-                            <div class="col-md-8 p-0">
+                        <div class="row gap-4">
+                            <div class="col-md-8 p-0 d-flex flex-wrap justify-content-center h-100">
 
                                 {% for item in cart_items %}
-                                    <div class="product-cart-card d-flex row justify-content-between border border-1 rounded-4 p-4 bg-white my-3">
-                                        <div class="col col-md-3 d-flex justify-content-center align-items-center">
+                                    <div class="product-cart-card cart-item d-flex row justify-content-between border border-1 rounded-4 p-4 bg-white my-3 w-100">
+                                        <div class="col-3 col-md-3 d-flex justify-content-center align-items-center">
                                             <div class="d-flex product-image justify-content-center align-items-center h-75">
-                                                <img class="img-fluid border rounded-4 h-100" src="{{ item.image.url }}"
+                                                <img class="img-fluid border border-0 rounded-4 h-100"
+                                                     src="{{ item.image.url }}"
                                                      alt="product image"/>
                                             </div>
                                         </div>
-                                        <div class="col col-md-5">
-                                            <div class="fs-6 d-inline-block text-start text-muted">{{ item.subcategory }}</div>
-                                            <div class="fs-3 fw-normal text-start text-nowrap text-truncate">{{ item.name }}</div>
-                                            <div class="fs-5 fw-normal text-start stock-label">{{ item.stock }}</div>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                {% crispy item.update_form %}
+                                        <div class="col-9 col-md-9">
+                                            <div class="row d-flex justify-content-center align-items-center">
+                                                <div class="col-10 col-md-11">
+                                                    <div class="fs-6 d-inline-block text-start text-muted">{{ item.subcategory }}</div>
+                                                    <div class="fs-5 fw-normal text-start text-nowrap text-truncate">{{ item.name }}</div>
+                                                    <div class="fs-6 fw-normal text-start stock-label">{{ item.stock }}</div>
+                                                </div>
+                                                <div class="col-2 col-md-1 d-flex justify-content-center align-items-center">
+                                                    <div class="d-flex align-items-center justify-content-end">
+                                                        {% crispy item.remove_form %}
+                                                    </div>
+                                                </div>
+
                                             </div>
-                                        </div>
-                                        <div class="col col-md-3 d-flex flex-column justify-content-between">
-                                            <div class="d-flex align-items-center justify-content-end">
-                                                {% crispy item.remove_form %}
-                                            </div>
-                                            <div class="d-flex justify-content-end flex-column">
-                                                <div class=" align-items-center fs-5 text-end fw-semibold">
-                                                    $ {{ item.subtotal }}</div>
-                                                <div class="align-items-center fs-sm-6 text-end text-muted" id="item-price">
-                                                    $ {{ item.price }} each
+                                            <div class="row align-items-center">
+                                                <div class="col-1 col-md-6 d-flex justify-content-between align-items-center">
+                                                    {% crispy item.update_form %}
+                                                </div>
+
+                                                <div class="col-12 col-md-6 d-flex justify-content-end flex-column">
+                                                    <div class="item-subtotal align-items-center fs-5 text-end fw-semibold">
+                                                        $ {{ item.subtotal }}
+                                                    </div>
+                                                    <div class="item-price align-items-center fs-sm-6 text-end text-muted"
+                                                         data-price="{{ item.price }}">
+                                                        $ {{ item.price }} each
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -66,17 +68,15 @@
                                     <div class="d-flex flex-column w-75">
                                         <div class="h5 fw-normal my-4">Order Summary</div>
                                         <div class="d-flex flex-column">
-                                            <form class="d-flex flex-column" method="POST">
-                                                <div class="p3 w-100">Promo Code</div>
-                                                <div class="row my-2 gap-1">
-                                                    {% crispy promo_form %}
-                                                </div>
-                                            </form>
+                                            <div class="p3 w-100">Promo Code</div>
+                                            <div class="d-flex my-2">
+                                                {% crispy promo_form %}
+                                            </div>
                                         </div>
                                         <div class="border border-1 border-bottom my-2"></div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="p2 d-inline-flex text-muted">Subtotal</div>
-                                            <div class="p2 d-inline-flex text-muted">{{ total }}</div>
+                                            <div class="p2 d-inline-flex text-muted total-price">{{ total }}</div>
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="p2 d-inline-flex text-muted">Shipping</div>
@@ -84,12 +84,12 @@
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="p2 d-inline-flex text-muted">Tax (8%)</div>
-                                            <div class="p2 d-inline-flex text-muted">{{ tax }}</div>
+                                            <div class="p2 d-inline-flex text-muted" data-tax>{{ tax }}</div>
                                         </div>
                                         <div class="border border-1 border-bottom my-2"></div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="p2 fw-semibold">Total</div>
-                                            <div class="h5 fw-bold">{{ grand_total }}</div>
+                                            <div class="h5 fw-bold grand-total-price">{{ grand_total }}</div>
                                         </div>
 
                                         <div class="d-flex w-100 justify-content-center align-items-center">
@@ -107,14 +107,66 @@
                             </div>
                         </div>
 
-                    {% else %}
-                        <div class="text-center py-5">
-                            <h1>Cart is empty</h1>
-                        </div>
-                    {% endif %}
+
+                    </div>
                 </div>
-            </div>
-        </div>
+                </div>
+            {% else %}
+                <div class="d-flex justify-content-center w-100 flex-column">
+                    <div class="empty-cart-section d-flex align-items-center justify-content-center ">
+                        <img class="empty-cart-img" src="{% static 'images/empty-cart-image.png' %}"
+                             alt="empty-cart-icon"/>
+                    </div>
+                    <div class="h5 fw-semibold text-center w-100 my-3">Your cart is empty</div>
+                    <div class="d-flex justify-content-center w-100">
+                        <div class="cart-placeholder fs-5 fw-light text-center">Looks like you haven't added anything to
+                            your cart
+                            yet.
+                            Start shopping to find great deals on electronics!
+                        </div>
+                    </div>
+                    <div class="cart-btns d-flex justify-content-center w-100 gap-3 my-5 align-items-end flex-wrap">
+                        <div class="cart-btn-first d-inline-flex justify-content-center">
+                            <a href="{% url 'homepage' %}" class="cart-btn-first">
+                                <button class="btn btn-dark text-white p-2 "><i
+                                        class="fa-solid fa-bag-shopping mx-1"></i>Start
+                                    Shopping
+                                </button>
+                            </a>
+                        </div>
+                        <div class="cart-btn-second d-inline-flex justify-content-center">
+                            <a href="{% url 'products' %}" class="cart-btn-second">
+                                <button class="btn btn-white text-dark border border-1 bg-white p-2 w-100">
+                                    View
+                                    Deals
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center w-100">
+                        <div class="d-flex flex-column">
+                            <div class="fs-6 fw-light text-center text-muted my-4">Popular Categories</div>
+                            <div class="d-flex justify-content-center w-100 gap-5 flex-wrap">
+                                {% for subcategory in subcategories %}
+                                    <div class="d-flex">
+                                        <a href="{% url 'subcategory_products' subcategory.id %}"
+                                           class="text-decoration-none w-100">
+                                            <div class="subcategory-card bg-white rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-start align-items-center">
+                                                <div class="{{ subcategory.bg_color }} p-3 rounded-3 d-inline-flex justify-content-center align-items-center">
+                                                    <i class="{{ subcategory.icon }} h4 m-0 {{ subcategory.text_color }}"></i>
+                                                </div>
+                                                <div class="badge custom-badge d-block mt-3">
+                                                    {{ subcategory.category_name }}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
     </section>
 
     {% include "inc/newsletter.html" %}

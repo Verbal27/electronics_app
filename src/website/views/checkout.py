@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from src.core.models import Product
+from src.core.utils.availability_check import check_stock
 from src.website.forms.checkout import OrderModelForm
 from src.website.services import Cart
 
@@ -39,12 +40,20 @@ class CheckoutCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         cart = Cart(self.request)
-        for item in cart.items():
-            product = Product.objects.get(pk=item["pid"])
-            quantity = item["quantity"]
+        products = {
+            item["id"]: Product.objects.get(pk=item["id"]) for item in cart.items()
+        }
 
-            product.quantity -= quantity
+        for item in cart.items():
+            product = products[item["id"]]
+            if not check_stock(self.request, product, item["quantity"], mode="update"):
+                return self.form_invalid(form)
+
+        for item in cart.items():
+            product = products[item["id"]]
+            product.quantity -= item["quantity"]
             product.save()
+
         response = super().form_valid(form)
         cart.clear()
         messages.success(self.request, "Your order has been placed.")
