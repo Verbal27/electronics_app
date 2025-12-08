@@ -1,3 +1,5 @@
+from django.db.models import Sum
+
 from src.core.models import Subcategory
 
 
@@ -48,3 +50,10 @@ def list_subcategories(request):
         },
     ]
     return subcategs
+
+
+def list_popular_subcategories(request):
+    popular_subcategories = Subcategory.objects.annotate(
+        total_sold=Sum("product__orderitem__quantity")
+    ).order_by("-total_sold")[:4]
+    return popular_subcategories

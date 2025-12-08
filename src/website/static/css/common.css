@@ -559,14 +559,28 @@ body {
     height: 6rem !important;
 }
 
+.empty-cart-section {
+    display: inline-block;
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
 .empty-cart-img {
-    width: 12rem;
-    height: 12rem;
-    border-radius: 50%;
+    background-color: #EFF5FD ;
+    font-size: 5rem !important;
+    color: #8CA3BB;
+    padding: 2rem 5rem !important;
 }
 
 .cart-placeholder {
-    width: 50%;
+    width: 37%;
+}
+
+.popular-subcategories-img {
+    width: 3rem !important;
+    height: 3rem !important;
+
 }
 
 @media (max-width: 767.98px) {

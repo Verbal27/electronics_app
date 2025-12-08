@@ -7,6 +7,7 @@ class Subcategory(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="subcategories"
     )
+    image = models.ImageField(upload_to="subcategories/images/", null=True, blank=True)
 
     class Meta:
         verbose_name = "Subcategory"

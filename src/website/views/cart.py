@@ -5,7 +5,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import TemplateView, View
 
 from src.core.models import Product, Subcategory
-from src.core.utils.subcategory_list import list_subcategories
+from src.core.utils.subcategory_list import list_popular_subcategories
 from src.website.forms.cart import (
     RemoveFromCartForm,
     UpdateCart,
@@ -90,7 +90,17 @@ class CartListView(TemplateView):
             context["tax"] = round(tax, 2)
             context["grand_total"] = round(grand_total, 2)
         else:
-            context["subcategories"] = list_subcategories(self.request)[:4]
+            if not product_ids:
+                subcategs = list_popular_subcategories(self.request)
+
+                context["subcategories"] = [
+                    {
+                        "name": subc.name,
+                        "image": getattr(subc, "image", None),
+                        "id": subc.id,
+                    }
+                    for subc in subcategs
+                ]
         return context
 
 

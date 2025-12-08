@@ -4,7 +4,7 @@
 
 {% block website_content %}
     <section>
-        <div class="container min-vh-100 py-5 custom-container">
+        <div class="container min-vh-100 mt-5 custom-container">
             {% if cart_items %}
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="cart-section col-12">
@@ -15,7 +15,6 @@
                                 <h3 class="fw-normal mb-0 ms-2">({{ cart_count }} {{ num_items }})</h3>
                             </div>
                         </div>
-
 
                         <div class="row gap-4">
                             <div class="col-md-8 p-0 d-flex flex-wrap justify-content-center h-100">
@@ -114,14 +113,13 @@
             {% else %}
                 <div class="d-flex justify-content-center w-100 flex-column">
                     <div class="empty-cart-section d-flex align-items-center justify-content-center ">
-                        <img class="empty-cart-img" src="{% static 'images/empty-cart-image.png' %}"
-                             alt="empty-cart-icon"/>
+                        <i class="fa-solid fa-bag-shopping empty-cart-img border-0 rounded-circle d-flex justify-content-center align-items-center"></i>
                     </div>
-                    <div class="h5 fw-semibold text-center w-100 my-3">Your cart is empty</div>
+                    <div class="h5 fw-semibold text-center w-100 my-4">Your cart is empty</div>
                     <div class="d-flex justify-content-center w-100">
-                        <div class="cart-placeholder fs-5 fw-light text-center">Looks like you haven't added anything to
-                            your cart
-                            yet.
+                        <div class="cart-placeholder fs-5 fw-light text-center text-newline">Looks like you haven't
+                            added anything to
+                            your cart yet.
                             Start shopping to find great deals on electronics!
                         </div>
                     </div>
@@ -143,20 +141,21 @@
                             </a>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center w-100">
+                    <div class="d-flex justify-content-center w-100 mb-sm-0 mb-5">
                         <div class="d-flex flex-column">
-                            <div class="fs-6 fw-light text-center text-muted my-4">Popular Categories</div>
-                            <div class="d-flex justify-content-center w-100 gap-5 flex-wrap">
+                            <div class="fs-6 fw-light text-center text-muted my-5">Popular Categories</div>
+                            <div class="d-flex justify-content-center w-100 gap-3 flex-wrap">
                                 {% for subcategory in subcategories %}
                                     <div class="d-flex">
                                         <a href="{% url 'subcategory_products' subcategory.id %}"
                                            class="text-decoration-none w-100">
-                                            <div class="subcategory-card bg-white rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-start align-items-center">
+                                            <div class="subcategory-card bg-white rounded-4 px-5 text-center h-100 d-flex flex-column justify-content-start align-items-center">
                                                 <div class="{{ subcategory.bg_color }} p-3 rounded-3 d-inline-flex justify-content-center align-items-center">
-                                                    <i class="{{ subcategory.icon }} h4 m-0 {{ subcategory.text_color }}"></i>
+                                                    <img src="{{ subcategory.image.url }}"
+                                                         class="popular-subcategories-img" alt="image">
                                                 </div>
-                                                <div class="badge custom-badge d-block mt-3">
-                                                    {{ subcategory.category_name }}
+                                                <div class="badge custom-badge d-block mt-3 ">
+                                                    {{ subcategory.name }}
                                                 </div>
                                             </div>
                                         </a>
