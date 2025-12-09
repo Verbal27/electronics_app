@@ -98,6 +98,4 @@ class OrderModelForm(ModelForm):
                     quantity=item['quantity'],
                     price=item['price'],
                 )
-            print("DEBUG cart_items:", self.cart_items)
-
         return order

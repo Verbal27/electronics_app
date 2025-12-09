@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
 
 AUTH_USER_MODEL = "users.CustomUser"
 
+PLACEHOLDER_IMAGE = "static/images/8428362.png"
 
 LOGIN_REDIRECT_URL = "homepage"
 LOGOUT_REDIRECT_URL = 'homepage'

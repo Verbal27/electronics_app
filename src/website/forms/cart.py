@@ -37,16 +37,14 @@ class AddToCartDetailForm(forms.Form):
         self.helper.layout = Layout(
             Div(
                 HTML(
-                    """
-                    <button type="button" class="btn bg-white border rounded-3 text-dark 
-                    mt-3 qty-decrease d-flex justify-content-center px-3">-</button>
-                    """
+                        """<button type="button" class="btn bg-white border rounded-3 text-dark
+                        mt-3 qty-decrease d-flex justify-content-center px-3">-</button>"""
                 ),
                 "quantity",
                 HTML(
                     """
-                    <button type="button" class="btn bg-white border rounded-3 text-dark 
-                    mt-3 qty-increase d-flex justify-content-center px-3">+</button>
+                        <button type="button" class="btn bg-white border rounded-3 text-dark
+                        mt-3 qty-increase d-flex justify-content-center px-3">+</button>
                     """
                 ),
                 css_class="d-flex align-items-center gap-2",
@@ -84,43 +82,35 @@ class UpdateCart(forms.Form):
             initial['quantity'] = quantity
         kwargs['initial'] = initial
 
-        super(UpdateCart, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.fields["quantity"].widget = forms.NumberInput(
             attrs={
-                "class": "qtty col col-md-4 d-flex justify-content-center "
-                         "mx-md-2 border-0 bg-transparent text-dark fw-semibold text-center",
-                "style": "pointer-events: none;display: inline-flex;",
+                "class": "qtty border-0 p-0",
+                "style": "pointer-events: none;",
                 "min": "1",
                 "id": "quantity",
-                "label": ""
             }
         )
+        self.fields["quantity"].label = ""
+
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.form_action = reverse("update_cart", args=[self.product_id])
-        self.helper.form_class = "d-flex justify-content-around align-items-baseline gap-3"
+        self.helper.form_class = ""
         self.helper.layout = Layout(
             Div(
                 HTML(
-                    """
-                    <button type="button" class=" btn bg-white border rounded-3 
-                    text-dark mt-3 qty-decrease d-flex justify-content-center px-3">-</button>
-                    """
+                    """<button type="button" class="btn bg-white border rounded-3 text-dark qty-decrease ">-</button>"""
                 ),
                 "quantity",
                 HTML(
-                    """
-                    <button type="button" class=" btn bg-white border rounded-3 
-                    text-dark mt-3 qty-increase d-flex justify-content-center px-3">+</button>
-                    """
+                    """<button type="button" class="btn bg-white border rounded-3 text-dark qty-increase ">+</button>"""
                 ),
                 css_class="d-flex align-items-center gap-2",
             ),
             HTML(
-                """
-                <input type="hidden" name="quantity" id="hidden-qty" />
-                """
+                """<input type="hidden" name="quantity" id="hidden-qty" />"""
             ),
         )
 
@@ -145,11 +135,11 @@ class CheckoutForm(forms.Form):
         self.helper.form_method = "get"
         self.helper.form_action = reverse("checkout")
         self.helper.layout = Layout(
-            Submit(
-                "checkout",
-                "Proceed to checkout",
-                css_class="btn btn-primary border-1 border-light-subtle bg-dark text-white w-100 my-2 text-wrap"
-            ),
+            HTML("""
+                <button type="submit" class="btn bg-dark border-0 text-white w-100 text-wrap my-2 p-2">
+                    Proceed to checkout <i class="fa-solid fa-arrow-right text-white"></i>
+                </button>
+            """)
         )
 
 
@@ -159,7 +149,7 @@ class PromoForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.form_action = "add_promo"
-        self.helper.form_class = "row align-items-center align-items-center gap-1"
+        self.helper.form_class = "row align-items-center align-items-center gap-1 promo-form"
         self.helper.layout = Layout(
             Div(
                 HTML("<i class='d-flex fa-solid fa-tag align-items-center'></i>"),
@@ -167,14 +157,17 @@ class PromoForm(forms.Form):
                     SimpleInput(
                         name="promo",
                         placeholder="Enter code",
-                        css_classes="col-12 col-md-8 input-group-sm form-control bg-transparent border-0",
+                        css_classes="col-12 col-md-8 input-group-sm form-control"
+                                    " bg-transparent border-0 p-2 m-0 promo-in",
                         input_type="text",
                     ),
                 ),
-                css_class="col promo-input d-flex rounded-3 border-0 bg-body-secondary px-3"),
+                css_class="col promo-input d-flex rounded-3 border-0"
+                          " bg-body-secondary px-3 text-muted align-items-center"),
             Submit(
                 "apply_promo",
                 "Apply",
-                css_class="col-12 col-md-4 btn btn-primary border-2 border-light-subtle bg-white text-dark fw-semibold"
+                css_class="col-12 col-md-4 btn btn-primary border-2 "
+                          "border-light-subtle bg-white text-dark fw-semibold promo-submit"
             ),
         )

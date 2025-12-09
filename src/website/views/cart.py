@@ -1,9 +1,11 @@
 from decimal import Decimal
 
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import TemplateView, View
 
+from electronics_app.settings import PLACEHOLDER_IMAGE
 from src.core.models import Product, Subcategory
 from src.core.utils.subcategory_list import list_popular_subcategories
 from src.website.forms.cart import (
@@ -96,10 +98,10 @@ class CartListView(TemplateView):
                 context["subcategories"] = [
                     {
                         "name": subc.name,
-                        "image": getattr(subc, "image", None),
+                        "image": getattr(subc, "image", None) if subc.image else PLACEHOLDER_IMAGE,
                         "id": subc.id,
                     }
-                    for subc in subcategs
+                    for subc in subcategs if subc.image
                 ]
         return context
 
@@ -149,19 +151,17 @@ class CartRemoveItemView(View):
 class CartUpdateQuantityView(View):
     def post(self, request, product_id):
         cart = Cart(request)
-        product: Product = get_object_or_404(Product, pk=product_id)
+        product = get_object_or_404(Product, pk=product_id)
         quantity = int(request.POST.get("quantity", 1))
+
         if not check_stock(request, product, quantity, mode="update"):
-            return redirect("cart")
+            return JsonResponse({"error": "out_of_stock"}, status=400)
+
         try:
             cart.update(product_id=product.pk, quantity=quantity)
-            messages.success(request, "Item quantity updated successfully!")
-            return redirect("cart")
+            return JsonResponse({"success": True, "quantity": quantity})
         except Exception:
-            messages.error(
-                request, "There was a problem updating this item in your cart."
-            )
-            return redirect("cart")
+            return JsonResponse({"error": "update_failed"}, status=500)
 
 
 class CartDropView(View):

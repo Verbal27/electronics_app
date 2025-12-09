@@ -93,7 +93,7 @@ function getCookie(name) {
 const csrftoken = getCookie("csrftoken");
 
 function updateServerAjax(productId, quantity) {
-    fetch(`/cart/${productId}/update`, {
+    fetch(`/cart/${productId}/update/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",

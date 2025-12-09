@@ -407,6 +407,10 @@ body {
     align-content: center;
 }
 
+.nav-link {
+    color: #212529;
+}
+
 .fa-cart-shopping {
     align-items: center;
     display: flex;
@@ -460,9 +464,9 @@ body {
 
 .cart-badge {
     position: absolute;
-    top: 2px;
-    right: 0;
-    background: #595959;
+    top: -10px;
+    right: -8px;
+    background: #212529;
     color: white;
     font-size: 0.7rem;
     padding: 2px 4px;
@@ -470,6 +474,7 @@ body {
     font-weight: bold;
     line-height: 1;
 }
+
 
 .cart-badge:hover {
     background: #595959;
@@ -567,7 +572,7 @@ body {
 }
 
 .empty-cart-img {
-    background-color: #EFF5FD ;
+    background-color: #EFF5FD;
     font-size: 5rem !important;
     color: #8CA3BB;
     padding: 2rem 5rem !important;
@@ -580,6 +585,34 @@ body {
 .popular-subcategories-img {
     width: 3rem !important;
     height: 3rem !important;
+
+}
+
+.cart-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.hide-border {
+    border: none !important;
+}
+
+.qtty {
+    margin-top: 1rem;
+    width: 2rem;
+    margin-left: 1rem;
+    margin-right: auto;
+}
+
+.update-form {
+    width: 10rem !important;
+}
+
+.promo-in:focus {
+    outline: none !important;
+    box-shadow: none !important;
 
 }
 
@@ -660,6 +693,12 @@ body {
         line-height: 1;
     }
 
+    .cart-overlay {
+        display: flex;
+        flex-direction: row !important;
+        height: auto !important;
+    }
+
     .promo-input {
         width: 100%;
     }
@@ -730,41 +769,32 @@ body {
     .promo-form {
         display: flex;
         flex-direction: column;
+        flex-wrap: wrap;
     }
 
     .promo-btn {
         width: 100%;
     }
 
-}
-
-@media (min-width: 992px) {
-    .container-bg {
-        padding: 5rem 3rem !important;
+    .custom-container {
+        max-width: fit-content;
     }
 
-    .cart-badge {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        background: #595959;
-        color: white;
-        font-size: 0.7rem;
-        padding: 2px 4px;
-        border-radius: 75%;
-        font-weight: bold;
-        line-height: 1;
+
+    .promo-submit {
+        width: 100%;
     }
 
 }
 
-@media (min-width: 1280px) {
-    .promo-form {
+@media (max-width: 991px) {
+    .flex-revert {
         display: flex;
-        flex-direction: column;
+        flex-direction: row-reverse !important;
     }
 
-    .promo-btn {
-        width: 100%;
+    .navbar-collapse {
+        flex-basis: 100% !important;
     }
+
 }

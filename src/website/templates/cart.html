@@ -20,7 +20,8 @@
                             <div class="col-md-8 p-0 d-flex flex-wrap justify-content-center h-100">
 
                                 {% for item in cart_items %}
-                                    <div class="product-cart-card cart-item d-flex row justify-content-between border border-1 rounded-4 p-4 bg-white my-3 w-100">
+                                    <div class="product-cart-card cart-item d-flex row justify-content-between border border-1 rounded-4 p-4 bg-white my-3 w-100"
+                                         data-item-id="{{ item.id }}">
                                         <div class="col-3 col-md-3 d-flex justify-content-center align-items-center">
                                             <div class="d-flex product-image justify-content-center align-items-center h-75">
                                                 <img class="img-fluid border border-0 rounded-4 h-100"
@@ -48,7 +49,8 @@
                                                 </div>
 
                                                 <div class="col-12 col-md-6 d-flex justify-content-end flex-column">
-                                                    <div class="item-subtotal align-items-center fs-5 text-end fw-semibold">
+                                                    <div class="item-subtotal align-items-center fs-5 text-end fw-semibold"
+                                                         data-subtotal="{{ item.subtotal }}">
                                                         $ {{ item.subtotal }}
                                                     </div>
                                                     <div class="item-price align-items-center fs-sm-6 text-end text-muted"
@@ -73,22 +75,22 @@
                                             </div>
                                         </div>
                                         <div class="border border-1 border-bottom my-2"></div>
-                                        <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center my-1">
                                             <div class="p2 d-inline-flex text-muted">Subtotal</div>
                                             <div class="p2 d-inline-flex text-muted total-price">{{ total }}</div>
                                         </div>
-                                        <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center my-1">
                                             <div class="p2 d-inline-flex text-muted">Shipping</div>
                                             <div class="p2 d-inline-flex text-muted">{{ shipping }}</div>
                                         </div>
-                                        <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center my-1">
                                             <div class="p2 d-inline-flex text-muted">Tax (8%)</div>
                                             <div class="p2 d-inline-flex text-muted" data-tax>{{ tax }}</div>
                                         </div>
                                         <div class="border border-1 border-bottom my-2"></div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="p2 fw-semibold">Total</div>
-                                            <div class="h5 fw-bold grand-total-price">{{ grand_total }}</div>
+                                            <div class="fs-5 fw-normal grand-total-price">{{ grand_total }}</div>
                                         </div>
 
                                         <div class="d-flex w-100 justify-content-center align-items-center">
@@ -106,9 +108,7 @@
                             </div>
                         </div>
 
-
                     </div>
-                </div>
                 </div>
             {% else %}
                 <div class="d-flex justify-content-center w-100 flex-column">
@@ -151,8 +151,12 @@
                                            class="text-decoration-none w-100">
                                             <div class="subcategory-card bg-white rounded-4 px-5 text-center h-100 d-flex flex-column justify-content-start align-items-center">
                                                 <div class="{{ subcategory.bg_color }} p-3 rounded-3 d-inline-flex justify-content-center align-items-center">
-                                                    <img src="{{ subcategory.image.url }}"
-                                                         class="popular-subcategories-img" alt="image">
+                                                    {% if subcategory.image.url %}
+                                                        <img src="{{ subcategory.image.url }}"
+                                                             class="popular-subcategories-img" alt="image">
+                                                    {% else %}
+                                                        <p>{{ subcategory.name }} image</p>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="badge custom-badge d-block mt-3 ">
                                                     {{ subcategory.name }}
@@ -166,6 +170,7 @@
                     </div>
                 </div>
             {% endif %}
+        </div>
     </section>
 
     {% include "inc/newsletter.html" %}
