@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const qtyInput = row.querySelector(".qtty");
         const subtotalEl = row.querySelector(".item-subtotal");
         const priceEl = row.querySelector(".item-price");
+        const form = row.querySelector(".qty-form");
         const productId = row.dataset.itemId;
 
         function updateSubtotal() {
@@ -54,25 +55,66 @@ document.addEventListener("DOMContentLoaded", function () {
         function handleChange() {
             const qty = parseInt(qtyInput.value) || 1;
             updateSubtotal();
-            updateServerAjax(productId, qty);
+
+            const maxAvailable = parseInt(qtyInput.dataset.max) || Infinity;
+            const increaseBtn = row.querySelector(".qty-increase");
+            if (qty < maxAvailable) {
+                increaseBtn.disabled = false;
+            }
+
+            updateServerAjax(qty, form);
         }
 
-        row.querySelector(".qty-increase").addEventListener("click", () => {
-            qtyInput.value = parseInt(qtyInput.value) + 1;
-            handleChange();
+        row.querySelector(".qty-increase").addEventListener("click", (e) => {
+            const current = parseInt(qtyInput.value) || 1;
+            const requested = current + 1;
+
+            checkStockAndUpdate(productId, requested, e.target, () => {
+                qtyInput.value = requested;
+                handleChange();
+            });
         });
 
-        row.querySelector(".qty-decrease").addEventListener("click", () => {
+        row.querySelector(".qty-decrease").addEventListener("click", (e) => {
             let current = parseInt(qtyInput.value);
-            if (current > 1) qtyInput.value = current - 1;
-            handleChange();
+            if (current > 1) {
+                qtyInput.value = current - 1;
+                handleChange();
+            }
         });
-
-        qtyInput.addEventListener("change", handleChange);
 
         updateSubtotal();
     });
 });
+
+function checkStockAndUpdate(productId, requestedQty, button, onSuccess) {
+    const csrftoken = getCookie("csrftoken");
+    const stockcheckurl = `/cart/${productId}/check-stock/`;
+    const qtyInput = document.querySelector(".qtty");
+
+
+    fetch(stockcheckurl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken,
+        },
+        body: JSON.stringify({quantity: requestedQty})
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                qtyInput.dataset.max = data.max_available; // store max
+                onSuccess();
+                button.disabled = false;
+            } else {
+                qtyInput.dataset.max = data.max_available;
+                button.disabled = true;
+                alert(`Only ${data.max_available} available in stock.`);
+            }
+        })
+        .catch(err => console.error("Error checking stock:", err));
+}
 
 
 function getCookie(name) {
@@ -92,18 +134,23 @@ function getCookie(name) {
 
 const csrftoken = getCookie("csrftoken");
 
-function updateServerAjax(productId, quantity) {
-    fetch(`/cart/${productId}/update/`, {
+function updateServerAjax(quantity, form) {
+    const updateUrl = form.dataset.updateUrl;
+
+    fetch(updateUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             "X-CSRFToken": csrftoken,
         },
-        body: `quantity=${quantity}`
+        body: JSON.stringify({quantity})
     })
         .then(response => {
-            if (!response.ok) throw new Error("Network response was not ok");
+            if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
             return response.json();
+        })
+        .then(data => {
+            console.log("Cart updated:", data);
         })
         .catch(err => console.error("Error updating cart:", err));
 }

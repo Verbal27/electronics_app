@@ -2,6 +2,7 @@ from django.views.generic import DetailView
 
 from src.core.models import Product
 from src.website.forms.cart import AddToCartDetailForm
+from src.website.services.cart_services import CartService
 
 
 class ProductDetailView(DetailView):
@@ -13,6 +14,13 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
-        context["related_products"] = product
-        context["form"] = self.form_class(product_id=product.id)
+
+        service = CartService(self.request)
+        current_qty = service.cart.cart.get(str(product.id), {}).get("quantity", 0)
+
+        context["form"] = self.form_class(
+            product_id=product.id,
+            product=product,
+            current_qty=current_qty
+        )
         return context

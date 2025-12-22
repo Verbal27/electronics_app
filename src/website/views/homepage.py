@@ -63,7 +63,7 @@ class SearchView(View):
 
         if form.is_valid():
             query = form.cleaned_data["query"]
-            products_qs = Product.objects.filter(name__icontains=query)  # filter by name
+            products_qs = Product.objects.filter(name__icontains=query)
             products = [
                 ProductCard(request=request, product=p, css_classes="default") for p in products_qs
             ]

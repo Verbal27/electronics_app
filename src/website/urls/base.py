@@ -25,6 +25,7 @@ urlpatterns = [
             path("add/", views.CartAddView.as_view(), name="add_to_cart", ),
             path("remove/", views.CartRemoveItemView.as_view(), name="remove_from_cart", ),
             path("update/", views.CartUpdateQuantityView.as_view(), name="update_cart", ),
+            path("check-stock/", views.CheckStockView.as_view(), name="check_stock"),
         ]), ),
     ])),
     path("checkout/", include([

@@ -9,6 +9,7 @@ from .cart import (
     CartUpdateQuantityView,
     CartDropView,
 )
+from .checkstock import CheckStockView
 from .products import ProductsListView, CategoryListView, SubCategoryProductListView
 
 
@@ -25,4 +26,5 @@ __all__ = (
     "CheckoutCreateView",
     "CabinetTemplateView",
     "ProductsListView",
+    "CheckStockView",
 )

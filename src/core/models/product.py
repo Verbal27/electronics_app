@@ -21,3 +21,9 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse("product_detail", args=[self.pk])
+
+    @property
+    def stock_status(self):
+        if self.quantity >= 10:
+            return "In Stock"
+        return "Low Stock"

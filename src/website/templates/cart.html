@@ -1,6 +1,6 @@
 {% extends "base/website/base.html" %}
-{% load static %}
-{% load crispy_forms_tags %}
+
+{% load static crispy_forms_tags %}
 
 {% block website_content %}
     <section>
@@ -21,7 +21,8 @@
 
                                 {% for item in cart_items %}
                                     <div class="product-cart-card cart-item d-flex row justify-content-between border border-1 rounded-4 p-4 bg-white my-3 w-100"
-                                         data-item-id="{{ item.id }}">
+                                         data-item-id="{{ item.id }}"
+                                         data-update-url="{% url 'check_stock' item.id %}">
                                         <div class="col-3 col-md-3 d-flex justify-content-center align-items-center">
                                             <div class="d-flex product-image justify-content-center align-items-center h-75">
                                                 <img class="img-fluid border border-0 rounded-4 h-100"

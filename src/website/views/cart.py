@@ -1,22 +1,10 @@
-from decimal import Decimal
+import json
 
 from django.contrib import messages
 from django.http import JsonResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.views.generic import TemplateView, View
-
-from electronics_app.settings import PLACEHOLDER_IMAGE
-from src.core.models import Product, Subcategory
-from src.core.utils.subcategory_list import list_popular_subcategories
-from src.website.forms.cart import (
-    RemoveFromCartForm,
-    UpdateCart,
-    DropCart,
-    CheckoutForm,
-    PromoForm,
-)
-from src.website.services import Cart
-from src.core.utils.availability_check import check_stock
+from src.website.services.cart_services import CartService
 
 
 class CartListView(TemplateView):
@@ -24,151 +12,66 @@ class CartListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart = Cart(self.request)
-
-        product_ids = cart.cart.keys()
-
-        if product_ids:
-            products = Product.objects.filter(pk__in=product_ids)
-            products_map = {str(p.pk): p for p in products}
-            cart_items_with_products = []
-
-            for id, item in cart.cart.items():
-                product = products_map.get(id)
-
-                if not product:
-                    continue
-
-                sub = Subcategory.objects.get(pk=item["subcategory"])
-
-                cart_items_with_products.append(
-                    {
-                        "id": id,
-                        "name": item["name"],
-                        "price": item["price"],
-                        "quantity": item["quantity"],
-                        "image": product.image,
-                        "description": product.description,
-                        "subcategory": sub,
-                        "remove_form": RemoveFromCartForm(product_id=id),
-                        "update_form": UpdateCart(
-                            product_id=id, quantity=item["quantity"]
-                        ),
-                    }
-                )
-            context["cart_items"] = cart_items_with_products
-            context["promo_form"] = PromoForm()
-            count = 0
-            for item in cart_items_with_products:
-                item["price"] = Decimal(item["price"]).quantize(Decimal(".00"))
-                quantity = item["quantity"] - 1
-                count += 1
-                count = count+quantity
-                item["subtotal"] = item["price"] * item["quantity"]
-                product = Product.objects.get(pk=item["id"])
-                if product.quantity >= 10:
-                    item["stock"] = "In Stock"
-                if product.quantity < 10:
-                    item["stock"] = "Low Stock"
-            context["cart_count"] = count
-            if count == 1:
-                num_items = "item"
-            else:
-                num_items = "items"
-            context["num_items"] = num_items
-            context["drop_form"] = DropCart()
-            context["checkout_form"] = CheckoutForm()
-            context["total"] = cart.get_total()
-            if context["total"] > 50:
-                context["shipping"] = "FREE"
-            else:
-                context["shipping"] = "Standard charge"
-
-            subtotal = Decimal(context["total"]).quantize(Decimal(".00"))
-            tax_rate = 0.08
-            tax = subtotal * Decimal(tax_rate)
-            grand_total = subtotal + tax
-
-            context["tax"] = round(tax, 2)
-            context["grand_total"] = round(grand_total, 2)
-        else:
-            if not product_ids:
-                subcategs = list_popular_subcategories(self.request)
-
-                context["subcategories"] = [
-                    {
-                        "name": subc.name,
-                        "image": getattr(subc, "image", None) if subc.image else PLACEHOLDER_IMAGE,
-                        "id": subc.id,
-                    }
-                    for subc in subcategs if subc.image
-                ]
+        service = CartService(self.request)
+        cart_context = service.get_cart_context()
+        context.update(cart_context)
         return context
 
 
 class CartAddView(View):
-
     def post(self, request, product_id):
-        cart = Cart(request)
-        product: Product = get_object_or_404(Product, pk=product_id)
         quantity = int(request.POST.get("quantity", 1))
-        if not check_stock(request, product, quantity, mode="add"):
+        service = CartService(request)
+        result = service.add_product(product_id, quantity)
+
+        if result.success:
+            messages.success(request, "Product added successfully.")
+            return redirect("homepage")
+        else:
+            messages.error(request, f"Cannot add product. Max available: {result.max_available}")
             return redirect("product_detail", pk=product_id)
-        try:
-            cart.add(
-                product_id=product.pk,
-                name=product.name,
-                price=float(product.price),
-                quantity=quantity,
-                subcategory=product.subcategory_id,
-            )
-            messages.success(request, "Product added sucessfully")
-            return redirect("homepage")
-        except Exception:
-            messages.error(
-                request, "There was a problem adding this item to your cart."
-            )
-            return redirect("homepage")
 
 
 class CartRemoveItemView(View):
-    form_class = RemoveFromCartForm
-
     def post(self, request, product_id):
-        cart = Cart(request)
-        product: Product = get_object_or_404(Product, pk=product_id)
-        try:
-            cart.remove(product_id=product.pk)
-            messages.success(request, "Item removed successfully!")
-            return redirect("cart")
-        except Exception:
-            messages.error(
-                request, "There was a problem removing this item from your cart."
-            )
-            return redirect("cart")
+        service = CartService(request)
+        result = service.remove_product(product_id)
+
+        if result.success:
+            messages.success(request, "Product removed successfully.")
+        else:
+            messages.error(request, "Something went wrong.")
+        return redirect("cart")
 
 
 class CartUpdateQuantityView(View):
     def post(self, request, product_id):
-        cart = Cart(request)
-        product = get_object_or_404(Product, pk=product_id)
-        quantity = int(request.POST.get("quantity", 1))
-
-        if not check_stock(request, product, quantity, mode="update"):
-            return JsonResponse({"error": "out_of_stock"}, status=400)
-
         try:
-            cart.update(product_id=product.pk, quantity=quantity)
-            return JsonResponse({"success": True, "quantity": quantity})
-        except Exception:
-            return JsonResponse({"error": "update_failed"}, status=500)
+            data = json.loads(request.body)
+            quantity = int(data.get("quantity", 1))
+        except (TypeError, ValueError, json.JSONDecodeError):
+            return JsonResponse({"success": False, "error": "invalid_quantity"}, status=400)
+
+        service = CartService(request)
+        result = service.update_quantity(product_id, quantity)
+
+        if result.success:
+            return JsonResponse({"success": True, "quantity": result.quantity, "status": 200})
+        else:
+            return JsonResponse({
+                "success": False,
+                "error": result.error,
+                "max_available": result.max_available,
+                "status": 400
+            })
 
 
 class CartDropView(View):
-    form_class = DropCart
-
     def post(self, request):
-        cart = Cart(request)
-        cart.clear()
-        messages.success(request, "Cart cleared!")
-        return redirect("homepage")
+        service = CartService(request)
+        result = service.clear_cart()
+
+        if result.success:
+            return JsonResponse({"success": True, "status": 200})
+        else:
+            return JsonResponse({"success": False, "error": result.error, "status": 400})

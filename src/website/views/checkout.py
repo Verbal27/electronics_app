@@ -4,7 +4,6 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from src.core.models import Product
-from src.core.utils.availability_check import check_stock
 from src.website.forms.checkout import OrderModelForm
 from src.website.services import Cart
 
@@ -43,11 +42,6 @@ class CheckoutCreateView(LoginRequiredMixin, CreateView):
         products = {
             item["id"]: Product.objects.get(pk=item["id"]) for item in cart.items()
         }
-
-        for item in cart.items():
-            product = products[item["id"]]
-            if not check_stock(self.request, product, item["quantity"], mode="update"):
-                return self.form_invalid(form)
 
         for item in cart.items():
             product = products[item["id"]]
