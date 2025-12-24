@@ -21,8 +21,12 @@ class CartServiceResult:
         self.error = error
 
     @staticmethod
-    def ok(quantity=None, quantity_in_cart=None, max_available=None, added=None):
-        return CartServiceResult(True, quantity=quantity_in_cart or quantity)
+    def ok(quantity=None, quantity_in_cart=None, max_available=None):
+        return CartServiceResult(
+            success=True,
+            quantity=quantity_in_cart or quantity,
+            max_available=max_available,
+        )
 
     @staticmethod
     def fail(error, max_available=None, quantity_in_cart=None):
@@ -95,23 +99,16 @@ class CartService:
 
     def check_stock_before_increment(self, product_id, requested_qty):
         product = get_object_or_404(Product, pk=product_id)
-        key = str(product_id)
-
-        cart_data = self.cart.cart.get(key, {})
-        current_in_cart = cart_data.get("quantity", 0)
         max_available = product.quantity
 
         requested_qty = max(1, requested_qty)
-        remaining = max_available - current_in_cart
 
-        if remaining <= 0:
+        if requested_qty > max_available:
             return CartServiceResult.fail(
                 error="out_of_stock", max_available=max_available
             )
 
-        return CartServiceResult.ok(
-            quantity=current_in_cart, max_available=max_available
-        )
+        return CartServiceResult.ok(max_available=max_available)
 
     def remove_product(self, product_id):
         if str(product_id) in self.cart.cart:

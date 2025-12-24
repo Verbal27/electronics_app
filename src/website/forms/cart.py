@@ -81,10 +81,12 @@ class RemoveFromCartForm(forms.Form):
 
         self.helper.layout = Layout(
             Div(
-                IconButton(
-                    name="remove_from_cart",
-                    icon=Icon(Icon.TYPES.DELETE),
-                    css_classes="btn btn-delete bg-transparent text-muted fw-normal text-center"
+                HTML(
+                    IconButton(
+                        name="remove_from_cart",
+                        icon=Icon(Icon.TYPES.DELETE),
+                        css_classes="btn btn-delete bg-transparent text-muted fw-normal text-center"
+                    ),
                 ),
                 css_class="d-flex align-items-center",
             )
@@ -108,7 +110,7 @@ class UpdateCart(forms.Form):
                 "class": "qtty border-0 p-0",
                 "style": "pointer-events: none;",
                 "min": "1",
-                "id": "quantity",
+                "id": f"quantity-{self.product_id}",
                 "name": "quantity",
             }
         )
@@ -124,6 +126,7 @@ class UpdateCart(forms.Form):
         self.helper.form_class = "qty-form"
         self.helper.attrs = {
             "data-update-url": reverse("update_cart", args=[self.product_id]),
+            "data-check-url": reverse("check_stock", args=[self.product_id]),
         }
         self.helper.layout = Layout(
             Div(
@@ -155,12 +158,14 @@ class CheckoutForm(forms.Form):
         self.helper.form_method = "get"
         self.helper.form_action = reverse("checkout")
         self.helper.layout = Layout(
-            IconButton(
-                name="checkout",
-                label="Proceed to checkout",
-                icon=Icon(Icon.TYPES.CHECKOUT),
-                icon_css_classes="text-white",
-                css_classes="btn bg-dark border-0 text-white w-100 text-wrap my-2 p-2"
+            HTML(
+                IconButton(
+                    name="checkout",
+                    label="Proceed to checkout",
+                    icon=Icon(Icon.TYPES.CHECKOUT),
+                    icon_css_classes="text-white",
+                    css_classes="btn bg-dark border-0 text-white w-100 text-wrap my-2 p-2"
+                )
             ),
         )
 
