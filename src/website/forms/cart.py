@@ -122,17 +122,26 @@ class UpdateCart(forms.Form):
         )
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_action = reverse("update_cart", args=[self.product_id])
         self.helper.form_class = "qty-form"
-        self.helper.attrs = {
-            "data-update-url": reverse("update_cart", args=[self.product_id]),
-            "data-check-url": reverse("check_stock", args=[self.product_id]),
-        }
         self.helper.layout = Layout(
             Div(
-                Button("decrease_quantity", "-", css_class="btn bg-white border rounded-3 text-dark qty-decrease"),
+                Button(
+                    "decrease_quantity",
+                    "-",
+                    css_class="btn bg-white border rounded-3 text-dark qty-btn qty-decrease",
+                    **{
+                        "data-url": reverse("decrease_quantity", args=[self.product_id]),
+                    }
+                ),
                 "quantity",
-                Button("increase_quantity", "+", css_class="btn bg-white border rounded-3 text-dark qty-increase"),
+                Button(
+                    "increase_quantity",
+                    "+",
+                    css_class="btn bg-white border rounded-3 text-dark qty-btn qty-increase",
+                    **{
+                        "data-url": reverse("increase_quantity", args=[self.product_id]),
+                    }
+                ),
                 css_class="d-flex align-items-center gap-2",
             ),
         )

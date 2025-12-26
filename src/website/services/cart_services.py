@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.shortcuts import get_object_or_404
 
+from src.core.components.website.span import Span
 from src.core.models import Product
 from src.website.forms.cart import (
     RemoveFromCartForm,
@@ -14,41 +15,19 @@ from src.website.services import Cart
 
 
 class CartServiceResult:
-    def __init__(self, success, quantity=None, max_available=None, error=None):
+    def __init__(self, success, quantity=None, max_available=None, error=None, new_subtotal=None, has_more=False):
         self.success = success
         self.quantity = quantity
         self.max_available = max_available
         self.error = error
-
-    @staticmethod
-    def ok(quantity=None, quantity_in_cart=None, max_available=None):
-        return CartServiceResult(
-            success=True,
-            quantity=quantity_in_cart or quantity,
-            max_available=max_available,
-        )
-
-    @staticmethod
-    def fail(error, max_available=None, quantity_in_cart=None):
-        return CartServiceResult(False, error=error, max_available=max_available)
+        self.new_subtotal = new_subtotal
+        self.has_more = False
 
 
 class CartService:
     def __init__(self, request):
         self.request = request
         self.cart = Cart(request)
-
-    def _apply_stock_limit(self, product, requested_qty):
-        if requested_qty < 1:
-            return 1
-        return min(requested_qty, product.quantity)
-
-    def _check_stock(self, product, requested_qty):
-        if requested_qty <= 0:
-            return False, 0
-        if requested_qty > product.quantity:
-            return False, product.quantity
-        return True, product.quantity
 
     def add_product(self, product_id, quantity):
         product = get_object_or_404(Product, pk=product_id)
@@ -57,12 +36,13 @@ class CartService:
         existing_qty = self.cart.cart.get(product_id, {}).get("quantity", 0)
 
         remaining_capacity = stock_available - existing_qty
-        if remaining_capacity <= 0:
-            return CartServiceResult.fail(
-                "out_of_stock",
-                quantity_in_cart=existing_qty,
-                max_available=stock_available
-            )
+        if remaining_capacity == 0:
+            return {
+                "success": False,
+                "message": "out_of_stock",
+                "quantity_in_cart": existing_qty,
+                "max_available": stock_available
+            }
 
         qty_to_add = min(quantity, remaining_capacity)
 
@@ -78,47 +58,100 @@ class CartService:
             }
 
         self.cart.save()
-        return CartServiceResult.ok(
-            quantity_in_cart=existing_qty + qty_to_add,
-            max_available=stock_available
-        )
+        return {
+                "success": True,
+                "max_available": stock_available,
+                "qunatity_in_cart": existing_qty + qty_to_add,
+            }
 
-    def update_quantity(self, product_id, quantity):
+    def increase_quantity(self, product_id):
         product = get_object_or_404(Product, pk=product_id)
         product_id = str(product_id)
+        price = Decimal(product.price)
 
-        quantity = max(1, quantity)
-        quantity = min(quantity, product.quantity)
+        if product_id not in self.cart.cart:
+            return {
+                "success": False,
+                "message": "not_in_cart"
+            }
 
-        if product_id in self.cart.cart:
-            self.cart.cart[product_id]["quantity"] = quantity
-            self.cart.save()
-            return CartServiceResult.ok(quantity_in_cart=quantity, max_available=product.quantity)
+        current = self.cart.cart[product_id]["quantity"]
 
-        return CartServiceResult.fail("not_in_cart")
+        if current == product.quantity:
+            return {
+                "success": True,
+                "quantity": product.quantity,
+                "new_subtotal": price * product.quantity,
+                "has_more": False,
+            }
 
-    def check_stock_before_increment(self, product_id, requested_qty):
+        new_quantity = current + 1
+
+        subtotal = price * new_quantity
+        subtotal = Decimal(subtotal)
+
+        self.cart.cart[product_id]["quantity"] = new_quantity
+        self.cart.save()
+
+        return {
+            "success": True,
+            "quantity": new_quantity,
+            "new_subtotal": subtotal,
+            "has_more": True,
+        }
+
+    def decrease_quantity(self, product_id):
         product = get_object_or_404(Product, pk=product_id)
-        max_available = product.quantity
+        product_id = str(product_id)
+        price = Decimal(product.price)
 
-        requested_qty = max(1, requested_qty)
+        if product_id not in self.cart.cart:
+            return {
+                "success": False,
+                "message": "not_in_cart"
+            }
 
-        if requested_qty > max_available:
-            return CartServiceResult.fail(
-                error="out_of_stock", max_available=max_available
-            )
+        current = self.cart.cart[product_id]["quantity"]
+        new_quantity = current - 1
+        print(current)
 
-        return CartServiceResult.ok(max_available=max_available)
+        if current == 1:
+            return {
+                "success": True,
+                "message": "min_quantity_reached",
+                "quantity": current,
+                "new_subtotal": price * current,
+                "has_more": new_quantity < product.quantity,
+            }
+
+        new_subtotal = price * new_quantity
+
+        self.cart.cart[product_id]["quantity"] = new_quantity
+        self.cart.save()
+
+        return {
+            "success": True,
+            "quantity": new_quantity,
+            "new_subtotal": new_subtotal,
+            "has_more": new_quantity < product.quantity,
+        }
 
     def remove_product(self, product_id):
         if str(product_id) in self.cart.cart:
             self.cart.remove(product_id)
-            return CartServiceResult.ok()
-        return CartServiceResult.fail("not_in_cart")
+            return {
+                    "success": True,
+                }
+        return {
+            "success": False,
+            "message": "not_in_cart"
+        }
 
     def clear_cart(self):
         self.cart.clear()
-        return CartServiceResult.ok()
+        return {
+                "success": True,
+            }
 
     def get_cart_context(self):
         cart_items = []
@@ -132,6 +165,8 @@ class CartService:
             subtotal = Decimal(price) * quantity
             total_quantity += quantity
             total_price += subtotal
+            stock_label_content = "Low stock" if product.quantity <= 10 else "In stock"
+            stock_label_css_classes = "text-warning" if product.quantity <= 10 else "text-success"
 
             cart_items.append({
                 "id": product_id,
@@ -143,8 +178,12 @@ class CartService:
                 "subcategory": product.subcategory,
                 "remove_form": RemoveFromCartForm(product_id=product_id),
                 "update_form": UpdateCart(product_id=product_id, quantity=quantity),
-                "subtotal": subtotal,
-                "stock": "In Stock" if product.quantity >= 10 else "Low Stock",
+                "subtotal": Decimal(subtotal).quantize(Decimal(".00")),
+                "stock_label": Span(
+                    content=stock_label_content,
+                    title=stock_label_content,
+                    css_classes=stock_label_css_classes
+                ),
             })
 
         subtotal_decimal = total_price.quantize(Decimal(".00"))
@@ -156,9 +195,9 @@ class CartService:
             "cart_items": cart_items,
             "cart_count": total_quantity,
             "num_items": "item" if total_quantity == 1 else "items",
-            "total": subtotal_decimal,
-            "tax": round(tax, 2),
-            "grand_total": round(grand_total, 2),
+            "total": Decimal(subtotal_decimal).quantize(Decimal(".00")),
+            "tax": Decimal(tax).quantize(Decimal(".00")),
+            "grand_total": Decimal(grand_total).quantize(Decimal(".00")),
             "shipping": "FREE" if subtotal_decimal > 50 else "Standard charge",
             "drop_form": DropCart(),
             "checkout_form": CheckoutForm(),

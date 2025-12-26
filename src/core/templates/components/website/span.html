@@ -1,0 +1,7 @@
+<span
+        {% if id %}id="{{ id }}" {% endif %}
+        {% if css_classes %}class="{{ css_classes }}"{% endif %}
+        {% for key, value in data_attributes.items %}
+            data-{{ key }}="{{ value }}"
+        {% endfor %}
+>{{ content }}</span>

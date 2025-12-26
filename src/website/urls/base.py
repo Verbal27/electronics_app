@@ -24,8 +24,8 @@ urlpatterns = [
         path("<int:product_id>/", include([
             path("add/", views.CartAddView.as_view(), name="add_to_cart", ),
             path("remove/", views.CartRemoveItemView.as_view(), name="remove_from_cart", ),
-            path("update/", views.CartUpdateQuantityView.as_view(), name="update_cart", ),
-            path("check-stock/", views.CheckStockView.as_view(), name="check_stock"),
+            path("update-increase/", views.CartUpdateIncreaseQuantityView.as_view(), name="increase_quantity"),
+            path("update-decrease/", views.CartUpdateDecreaseQuantityView.as_view(), name="decrease_quantity"),
         ]), ),
     ])),
     path("checkout/", include([
