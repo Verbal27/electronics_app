@@ -3,6 +3,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views.generic import TemplateView, View
+
+from src.core.utils.subcategory_list import list_popular_subcategories
 from src.website.services.cart_services import CartService
 
 
@@ -17,6 +19,9 @@ class CartListView(TemplateView):
         service = CartService(self.request)
         cart_context = service.get_cart_context()
         context.update(cart_context)
+
+        context["subcategories"] = list_popular_subcategories(self.request)
+
         return context
 
 
@@ -66,7 +71,7 @@ class CartUpdateIncreaseQuantityView(View):
                     status=200,
                 )
             else:
-                return JsonResponse({"success": False, "message": "Something went wrong."}, status=400)
+                return JsonResponse({"success": False, "error": "Something went wrong."}, status=400)
         except Exception as e:
             logger.error(e)
             return JsonResponse({"success": False, "error": str(e)}, status=400)
@@ -93,14 +98,10 @@ class CartUpdateDecreaseQuantityView(View):
                     status=200,
                 )
             else:
-                return JsonResponse({"success": False, "message": "Something went wrong."}, status=400)
+                return JsonResponse({"success": False, "error": "Something went wrong."}, status=400)
         except Exception as e:
             logger.error(e)
-            return JsonResponse(
-                {
-                    "success": False,
-                }
-            )
+            return JsonResponse({"success": False, "error": str(e)}, status=400)
 
 
 class CartDropView(View):
@@ -108,7 +109,8 @@ class CartDropView(View):
         service = CartService(request)
         result = service.clear_cart()
 
-        if result.success:
-            return JsonResponse({"success": True, "status": 200})
+        if result["success"]:
+            return JsonResponse({"success": True}, status=200)
         else:
-            return JsonResponse({"success": False, "error": result.error, "status": 400})
+            return JsonResponse(
+                {"success": False, "error": result.error}, status=400)

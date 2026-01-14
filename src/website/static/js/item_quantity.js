@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const input = document.querySelector("input[name='quantity']");
     updateButtonState(input);
     initItemQuantity();
-
 });
 
 function initItemQuantity() {

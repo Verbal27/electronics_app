@@ -31,12 +31,12 @@ function initUpdateCartQuantity() {
 
                 quantityInput.value = data.quantity;
 
-                let increase = $(".qty-increase");
+                let increase = cartItem.querySelector(".qty-increase");
 
                 if (data.has_more) {
-                    increase.prop("disabled", false);
+                    increase.disabled = false;
                 } else {
-                    increase.prop("disabled", true);
+                    increase.disabled = true;
                 }
 
                 if (itemSubtotalEl && data.new_subtotal) {
