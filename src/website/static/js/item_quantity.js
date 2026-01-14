@@ -1,9 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const input = document.querySelector("input[name='quantity']");
-    updateButtonState(input);
-    initItemQuantity();
-});
-
 function initItemQuantity() {
     $(document).on("click", ".qty-btn", function (e) {
         e.preventDefault();
@@ -61,3 +55,9 @@ function updateButtonState(input) {
         decreaseBtn.disabled = value <= 1;
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.querySelector("input[name='quantity']");
+    updateButtonState(input);
+    initItemQuantity();
+});
