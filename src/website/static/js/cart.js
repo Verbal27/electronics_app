@@ -65,32 +65,3 @@ function initUpdateCartQuantity() {
 document.addEventListener("DOMContentLoaded", function () {
     initUpdateCartQuantity();
 });
-
-function AjaxRequest(quantity, form) {
-    fetch(form.dataset.updateUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getCookie("csrftoken"),
-        },
-        body: JSON.stringify({quantity}),
-    })
-        .then(res => {
-            if (!res.ok) throw new Error(res.status);
-            return res.json();
-        })
-        .catch(err => console.error("Cart update failed:", err));
-}
-
-function getCookie(name) {
-    let value = null;
-    if (document.cookie) {
-        document.cookie.split(";").forEach(cookie => {
-            cookie = cookie.trim();
-            if (cookie.startsWith(name + "=")) {
-                value = decodeURIComponent(cookie.slice(name.length + 1));
-            }
-        });
-    }
-    return value;
-}

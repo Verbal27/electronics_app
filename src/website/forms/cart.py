@@ -23,42 +23,45 @@ class AddToCartDetailForm(forms.Form):
     quantity = forms.IntegerField(min_value=1, required=False, initial=1)
 
     def __init__(self, *args, product_id=None, product=None, current_qty=0, **kwargs):
+        self.product_id = product_id
         super().__init__(*args, **kwargs)
 
         max_qty = product.quantity if product else 9999
 
         self.fields["quantity"].widget = forms.NumberInput(
             attrs={
-                "class": "col col-md-4 d-flex justify-content-center mx-md-2 "
+                "class": "col col-md-4 d-flex justify-content-center mx-md-2 quantity "
                 "border-0 bg-transparent text-dark fw-semibold text-center",
                 "style": "pointer-events: none; display: inline-flex;",
                 "min": "1",
-                "id": f"quantity-{product_id}",
-                "data-product-id": str(product_id),
+                "id": f"quantity-{self.product_id}",
                 "data-max": str(max_qty),
                 "data-in-cart": str(current_qty),
                 "value": "1",
             }
         )
-
+        self.fields["quantity"].widget.attrs.update(
+            {
+                "data-product-id": str(self.product_id),
+            }
+        )
         self.helper = FormHelper()
         self.helper.form_method = "post"
+        self.helper.form_class = "product-detail-form"
         self.helper.form_action = reverse("add_to_cart", args=[product_id])
-        self.helper.attrs = {"id": "product-detail-form"}
-
         self.helper.layout = Layout(
             Div(
                 Button(
                     "decrease_quantity",
                     "-",
-                    css_class="btn bg-white border rounded-3 text-dark qty-decrease",
+                    css_class="btn bg-white border rounded-3 text-dark qty-btn qty-decrease",
                     type="button"
                 ),
                 "quantity",
                 Button(
                     "increase_quantity",
                     "+",
-                    css_class="btn bg-white border rounded-3 text-dark qty-increase",
+                    css_class="btn bg-white border rounded-3 text-dark qty-btn qty-increase",
                     type="button"
                 ),
                 css_class="d-flex align-items-center gap-2",
@@ -66,7 +69,7 @@ class AddToCartDetailForm(forms.Form):
             Submit(
                 "add_to_cart",
                 "Add To Cart",
-                css_class="btn btn-primary btn-update-cart d-inline-block h-100",
+                css_class="btn btn-primary btn-update-cart add-to-cart d-inline-block h-100",
             ),
         )
 

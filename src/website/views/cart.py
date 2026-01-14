@@ -52,20 +52,23 @@ class CartUpdateIncreaseQuantityView(View):
             service = CartService(request)
             result = service.increase_quantity(product_id)
             context = service.get_cart_context()
-            res = {
-                "success": True,
-                "quantity": result["quantity"],
-                "new_subtotal": str(result["new_subtotal"]),
-                "cart_total": str(context["total"]),
-                "tax": str(context["tax"]),
-                "grand_total": str(context["grand_total"]),
-                "has_more": result["has_more"],
-                }
-            return JsonResponse(res, status=200)
-
+            if result["success"]:
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "quantity": result["quantity"],
+                        "new_subtotal": str(result["new_subtotal"]),
+                        "cart_total": str(context["total"]),
+                        "tax": str(context["tax"]),
+                        "grand_total": str(context["grand_total"]),
+                        "has_more": result["has_more"],
+                    },
+                    status=200,
+                )
+            else:
+                return JsonResponse({"success": False, "message": "Something went wrong."}, status=400)
         except Exception as e:
             logger.error(e)
-            print(e)
             return JsonResponse({"success": False, "error": str(e)}, status=400)
 
 
@@ -89,6 +92,8 @@ class CartUpdateDecreaseQuantityView(View):
                     },
                     status=200,
                 )
+            else:
+                return JsonResponse({"success": False, "message": "Something went wrong."}, status=400)
         except Exception as e:
             logger.error(e)
             return JsonResponse(

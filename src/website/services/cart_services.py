@@ -14,16 +14,6 @@ from src.website.forms.cart import (
 from src.website.services import Cart
 
 
-class CartServiceResult:
-    def __init__(self, success, quantity=None, max_available=None, error=None, new_subtotal=None, has_more=False):
-        self.success = success
-        self.quantity = quantity
-        self.max_available = max_available
-        self.error = error
-        self.new_subtotal = new_subtotal
-        self.has_more = False
-
-
 class CartService:
     def __init__(self, request):
         self.request = request
@@ -61,7 +51,7 @@ class CartService:
         return {
                 "success": True,
                 "max_available": stock_available,
-                "qunatity_in_cart": existing_qty + qty_to_add,
+                "quantity_in_cart": existing_qty + qty_to_add,
             }
 
     def increase_quantity(self, product_id):
@@ -113,7 +103,6 @@ class CartService:
 
         current = self.cart.cart[product_id]["quantity"]
         new_quantity = current - 1
-        print(current)
 
         if current == 1:
             return {
@@ -121,7 +110,7 @@ class CartService:
                 "message": "min_quantity_reached",
                 "quantity": current,
                 "new_subtotal": price * current,
-                "has_more": new_quantity < product.quantity,
+                "has_more": current < product.quantity,
             }
 
         new_subtotal = price * new_quantity
