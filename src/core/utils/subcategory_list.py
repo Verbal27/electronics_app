@@ -1,6 +1,5 @@
-from django.db.models import Sum
-
 from src.core.models import Subcategory
+from django.db.models import Sum
 
 
 def list_subcategories(request):

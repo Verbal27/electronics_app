@@ -1,5 +1,5 @@
-from django.utils.safestring import mark_safe
 from src.core.components.base import RenderComponentMixin, MediaDefiningComponent
+from django.utils.safestring import mark_safe
 
 
 class Span(RenderComponentMixin, MediaDefiningComponent):

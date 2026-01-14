@@ -1,6 +1,6 @@
-from django.db import models
-from django.urls import reverse
 from .subcategory import Subcategory
+from django.urls import reverse
+from django.db import models
 
 
 class Product(models.Model):

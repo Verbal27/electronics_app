@@ -1,10 +1,10 @@
 import logging
-from django.contrib import messages
-from django.http import JsonResponse
-from django.shortcuts import redirect
-from django.views.generic import TemplateView, View
 from src.core.utils.subcategory_list import list_popular_subcategories
 from src.website.services.cart_services import CartService
+from django.views.generic import TemplateView, View
+from django.shortcuts import redirect
+from django.http import JsonResponse
+from django.contrib import messages
 
 
 logger = logging.getLogger(__name__)
@@ -74,7 +74,7 @@ class CartUpdateIncreaseQuantityView(View):
             return JsonResponse(
                 {
                     "success": True,
-                    "message": "Product updated successfully",
+                    "message": result["message"],
                     "data": {
                         "quantity": data["quantity"],
                         "new_subtotal": str(data["new_subtotal"]),
@@ -121,7 +121,7 @@ class CartUpdateDecreaseQuantityView(View):
             return JsonResponse(
                 {
                     "success": True,
-                    "message": "Product updated successfully",
+                    "message": result["message"],
                     "data": {
                         "quantity": data["quantity"],
                         "new_subtotal": str(data["new_subtotal"]),
@@ -155,7 +155,7 @@ class CartDropView(View):
             return JsonResponse(
                 {
                     "success": True,
-                    "message": "Cart cleared successfully",
+                    "message": result["message"],
                     "data": {}
                 },
                 status=200
@@ -164,7 +164,7 @@ class CartDropView(View):
             return JsonResponse(
                 {
                     "success": False,
-                    "message": result,
+                    "message": "Something went wrong.",
                     "data": {}
                 },
                 status=500

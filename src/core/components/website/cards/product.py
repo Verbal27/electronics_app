@@ -1,6 +1,6 @@
-from django.urls import reverse
 from src.core.components.base import RenderComponentMixin, MediaDefiningComponent
 from src.website.forms.cart import AddToCartForm
+from django.urls import reverse
 
 
 class ProductCard(RenderComponentMixin, MediaDefiningComponent):

@@ -1,7 +1,4 @@
-from decimal import Decimal
-
 from django.shortcuts import get_object_or_404
-
 from src.core.components.website.span import Span
 from src.core.models import Product
 from src.website.forms.cart import (
@@ -12,6 +9,7 @@ from src.website.forms.cart import (
     PromoForm,
 )
 from src.website.services import Cart
+from decimal import Decimal
 
 
 class CartService:
@@ -94,7 +92,7 @@ class CartService:
 
         return {
             "success": True,
-            "message": "Increased quantity",
+            "message": "Product updated successfully",
             "data": {
                 "quantity": new_quantity,
                 "new_subtotal": subtotal,
@@ -153,7 +151,7 @@ class CartService:
             }
         return {
             "success": False,
-            "message": "not_in_cart",
+            "message": "Not in cart",
             "data": {}
         }
 

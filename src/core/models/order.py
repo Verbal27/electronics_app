@@ -1,8 +1,7 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
 from .product import Product
 from .payment import Payment
-
 from ..constants import OrderStatus
 
 User = get_user_model()

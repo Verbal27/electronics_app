@@ -1,5 +1,5 @@
-from django.db import models
 from .category import Category
+from django.db import models
 
 
 class Subcategory(models.Model):

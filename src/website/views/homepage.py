@@ -1,14 +1,13 @@
-from django.contrib import messages
-from django.db.models import Sum
-from django.shortcuts import redirect, render
-from django.views.generic import ListView, View
-
-from src.core.models import Product
-from src.core.components.website.cards import ProductCard
 from src.core.utils.subcategory_list import list_subcategories
-from src.website.forms.cart import AddToCartForm
+from src.core.components.website.cards import ProductCard
 from src.website.forms.newsletter import NewsletterForm
+from src.website.forms.cart import AddToCartForm
+from django.views.generic import ListView, View
+from django.shortcuts import redirect, render
 from src.website.forms.search import Search
+from django.contrib import messages
+from src.core.models import Product
+from django.db.models import Sum
 
 
 class HomePageListView(ListView):

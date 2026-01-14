@@ -1,6 +1,5 @@
-from django.views.generic import ListView
-
 from src.core.components.website.cards import ProductCard
+from django.views.generic import ListView
 from src.core.models import Product
 
 

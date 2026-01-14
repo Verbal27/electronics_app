@@ -1,11 +1,10 @@
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
-
-from src.core.models import Product
 from src.website.forms.checkout import OrderModelForm
+from django.views.generic import CreateView
 from src.website.services import Cart
+from django.urls import reverse_lazy
+from django.contrib import messages
+from src.core.models import Product
 
 
 class CheckoutCreateView(LoginRequiredMixin, CreateView):
