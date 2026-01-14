@@ -29,30 +29,32 @@ function initUpdateCartQuantity() {
 
             .then(data => {
 
-                quantityInput.value = data.quantity;
+                let dt = data.data;
+
+                quantityInput.value = dt.quantity;
 
                 let increase = cartItem.querySelector(".qty-increase");
 
-                if (data.has_more) {
+                if (dt.has_more) {
                     increase.disabled = false;
                 } else {
                     increase.disabled = true;
                 }
 
-                if (itemSubtotalEl && data.new_subtotal) {
-                    itemSubtotalEl.textContent = `$ ${data.new_subtotal}`;
+                if (itemSubtotalEl && dt.new_subtotal) {
+                    itemSubtotalEl.textContent = `$ ${dt.new_subtotal}`;
                 }
 
-                if (cartSubtotalEl && data.cart_total) {
-                    cartSubtotalEl.textContent = `$ ${data.cart_total}`;
+                if (cartSubtotalEl && dt.cart_total) {
+                    cartSubtotalEl.textContent = `$ ${dt.cart_total}`;
                 }
 
-                if (taxAmountEl && data.tax) {
-                    taxAmountEl.textContent = `$ ${data.tax}`;
+                if (taxAmountEl && dt.tax) {
+                    taxAmountEl.textContent = `$ ${dt.tax}`;
                 }
 
-                if (cartGrandTotalEl && data.grand_total) {
-                    cartGrandTotalEl.textContent = `$ ${data.grand_total}`;
+                if (cartGrandTotalEl && dt.grand_total) {
+                    cartGrandTotalEl.textContent = `$ ${dt.grand_total}`;
                 }
             })
             .catch(error => {

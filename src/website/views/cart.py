@@ -3,7 +3,6 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views.generic import TemplateView, View
-
 from src.core.utils.subcategory_list import list_popular_subcategories
 from src.website.services.cart_services import CartService
 
@@ -31,11 +30,13 @@ class CartAddView(View):
         service = CartService(request)
         result = service.add_product(product_id, quantity)
 
+        data = result["data"]
+
         if result["success"]:
             messages.success(request, "Product added successfully.")
             return redirect("homepage")
         else:
-            messages.error(request, f"Cannot add product. Max available: {result["max_available"]}")
+            messages.error(request, f"Cannot add product. Max available: {data["max_available"]}")
             return redirect("product_detail", pk=product_id)
 
 
@@ -57,24 +58,45 @@ class CartUpdateIncreaseQuantityView(View):
             service = CartService(request)
             result = service.increase_quantity(product_id)
             context = service.get_cart_context()
-            if result["success"]:
+
+            if not result["success"]:
                 return JsonResponse(
                     {
-                        "success": True,
-                        "quantity": result["quantity"],
-                        "new_subtotal": str(result["new_subtotal"]),
+                        "success": False,
+                        "message": result["message"],
+                        "data": {}
+                    },
+                    status=400,
+                )
+
+            data = result["data"]
+
+            return JsonResponse(
+                {
+                    "success": True,
+                    "message": "Product updated successfully",
+                    "data": {
+                        "quantity": data["quantity"],
+                        "new_subtotal": str(data["new_subtotal"]),
                         "cart_total": str(context["total"]),
                         "tax": str(context["tax"]),
                         "grand_total": str(context["grand_total"]),
-                        "has_more": result["has_more"],
+                        "has_more": data["has_more"],
                     },
-                    status=200,
-                )
-            else:
-                return JsonResponse({"success": False, "error": "Something went wrong."}, status=400)
+                },
+                status=200,
+            )
+
         except Exception as e:
-            logger.error(e)
-            return JsonResponse({"success": False, "error": str(e)}, status=400)
+            logger.exception(e)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Internal server error",
+                    "data": {}
+                },
+                status=500,
+            )
 
 
 class CartUpdateDecreaseQuantityView(View):
@@ -84,24 +106,44 @@ class CartUpdateDecreaseQuantityView(View):
             result = service.decrease_quantity(product_id)
             context = service.get_cart_context()
 
-            if result["success"]:
+            if not result["success"]:
                 return JsonResponse(
                     {
-                        "success": True,
-                        "quantity": result["quantity"],
-                        "new_subtotal": str(result["new_subtotal"]),
+                        "success": False,
+                        "message": result["message"],
+                        "data": {}
+                    },
+                    status=400,
+                )
+
+            data = result["data"]
+
+            return JsonResponse(
+                {
+                    "success": True,
+                    "message": "Product updated successfully",
+                    "data": {
+                        "quantity": data["quantity"],
+                        "new_subtotal": str(data["new_subtotal"]),
                         "cart_total": str(context["total"]),
                         "tax": str(context["tax"]),
                         "grand_total": str(context["grand_total"]),
-                        "has_more": result["has_more"],
+                        "has_more": data["has_more"],
                     },
-                    status=200,
-                )
-            else:
-                return JsonResponse({"success": False, "error": "Something went wrong."}, status=400)
+                },
+                status=200,
+            )
+
         except Exception as e:
-            logger.error(e)
-            return JsonResponse({"success": False, "error": str(e)}, status=400)
+            logger.exception(e)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Internal server error",
+                    "data": {}
+                },
+                status=500,
+            )
 
 
 class CartDropView(View):
@@ -110,7 +152,20 @@ class CartDropView(View):
         result = service.clear_cart()
 
         if result["success"]:
-            return JsonResponse({"success": True}, status=200)
+            return JsonResponse(
+                {
+                    "success": True,
+                    "message": "Cart cleared successfully",
+                    "data": {}
+                },
+                status=200
+            )
         else:
             return JsonResponse(
-                {"success": False, "error": result.error}, status=400)
+                {
+                    "success": False,
+                    "message": result,
+                    "data": {}
+                },
+                status=500
+            )

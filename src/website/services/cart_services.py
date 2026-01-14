@@ -29,9 +29,11 @@ class CartService:
         if remaining_capacity == 0:
             return {
                 "success": False,
-                "message": "out_of_stock",
-                "quantity_in_cart": existing_qty,
-                "max_available": stock_available
+                "message": "Out of stock",
+                "data": {
+                    "quantity_in_cart": existing_qty,
+                    "max_available": stock_available,
+                },
             }
 
         qty_to_add = min(quantity, remaining_capacity)
@@ -49,10 +51,13 @@ class CartService:
 
         self.cart.save()
         return {
-                "success": True,
+            "success": True,
+            "message": "Added successfully",
+            "data": {
                 "max_available": stock_available,
                 "quantity_in_cart": existing_qty + qty_to_add,
-            }
+            },
+        }
 
     def increase_quantity(self, product_id):
         product = get_object_or_404(Product, pk=product_id)
@@ -62,7 +67,8 @@ class CartService:
         if product_id not in self.cart.cart:
             return {
                 "success": False,
-                "message": "not_in_cart"
+                "message": "Product not in cart",
+                "data": {}
             }
 
         current = self.cart.cart[product_id]["quantity"]
@@ -70,9 +76,12 @@ class CartService:
         if current == product.quantity:
             return {
                 "success": True,
-                "quantity": product.quantity,
-                "new_subtotal": price * product.quantity,
-                "has_more": False,
+                "message": "Max stock reached",
+                "data": {
+                    "quantity": product.quantity,
+                    "new_subtotal": price * product.quantity,
+                    "has_more": False,
+                },
             }
 
         new_quantity = current + 1
@@ -85,9 +94,12 @@ class CartService:
 
         return {
             "success": True,
-            "quantity": new_quantity,
-            "new_subtotal": subtotal,
-            "has_more": True,
+            "message": "Increased quantity",
+            "data": {
+                "quantity": new_quantity,
+                "new_subtotal": subtotal,
+                "has_more": True,
+            },
         }
 
     def decrease_quantity(self, product_id):
@@ -98,7 +110,8 @@ class CartService:
         if product_id not in self.cart.cart:
             return {
                 "success": False,
-                "message": "not_in_cart"
+                "message": "Product not in cart",
+                "data": {}
             }
 
         current = self.cart.cart[product_id]["quantity"]
@@ -107,10 +120,12 @@ class CartService:
         if current == 1:
             return {
                 "success": True,
-                "message": "min_quantity_reached",
-                "quantity": current,
-                "new_subtotal": price * current,
-                "has_more": current < product.quantity,
+                "message": "Minimum reached",
+                "data": {
+                    "quantity": current,
+                    "new_subtotal": price * current,
+                    "has_more": current < product.quantity,
+                },
             }
 
         new_subtotal = price * new_quantity
@@ -120,27 +135,35 @@ class CartService:
 
         return {
             "success": True,
-            "quantity": new_quantity,
-            "new_subtotal": new_subtotal,
-            "has_more": new_quantity < product.quantity,
+            "message": "Decreased quantity",
+            "data": {
+                "quantity": new_quantity,
+                "new_subtotal": new_subtotal,
+                "has_more": new_quantity < product.quantity,
+            },
         }
 
     def remove_product(self, product_id):
         if str(product_id) in self.cart.cart:
             self.cart.remove(product_id)
             return {
-                    "success": True,
-                }
+                "success": True,
+                "message": "Removed successfully",
+                "data": {}
+            }
         return {
             "success": False,
-            "message": "not_in_cart"
+            "message": "not_in_cart",
+            "data": {}
         }
 
     def clear_cart(self):
         self.cart.clear()
         return {
-                "success": True,
-            }
+            "success": True,
+            "message": "Cleared successfully",
+            "data": {}
+        }
 
     def get_cart_context(self):
         cart_items = []
