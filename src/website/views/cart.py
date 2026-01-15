@@ -1,11 +1,12 @@
 import logging
-from src.core.utils.subcategory_list import list_popular_subcategories
 from src.website.services.cart_services import CartService
 from django.views.generic import TemplateView, View
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.contrib import messages
+from django.conf import settings
 
+subcat_placeholder = settings.EMPTY_CART_PLACEHOLDER_IMAGE
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +17,10 @@ class CartListView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         service = CartService(self.request)
-        cart_context = service.get_cart_context()
+        cart_context = service.get_cart_context(self.request)
         context.update(cart_context)
 
-        context["subcategories"] = list_popular_subcategories(self.request)
-
+        context["sub_placeholder_image"] = subcat_placeholder
         return context
 
 

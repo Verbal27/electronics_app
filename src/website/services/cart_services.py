@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from src.core.components.website.span import Span
 from src.core.models import Product
+from src.core.utils.subcategory_list import list_popular_subcategories
 from src.website.forms.cart import (
     RemoveFromCartForm,
     UpdateCart,
@@ -163,7 +164,7 @@ class CartService:
             "data": {}
         }
 
-    def get_cart_context(self):
+    def get_cart_context(self, request):
         cart_items = []
         total_quantity = 0
         total_price = Decimal("0.00")
@@ -201,6 +202,8 @@ class CartService:
         tax = subtotal_decimal * tax_rate
         grand_total = subtotal_decimal + tax
 
+        subcategories = list_popular_subcategories(request)
+
         return {
             "cart_items": cart_items,
             "cart_count": total_quantity,
@@ -212,4 +215,5 @@ class CartService:
             "drop_form": DropCart(),
             "checkout_form": CheckoutForm(),
             "promo_form": PromoForm(),
+            "subcategories": subcategories,
         }

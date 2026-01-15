@@ -151,11 +151,10 @@
                                            class="text-decoration-none w-100">
                                             <div class="subcategory-card bg-white rounded-4 px-5 text-center h-100 d-flex flex-column justify-content-start align-items-center">
                                                 <div class="{{ subcategory.bg_color }} p-3 rounded-3 d-inline-flex justify-content-center align-items-center">
-                                                    {% if subcategory.image.url %}
-                                                        <img src="{{ subcategory.image.url }}"
-                                                             class="popular-subcategories-img" alt="image">
+                                                    {% if subcategory.has_valid_image %}
+                                                        <img src="{{ subcategory.image.url }}" class="popular-subcategories-img" alt="image">
                                                     {% else %}
-                                                        <p>{{ subcategory.name }} image</p>
+                                                        <img src="{% static sub_placeholder_image %}" class="popular-subcategories-img" alt="image">
                                                     {% endif %}
                                                 </div>
                                                 <div class="badge custom-badge d-block mt-3 ">

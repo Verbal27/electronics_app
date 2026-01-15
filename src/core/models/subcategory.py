@@ -1,3 +1,5 @@
+from django.core.files.storage import default_storage
+
 from .category import Category
 from django.db import models
 
@@ -15,3 +17,9 @@ class Subcategory(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def has_valid_image(self):
+        return bool(
+            self.image and self.image.name and default_storage.exists(self.image.name)
+        )
