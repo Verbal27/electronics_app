@@ -17,7 +17,7 @@ class CartListView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         service = CartService(self.request)
-        cart_context = service.get_cart_context(self.request)
+        cart_context = service.get_cart_context()
         context.update(cart_context)
 
         context["sub_placeholder_image"] = subcat_placeholder

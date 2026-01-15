@@ -164,7 +164,7 @@ class CartService:
             "data": {}
         }
 
-    def get_cart_context(self, request):
+    def get_cart_context(self):
         cart_items = []
         total_quantity = 0
         total_price = Decimal("0.00")
@@ -202,7 +202,7 @@ class CartService:
         tax = subtotal_decimal * tax_rate
         grand_total = subtotal_decimal + tax
 
-        subcategories = list_popular_subcategories(request)
+        subcategories = list_popular_subcategories(self.request)
 
         return {
             "cart_items": cart_items,
