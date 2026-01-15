@@ -6,17 +6,18 @@ class Cart:
         self.session = request.session
         self.cart = self.session.get("cart", {})
 
-    def add(self, product_id, name, price, quantity):
+    def add(self, product_id, name, price, quantity, subcategory):
         product_id = str(product_id)
         price = str(price)
         if product_id in self.cart:
             self.cart[product_id]["quantity"] += quantity
         else:
             self.cart[product_id] = {
-                "pid": product_id,
+                "id": product_id,
                 "name": name,
                 "price": price,
                 "quantity": quantity,
+                "subcategory": int(subcategory),
             }
         self.save()
 

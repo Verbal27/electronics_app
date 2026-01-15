@@ -1,5 +1,5 @@
-from django.db import models
 from ..constants import PaymentMethod, PaymentStatus
+from django.db import models
 
 
 class Payment(models.Model):

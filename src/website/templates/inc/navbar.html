@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 <nav class="navbar navbar-expand-lg bg-white shadow-sm">
-    <div class="container w-75">
+    <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="{% url 'homepage' %}">
             <div class="border rounded-3 p-2 bg-blue text-white me-2 d-inline-flex">
                 <i class="fa-solid fa-bolt"></i>
@@ -10,11 +10,23 @@
             <span class="fw-normal">TechHub</span>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#mainNavbar" aria-controls="mainNavbar"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="d-flex align-items-center">
+
+            <a href="{% url 'cart' %}"
+               class="nav-link position-relative d-flex d-lg-none me-2">
+                <div class="overlay mx-0 p-0 cart-overlay">
+                    <i class="fa-solid fa-cart-shopping mt-0"></i>
+                    {% if cart_count > 0 %}
+                        <span class="cart-badge">{{ cart_count }}</span>
+                    {% endif %}
+                </div>
+            </a>
+
+            <button class="navbar-toggler hide-border" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
 
         <div class="collapse navbar-collapse" id="mainNavbar">
 
@@ -37,7 +49,6 @@
                                 <a class="dropdown-item" href="{% url 'category_products' c.id %}">
                                     {{ c.name }}
                                 </a>
-
                                 {% if c.subcategories.all %}
                                     <ul class="list-unstyled ps-3">
                                         {% for sub in c.subcategories.all %}
@@ -62,14 +73,14 @@
 
             <div class="d-flex mx-lg-auto my-2 my-lg-0 w-100 justify-content-center">
                 <div class="input-group justify-content-center">
-                    <span class="input-group-text  border-0 w-75 py-0">
+                    <span class="input-group-text border-0 w-75 py-0">
                         <i class="fa-solid fa-magnifying-glass text-secondary"></i>
-                        {%  crispy search %}
+                        {% crispy search %}
                     </span>
                 </div>
             </div>
 
-            <ul class="navbar-nav ms-lg-3">
+            <ul class="navbar-nav ms-lg-3 custom-dropdown">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown"
                        role="button" data-bs-toggle="dropdown">
@@ -91,18 +102,18 @@
                         {% endif %}
                     </ul>
                 </li>
-
-                <li class="nav-item">
-                    <a href="{% url 'cart' %}" class="nav-link position-relative">
-                        <div class="overlay mx-0 p-0">
-                            <i class="fa-solid fa-cart-shopping mt-0"></i>
-                            {% if cart_count > 0 %}
-                                <span class="cart-badge">{{ cart_count }}</span>
-                            {% endif %}
-                        </div>
-                    </a>
-                </li>
             </ul>
+
+            <a href="{% url 'cart' %}"
+               class="nav-link position-relative d-none d-lg-flex ms-3">
+                <div class="overlay mx-0 p-0 cart-overlay">
+                    <i class="fa-solid fa-cart-shopping mt-0"></i>
+                    {% if cart_count > 0 %}
+                        <span class="cart-badge">{{ cart_count }}</span>
+                    {% endif %}
+                </div>
+            </a>
+
         </div>
     </div>
 </nav>

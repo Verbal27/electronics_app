@@ -1,6 +1,6 @@
-from django.db import models
-from django.urls import reverse
 from .subcategory import Subcategory
+from django.urls import reverse
+from django.db import models
 
 
 class Product(models.Model):
@@ -21,3 +21,9 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse("product_detail", args=[self.pk])
+
+    @property
+    def stock_status(self):
+        if self.quantity >= 10:
+            return "In Stock"
+        return "Low Stock"

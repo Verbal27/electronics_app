@@ -84,10 +84,10 @@
         <div class="container-fluid d-flex justify-content-center flex-column align-items-center py-5">
             <div class="text-center">
                 <div class="h5">Shop by category</div>
-                <div class="text-secondary">Find exacly what tou are looking for</div>
+                <div class="text-secondary">Find exactly what tou are looking for</div>
             </div>
             <div class="row w-75 g-3 justify-content-center mt-3">
-                {% for subcategory in subcategs %}
+                {% for subcategory in subcategories %}
                     <div class="col-6 col-sm-4 col-md-3 col-lg-2 d-flex">
                         <a href="{% url 'subcategory_products' subcategory.id %}" class="text-decoration-none w-100">
                             <div class="subcategory-card bg-white rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-start align-items-center">

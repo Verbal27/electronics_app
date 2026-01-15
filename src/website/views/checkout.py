@@ -1,10 +1,10 @@
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
-
 from src.website.forms.checkout import OrderModelForm
+from django.views.generic import CreateView
 from src.website.services import Cart
+from django.urls import reverse_lazy
+from django.contrib import messages
+from src.core.models import Product
 
 
 class CheckoutCreateView(LoginRequiredMixin, CreateView):
@@ -38,6 +38,15 @@ class CheckoutCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         cart = Cart(self.request)
+        products = {
+            item["id"]: Product.objects.get(pk=item["id"]) for item in cart.items()
+        }
+
+        for item in cart.items():
+            product = products[item["id"]]
+            product.quantity -= item["quantity"]
+            product.save()
+
         response = super().form_valid(form)
         cart.clear()
         messages.success(self.request, "Your order has been placed.")

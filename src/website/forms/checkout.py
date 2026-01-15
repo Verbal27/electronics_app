@@ -38,7 +38,7 @@ class OrderModelForm(ModelForm):
         model = Order
         exclude = ('payment', 'status', 'user')
 
-    def __init__(self, *args, cart_items=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.cart_items = kwargs.pop('cart_items', [])
         self.user = kwargs.pop('user', None)
         self.total = kwargs.pop('total', None)
@@ -93,10 +93,9 @@ class OrderModelForm(ModelForm):
             for item in self.cart_items:
                 OrderItem.objects.create(
                     order_id=order.id,
-                    product_id=int(item['pid']),
+                    product_id=int(item['id']),
                     product_name=item['name'],
                     quantity=item['quantity'],
                     price=item['price'],
                 )
-
         return order

@@ -1,7 +1,11 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Div, Field, HTML
+from crispy_forms.layout import Submit, Layout, Div, HTML, Button
 from django import forms
 from django.urls import reverse
+
+from src.core.components.website.icon import Icon
+from src.core.components.website.iconbutton import IconButton
+from src.core.components.website.inputs import SimpleInput
 
 
 class AddToCartForm(forms.Form):
@@ -16,37 +20,79 @@ class AddToCartForm(forms.Form):
 
 
 class AddToCartDetailForm(forms.Form):
-    quantity = forms.ChoiceField(initial=1, choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")])
+    quantity = forms.IntegerField(min_value=1, required=False, initial=1)
 
-    def __init__(self, *args, product_id=None, **kwargs):
-        super(AddToCartDetailForm, self).__init__(*args, **kwargs)
+    def __init__(self, *args, product_id=None, product=None, current_qty=0, **kwargs):
+        self.product_id = product_id
+        super().__init__(*args, **kwargs)
+
+        max_qty = product.quantity if product else 9999
+
+        self.fields["quantity"].widget = forms.NumberInput(
+            attrs={
+                "class": "col col-md-4 d-flex justify-content-center mx-md-2 quantity "
+                "border-0 bg-transparent text-dark fw-semibold text-center",
+                "style": "pointer-events: none; display: inline-flex;",
+                "min": "1",
+                "id": f"quantity-{self.product_id}",
+                "data-max": str(max_qty),
+                "data-in-cart": str(current_qty),
+                "value": "1",
+            }
+        )
+        self.fields["quantity"].widget.attrs.update(
+            {
+                "data-product-id": str(self.product_id),
+            }
+        )
         self.helper = FormHelper()
         self.helper.form_method = "post"
+        self.helper.form_class = "product-detail-form"
         self.helper.form_action = reverse("add_to_cart", args=[product_id])
         self.helper.layout = Layout(
             Div(
-                Div(
-                    Field("quantity"),
-                    css_class="d-flex d-flex-center align-items-center"
+                Button(
+                    "decrease_quantity",
+                    "-",
+                    css_class="btn bg-white border rounded-3 text-dark qty-btn qty-decrease",
+                    type="button"
                 ),
-                css_class="mb-4"
+                "quantity",
+                Button(
+                    "increase_quantity",
+                    "+",
+                    css_class="btn bg-white border rounded-3 text-dark qty-btn qty-increase",
+                    type="button"
+                ),
+                css_class="d-flex align-items-center gap-2",
             ),
-            Submit("add_to_cart", "Add To Cart", css_class="btn btn-primary btn-add-to-cart"),
+            Submit(
+                "add_to_cart",
+                "Add To Cart",
+                css_class="btn btn-primary btn-update-cart add-to-cart d-inline-block h-100",
+            ),
         )
 
 
 class RemoveFromCartForm(forms.Form):
     def __init__(self, *args, product_id=None, **kwargs):
-        super(RemoveFromCartForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.form_action = reverse("remove_from_cart", args=[product_id])
+
         self.helper.layout = Layout(
-            HTML("""
-                <button type="submit" class="btn custom-delete-btn text-danger">
-                    <i class='fa fa-trash'></i>
-                </button>
-            """)
+            Div(
+                HTML(
+                    IconButton(
+                        name="remove_from_cart",
+                        icon=Icon(Icon.TYPES.DELETE),
+                        css_classes="btn btn-delete bg-transparent text-muted fw-normal text-center"
+                    ),
+                ),
+                css_class="d-flex align-items-center",
+            )
         )
 
 
@@ -60,14 +106,47 @@ class UpdateCart(forms.Form):
             initial['quantity'] = quantity
         kwargs['initial'] = initial
 
-        super(UpdateCart, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
+        self.fields["quantity"].widget = forms.NumberInput(
+            attrs={
+                "class": "qtty border-0 p-0",
+                "style": "pointer-events: none;",
+                "min": "1",
+                "id": f"quantity-{self.product_id}",
+                "name": "quantity",
+            }
+        )
+        self.fields["quantity"].label = ""
+        self.fields["quantity"].widget.attrs.update(
+            {
+                "data-product-id": str(self.product_id),
+            }
+        )
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_action = reverse("update_cart", args=[self.product_id])
+        self.helper.form_class = "qty-form"
         self.helper.layout = Layout(
-            "quantity",
-            Submit("update_cart", "Update", css_class="btn btn-primary btn-update-cart"),
+            Div(
+                Button(
+                    "decrease_quantity",
+                    "-",
+                    css_class="btn bg-white border rounded-3 text-dark qty-btn qty-decrease",
+                    **{
+                        "data-url": reverse("decrease_quantity", args=[self.product_id]),
+                    }
+                ),
+                "quantity",
+                Button(
+                    "increase_quantity",
+                    "+",
+                    css_class="btn bg-white border rounded-3 text-dark qty-btn qty-increase",
+                    **{
+                        "data-url": reverse("increase_quantity", args=[self.product_id]),
+                    }
+                ),
+                css_class="d-flex align-items-center gap-2",
+            ),
         )
 
 
@@ -91,5 +170,43 @@ class CheckoutForm(forms.Form):
         self.helper.form_method = "get"
         self.helper.form_action = reverse("checkout")
         self.helper.layout = Layout(
-            Submit("checkout", "Checkout", css_class="btn btn-warning btn-block btn-lg"),
+            HTML(
+                IconButton(
+                    name="checkout",
+                    label="Proceed to checkout",
+                    icon=Icon(Icon.TYPES.CHECKOUT),
+                    icon_css_classes="text-white",
+                    css_classes="btn bg-dark border-0 text-white w-100 text-wrap my-2 p-2"
+                )
+            ),
+        )
+
+
+class PromoForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(PromoForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_action = "add_promo"
+        self.helper.form_class = "row align-items-center align-items-center gap-1 promo-form"
+        self.helper.layout = Layout(
+            Div(
+                HTML(Icon(icon_type=Icon.TYPES.PROMO)),
+                HTML(
+                    SimpleInput(
+                        name="promo",
+                        placeholder="Enter code",
+                        css_classes="col-12 col-md-8 input-group-sm form-control"
+                                    " bg-transparent border-0 p-2 m-0 promo-in",
+                        input_type="text",
+                    ),
+                ),
+                css_class="col promo-input d-flex rounded-3 border-0"
+                          " bg-body-secondary px-3 text-muted align-items-center"),
+            Submit(
+                "apply_promo",
+                "Apply",
+                css_class="col-12 col-md-4 btn btn-primary border-2 "
+                          "border-light-subtle bg-white text-dark fw-semibold promo-submit"
+            ),
         )

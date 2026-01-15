@@ -1,10 +1,10 @@
 {% extends "base/website/base.html" %}
 
-{% load crispy_forms_tags %}
+{% load static crispy_forms_tags %}
 
 {% block website_content %}
     <div class="container py-5 min-vh-100">
-        <div class="row big-row">
+        <div class="row big-row product-detail">
             <div class="col-md-6 mb-4 column">
                 <div class="detail-card">
                     <img src="{{ product.image.url }}" class="detail-card-img-top" alt="Product Image">
@@ -68,4 +68,9 @@
         </div>
     </div>
     {% include "inc/newsletter.html" %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/item_quantity.js' %}"></script>
 {% endblock %}

@@ -6,7 +6,8 @@ from .cart import (
     CartListView,
     CartAddView,
     CartRemoveItemView,
-    CartUpdateQuantityView,
+    CartUpdateIncreaseQuantityView,
+    CartUpdateDecreaseQuantityView,
     CartDropView,
 )
 from .products import ProductsListView, CategoryListView, SubCategoryProductListView
@@ -20,7 +21,8 @@ __all__ = (
     "CartListView",
     "CartAddView",
     "CartRemoveItemView",
-    "CartUpdateQuantityView",
+    "CartUpdateIncreaseQuantityView",
+    "CartUpdateDecreaseQuantityView",
     "CartDropView",
     "CheckoutCreateView",
     "CabinetTemplateView",
