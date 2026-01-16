@@ -1,23 +1,23 @@
 {% extends "base/website/base_app.html" %}
+
 {% block website_body %}
+
     {% if messages %}
-        <div class="container-alert mt-3">
+        <script id="django-messages" type="application/json">
+            [
             {% for message in messages %}
-                <div class="alert
-                    {% if message.tags %}
-                        alert-{{ message.tags }}
-                    {% else %}
-                        alert-info
-                    {% endif %}
-                        alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        </div>
+                {
+                    "level": "{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}",
+                    "text": "{{ message|escapejs }}"
+            }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+            ]
+        </script>
     {% endif %}
+
     {% include "inc/navbar.html" %}
-        {% block website_content %}
-        {% endblock %}
+    {% block website_content %}
+    {% endblock %}
     {% include "inc/footer.html" %}
+
 {% endblock %}
