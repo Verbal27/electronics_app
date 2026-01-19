@@ -1,10 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
+
+from src.website.services import Cart, CartService, CheckoutService
 from src.website.forms.checkout import OrderModelForm
 from django.views.generic import CreateView
-from src.website.services import Cart
 from django.urls import reverse_lazy
-from django.contrib import messages
-from src.core.models import Product
 
 
 class CheckoutCreateView(LoginRequiredMixin, CreateView):
@@ -37,26 +38,23 @@ class CheckoutCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
     def form_valid(self, form):
-        cart = Cart(self.request)
-        products = {
-            item["id"]: Product.objects.get(pk=item["id"]) for item in cart.items()
-        }
+        checkout_service = CheckoutService(self.request)
+        res = checkout_service.process_checkout(form)
 
-        for item in cart.items():
-            product = products[item["id"]]
-            product.quantity -= item["quantity"]
-            product.save()
+        if res["success"]:
+            messages.success(self.request, res.get("message"))
+            return HttpResponseRedirect(self.get_success_url())
 
-        response = super().form_valid(form)
-        cart.clear()
-        messages.success(self.request, "Your order has been placed.")
-        return response
+        messages.error(
+            self.request,
+            res.get("message", "There was an error processing your request."),
+        )
+        return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart = Cart(self.request)
-
-        context["cart_items"] = cart.items()
-        context["total"] = cart.get_total()
+        service = CartService(self.request)
+        cart_context = service.get_cart_context()
+        context.update(cart_context)
 
         return context

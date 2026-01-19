@@ -3,6 +3,7 @@ from django.db import models
 from .product import Product
 from .payment import Payment
 from ..constants import OrderStatus
+from ..constants.order import ShippingMethod
 
 User = get_user_model()
 
@@ -12,11 +13,15 @@ class Order(models.Model):
     first_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
     email = models.EmailField(max_length=255, null=True)
-    address = models.CharField(max_length=255, null=True)
+    street = models.CharField(max_length=255, null=True)
+    city = models.CharField(max_length=255, null=True)
+    state = models.CharField(max_length=255, null=True)
+    zipcode = models.CharField(max_length=255, null=True)
     payment = models.OneToOneField(Payment, on_delete=models.CASCADE)
     status = models.PositiveSmallIntegerField(choices=OrderStatus.choices)
     created_at = models.DateField(auto_now_add=True)
     phone = models.CharField(max_length=15, null=True)
+    save_address = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Order"
@@ -36,3 +41,33 @@ class OrderItem(models.Model):
 
     def __str__(self) -> str:
         return f"Order - {self.order.id} {self.product_name}"  # type: ignore
+
+
+class ShippingOption(models.Model):
+    code = models.PositiveSmallIntegerField(
+        choices=ShippingMethod.choices,
+        unique=True,
+    )
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    delivery_time = models.CharField(max_length=50, help_text="e.g. '1–2 business days', '3–5 days', 'Same day'")
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Shipping option"
+        verbose_name_plural = "Shipping options"
+
+    def __str__(self):
+        return f"{self.get_code_display()} {self.delivery_time} {self.price}"
+
+
+class SavedAddress(models.Model):
+    user = models.ForeignKey(User, related_name="saved_addresses", on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=255)
+    street = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
+    zipcode = models.CharField(max_length=20)
+    phone = models.CharField(max_length=15)
+    created_at = models.DateTimeField(auto_now_add=True)

@@ -5,6 +5,8 @@
     --color-fourth: #F53600;
     --color-fifth: #E8007C;
     --color-sixth: #2600F5;
+    --color-light-blue: #D7EBFF;
+    --color-icon-light-blue: #0E5FFF;
 
     --color-first-light: color-mix(in srgb, var(--color-first), white 75%);
     --color-second-light: color-mix(in srgb, var(--color-second), white 75%);
@@ -68,6 +70,10 @@ body {
     max-width: -webkit-fill-available;
 }
 
+.bg-input {
+    background: #F3F3F5;
+}
+
 .hero-gradient {
     background: linear-gradient(120deg, #0A1C4F 10%, #2c4595 50%, #0A1C4FFF 100%);
 }
@@ -122,6 +128,14 @@ body {
 
 .bg-sixth {
     background-color: var(--color-sixth-light) !important;
+}
+
+.bg-light-blue {
+    background-color: var(--color-light-blue) !important;
+}
+
+.text-light-blue {
+    color: var(--color-icon-light-blue) !important;
 }
 
 .container-checkout {
@@ -322,10 +336,6 @@ body {
 
 .card-promo {
     height: auto;
-}
-
-.checkout-row {
-    padding: 7rem;
 }
 
 .links {
@@ -614,6 +624,26 @@ body {
     outline: none !important;
     box-shadow: none !important;
 
+}
+
+.shipping-card {
+    width: 100%;
+    padding: 16px 20px;
+    border: 1px solid #e3e3e3;
+    border-radius: 14px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.shipping-card:hover {
+    border-color: #6aa7ff;
+}
+
+.shipping-option input:checked + .shipping-card {
+    border-color: #4f8cff;
+    background: #f3f7ff;
+    box-shadow: 0 0 0 1px rgba(79, 140, 255, 0.2);
 }
 
 @media (max-width: 767.98px) {

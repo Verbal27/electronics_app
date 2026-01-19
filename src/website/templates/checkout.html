@@ -3,22 +3,61 @@
 {% load crispy_forms_tags %}
 
 {% block website_content %}
-    <div class="container-checkout">
-        <div class="py-5 text-center">
-            <h2>Checkout </h2>
+    <div class="container min-vh-100 mt-5 custom-container">
+        <div>
+            <a href="{% url 'cart' %}"
+               class="text-decoration-none text-dark fw-medium gap-2 d-flex align-items-baseline"><i
+                    class="fa-solid fa-arrow-left"></i>Back to Cart</a>
+        </div>
+        <div class="py-5">
+            <h5>Checkout</h5>
         </div>
         {% if cart_items %}
-            <div class="row checkout-row">
-                <div class="col-md-4 order-md-2 mb-4">
+            <div class="row checkout-row gap-3">
+                <div class="col d-flex justify-content-between">
+                    <div class="w-100">
+                        {% crispy form %}
+                    </div>
+                </div>
+                <div class="col col-md-4 border border-1 rounded-4 bg-white p-4 h-100">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                         <span class="text-muted">Your cart</span>
-                        <span class="badge badge-secondary badge-pill">{{ cart_items|length }}</span>
                     </h4>
-
-                </div>
-                <div class="col-md-8 order-md-1">
-                    <h4 class="mb-3">Customer Details</h4>
-                    {% crispy form %}
+                    {% for item in cart_items %}
+                        <div class="p-1">
+                            <div class="row">
+                                <div class="col p-0">
+                                    <img class="img-fluid border border-0 rounded-4 h-100" src="{{ item.image.url }}"
+                                         alt="Card image cap">
+                                </div>
+                                <div class="col col-md-6">
+                                    <h5 class="fw-medium fs-6">{{ item.name }}</h5>
+                                    <p class="card-text"><small class="text-muted">Qty: {{ item.quantity }}</small></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-medium fs-6">${{ item.price }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="border border-1 border-bottom my-2"></div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="p2 fw-semibold">Total</div>
+                        <div class="fs-5 fw-normal grand-total-price">$ {{ total }}</div>
+                    </div>
+                    <div class="">
+                        <button type="submit"
+                                form="checkout-form"
+                                class="btn btn-add-to-cart w-100 mt-3 text-white d-flex align-items-center justify-content-center gap-3">
+                            <i class="fa-solid fa-shopping-bag"></i>
+                            Place Order
+                        </button>
+                    </div>
+                    <div class="justify-content-center d-flex align-items-center mt-3">
+                        <div class="text-muted text-center small">
+                            By placing your order, you agree to our Terms of Service and Privacy Policy.
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endif %}

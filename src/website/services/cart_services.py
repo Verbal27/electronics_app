@@ -18,6 +18,16 @@ class CartService:
         self.request = request
         self.cart = Cart(request)
 
+    def check_available(self, product, product_id):
+        product_id = str(product_id)
+
+        stock_available = product.quantity
+        in_cart = self.cart.cart.get(product_id, {}).get("quantity", 0)
+
+        remaining = stock_available - in_cart
+
+        return remaining >= 0
+
     def add_product(self, product_id, quantity):
         product = get_object_or_404(Product, pk=product_id)
         product_id = str(product_id)
@@ -49,14 +59,24 @@ class CartService:
             }
 
         self.cart.save()
-        return {
-            "success": True,
-            "message": "Added successfully",
-            "data": {
-                "max_available": stock_available,
-                "quantity_in_cart": existing_qty + qty_to_add,
-            },
-        }
+
+        check_res = self.check_available(product_id)
+
+        if check_res:
+            return {
+                "success": True,
+                "message": "Added successfully",
+                "data": {
+                    "max_available": stock_available,
+                    "quantity_in_cart": existing_qty + qty_to_add,
+                },
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Failed to add product",
+                "data": {}
+            }
 
     def increase_quantity(self, product_id):
         product = get_object_or_404(Product, pk=product_id)

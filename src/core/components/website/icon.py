@@ -9,6 +9,7 @@ class Icon(RenderComponentMixin):
         DELETE = "fas fa-trash"
         PROMO = "fas fa-tag"
         CHECKOUT = "fa-solid fa-arrow-right"
+        BAG = "fa-solid fa-shopping-bag"
 
     def __init__(self, icon_type, css_classes=None, css_style=None):
         self.icon_type = icon_type
