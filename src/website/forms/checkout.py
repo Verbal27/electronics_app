@@ -9,6 +9,11 @@ from phonenumber_field.formfields import PhoneNumberField
 
 from src.core.constants import OrderStatus
 from src.core.models import Order, Payment, OrderItem, ShippingOption
+from src.core.models.order import SavedAddress
+
+
+class SavedAddressRadioSelect(forms.RadioSelect):
+    template_name = "widgets/saved_addresses.html"
 
 
 class ShippingRadioSelect(forms.RadioSelect):
@@ -28,13 +33,17 @@ class OrderModelForm(ModelForm):
     city = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Chisinau"}))
     state = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "CU"}))
     zipcode = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "2121"}))
-    save_address = forms.CheckboxInput()
+    save_address = forms.BooleanField(required=False)
     phone = PhoneNumberField(region="MD", widget=forms.TextInput(attrs={"placeholder": "+373-00-000-000"}))
+    saved_addresses = forms.ChoiceField(
+        widget=SavedAddressRadioSelect,
+    )
     # noinspection PyTypeChecker
-    shipping_method = ShippingChoiceField(
+    shipping = ShippingChoiceField(
         queryset=ShippingOption.objects.filter(is_active=True),
         widget=ShippingRadioSelect,
         empty_label=None,
+        initial=ShippingOption.objects.filter(is_active=True).first(),
     )
     payment_method = TypedChoiceField(widget=forms.RadioSelect,
                                       choices=[("1", "Cash"), ("2", "Debit Card"), ("3", "Credit Card")], initial="1")
@@ -65,9 +74,18 @@ class OrderModelForm(ModelForm):
         self.cart_items = kwargs.pop('cart_items', [])
         self.user = kwargs.pop('user', None)
         self.total = kwargs.pop('total', None)
+        self.grand_total = kwargs.pop('grand_total', None)
+        self.tax = kwargs.pop('tax', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.fields["shipping_method"].label = ""
+        if self.user:
+            addresses = SavedAddress.objects.filter(user=self.user)
+            self.fields["saved_addresses"].choices = [
+                (addr.id, f"{addr.street}, {addr.city}, {addr.state}, {addr.zipcode}")
+                for addr in addresses
+            ]
+            self.fields["saved_addresses"].required = False
+        self.fields["shipping"].label = ""
         self.fields["payment_method"].label = ""
         self.fields["save_address"].label = "Save this address for future use"
         self.fields["zipcode"].label = "Zip Code"
@@ -91,6 +109,7 @@ class OrderModelForm(ModelForm):
                         css_class="d-flex align-items-baseline mb-4 gap-2",
                     ),
                 ),
+                Field("saved_addresses", css_class=""),
                 Row(
                     Column(
                         Field("first_name", css_class="bg-input"),
@@ -126,7 +145,7 @@ class OrderModelForm(ModelForm):
                         css_class="d-flex align-items-baseline mb-4 gap-2",
                     ),
                 ),
-                HTML("{{ form.shipping_method }}"),
+                HTML("{{ form.shipping }}"),
                 css_class="border border-1 rounded-4 bg-white p-4 my-4",
             ),
             Div(
@@ -180,20 +199,33 @@ class OrderModelForm(ModelForm):
             order.user = self.user
 
         if commit:
-            shipping_code = self.cleaned_data["shipping_method"]
-            shipping = ShippingOption.objects.get(name=shipping_code)
-
-            total = Decimal(self.total) + shipping.price
+            shipping = self.cleaned_data["shipping"]
+            tax_rate = Decimal("0.08")
+            tax = (Decimal(self.total) + shipping.price) * tax_rate
+            total_amount = Decimal(self.total) + shipping.price + tax
 
             payment = Payment.objects.create(
                 payment_method=self.cleaned_data["payment_method"],
-                amount=total,
+                amount=total_amount,
                 status="1",
             )
 
+            if self.cleaned_data["save_address"]:
+                SavedAddress.objects.update_or_create(
+                    user=self.user,
+                    first_name=self.cleaned_data["first_name"],
+                    last_name=self.cleaned_data["last_name"],
+                    email=self.cleaned_data["email"],
+                    street=self.cleaned_data["street"],
+                    city=self.cleaned_data["city"],
+                    state=self.cleaned_data["state"],
+                    zipcode=self.cleaned_data["zipcode"],
+                    phone=self.cleaned_data["phone"],
+                )
+
             order.payment = payment
             order.status = OrderStatus.PENDING
-            order.shipping = shipping_code
+            order.shipping = shipping.code
             order.save()
 
             for item in self.cart_items:

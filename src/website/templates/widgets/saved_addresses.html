@@ -1,0 +1,10 @@
+{% if saved_addresses %}
+    <label for="saved_address_select">Choose a saved address:</label>
+    <select id="saved_address_select">
+        {% for address in saved_addresses %}
+            <option value="{{ address.id }}" class="d-flex border border-2 border-secondary">
+                {{ address.street }}, {{ address.city }}, {{ address.zipcode }}
+            </option>
+        {% endfor %}
+    </select>
+{% endif %}

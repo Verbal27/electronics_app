@@ -22,6 +22,7 @@ class Order(models.Model):
     created_at = models.DateField(auto_now_add=True)
     phone = models.CharField(max_length=15, null=True)
     save_address = models.BooleanField(default=False)
+    shipping = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         verbose_name = "Order"
@@ -57,7 +58,10 @@ class ShippingOption(models.Model):
         verbose_name_plural = "Shipping options"
 
     def __str__(self):
-        return f"{self.get_code_display()} {self.delivery_time} {self.price}"
+        return f"{self.code} - {self.get_code_display()} {self.delivery_time} {self.price}"
+
+    def __int__(self):
+        return self.code
 
 
 class SavedAddress(models.Model):

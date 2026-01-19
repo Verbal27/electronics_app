@@ -42,8 +42,31 @@
                     {% endfor %}
                     <div class="border border-1 border-bottom my-2"></div>
                     <div class="d-flex justify-content-between align-items-center">
+                        <div class="p2 fw-semibold">Subtotal</div>
+                        <div class="fs-5 fw-normal grand-total-price" id="subtotal" data-subtotal="{{ total }}">
+                            $ {{ total }}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="p2 fw-semibold">Delivery</div>
+                        <div class="fs-5 fw-normal grand-total-price" id="shipping-price"
+                             data-shipping="{{ shipping_price }}">
+                            $ {{ shipping_price }}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="p2 fw-semibold">Tax(8%)</div>
+                        <div class="fs-5 fw-normal grand-total-price" id="tax" data-tax="{{ tax }}">
+                            $ {{ tax }}
+                        </div>
+                    </div>
+                    <div class="border border-1 border-bottom my-2"></div>
+                    <div class="d-flex justify-content-between align-items-center">
                         <div class="p2 fw-semibold">Total</div>
-                        <div class="fs-5 fw-normal grand-total-price">$ {{ total }}</div>
+                        <div class="fs-5 fw-normal grand-total-price" id="grand-total" data-subtotal="{{ total }}"
+                             data-shipping="{{ shipping_price }}" data-tax="{{ tax }}">
+                            $ {{ grand_total }}
+                        </div>
                     </div>
                     <div class="">
                         <button type="submit"
