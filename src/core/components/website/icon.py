@@ -10,6 +10,7 @@ class Icon(RenderComponentMixin):
         PROMO = "fas fa-tag"
         CHECKOUT = "fa-solid fa-arrow-right"
         BAG = "fa-solid fa-shopping-bag"
+        LOCK = "fa-solid fa-lock"
 
     def __init__(self, icon_type, css_classes=None, css_style=None):
         self.icon_type = icon_type

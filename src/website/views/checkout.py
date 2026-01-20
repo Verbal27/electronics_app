@@ -3,18 +3,18 @@ from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 
-from src.core.models import ShippingOption
+from src.core.models import ShippingOption, Order
 from src.website.services import Cart, CartService, CheckoutService
 from src.website.forms.checkout import OrderModelForm
-from django.views.generic import CreateView
+from django.views.generic import CreateView, TemplateView
 from django.urls import reverse_lazy
 
 
 class CheckoutCreateView(LoginRequiredMixin, CreateView):
     form_class = OrderModelForm
     template_name = "checkout.html"
-    success_url = reverse_lazy("homepage")
 
     def get_initial(self):
         user = self.request.user
@@ -52,13 +52,18 @@ class CheckoutCreateView(LoginRequiredMixin, CreateView):
         )
         return kwargs
 
+    def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{error}")
+        return super().form_invalid(form)
+
     def form_valid(self, form):
         checkout_service = CheckoutService(self.request)
         res = checkout_service.process_checkout(form)
 
         if res["success"]:
             self.object = res["data"]["order"]
-            messages.success(self.request, res.get("message"))
             return HttpResponseRedirect(self.get_success_url())
 
         messages.error(
@@ -66,6 +71,9 @@ class CheckoutCreateView(LoginRequiredMixin, CreateView):
             res.get("message", "There was an error processing your request."),
         )
         return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("complete", kwargs={"pk": self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -76,5 +84,24 @@ class CheckoutCreateView(LoginRequiredMixin, CreateView):
         initial_data = checkout_service.get_initial_data(context)
 
         context.update(initial_data)
+
+        return context
+
+
+class CheckoutCompleteView(LoginRequiredMixin, TemplateView):
+    template_name = "checkout_complete.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        order = get_object_or_404(Order, pk=self.kwargs["pk"], user=self.request.user)
+
+        context["order"] = order
+
+        shipping = ShippingOption.objects.filter(code=order.shipping).first()
+        if shipping and shipping.delivery_time:
+            context["delivery_time_span"] = f"{shipping.delivery_time}"
+        else:
+            context["delivery_time_span"] = "3–5 business days"
 
         return context

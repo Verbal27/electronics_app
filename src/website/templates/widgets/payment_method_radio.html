@@ -2,10 +2,11 @@
     {% for option in options %}
         <label class="d-flex align-items-center gap-2 border p-2 rounded mb-2 hstack">
             <input
-                    type="radio"
-                    name="{{ widget.name }}"
-                    value="{{ option.value }}"
-                    {% if option.selected %}checked{% endif %}
+                type="radio"
+                name="{{ widget.name }}"
+                value="{{ option.value }}"
+                {% if option.selected %}checked{% endif %}
+                data-requires-card="{% if option.value != '1' %}1{% else %}0{% endif %}"
             >
             <span>{{ option.label }}</span>
         </label>

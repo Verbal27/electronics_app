@@ -7,6 +7,9 @@
     --color-sixth: #2600F5;
     --color-light-blue: #D7EBFF;
     --color-icon-light-blue: #0E5FFF;
+    --color-light-green: #D4FDE4;
+    --color-icon-light-green: #05AA28;
+    --color-light-grey: #F9FAFC;
 
     --color-first-light: color-mix(in srgb, var(--color-first), white 75%);
     --color-second-light: color-mix(in srgb, var(--color-second), white 75%);
@@ -132,6 +135,18 @@ body {
 
 .bg-light-blue {
     background-color: var(--color-light-blue) !important;
+}
+
+.bg-light-green {
+    background-color: var(--color-light-green) !important;
+}
+
+.bg-light-grey {
+    background-color: var(--color-light-grey) !important;
+}
+
+.text-light-green {
+    color: var(--color-icon-light-green) !important;
 }
 
 .text-light-blue {
@@ -644,6 +659,11 @@ body {
     border-color: #4f8cff;
     background: #f3f7ff;
     box-shadow: 0 0 0 1px rgba(79, 140, 255, 0.2);
+}
+
+.home-btn:hover {
+    text-decoration: none !important;
+    color: black;
 }
 
 @media (max-width: 767.98px) {

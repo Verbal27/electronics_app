@@ -30,5 +30,6 @@ urlpatterns = [
     ])),
     path("checkout/", include([
         path("", views.CheckoutCreateView.as_view(), name="checkout"),
+        path("complete/<int:pk>/", views.CheckoutCompleteView.as_view(), name="complete"),
     ]), )
 ]

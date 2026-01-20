@@ -1,12 +1,11 @@
 {% for group, options, index in widget.optgroups %}
     {% for option in options %}
         <label class="d-flex align-items-center gap-2 border p-2 rounded mb-2 hstack">
-            <input
-                    type="radio"
-                    name="{{ widget.name }}"
-                    value="{{ option.value }}"
-                    {% if option.selected %}checked{% endif %}
-            >
+            <input type="radio"
+                   name="{{ widget.name }}"
+                   value="{{ option.value }}"
+                   class="form-check-input"
+                   {% if option.selected %}checked{% endif %}>
             <span>{{ option.label }}</span>
         </label>
     {% endfor %}
