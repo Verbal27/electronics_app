@@ -1,13 +1,22 @@
-{% for group, options, index in widget.optgroups %}
-    {% for option in options %}
+{% load crispy_forms_field %}
+
+<div class="custom-radio-group">
+    {% for value, label in field.field.choices %}
         <label class="d-flex align-items-center gap-2 border p-2 rounded mb-2 hstack">
             <input
-                    type="radio"
-                    name="{{ widget.name }}"
-                    value="{{ option.value }}"
-                    {% if option.selected %}checked{% endif %}
+                type="radio"
+                name="{{ field.html_name }}"
+                value="{{ value }}"
+                {% if field.value == value%}checked{% endif %}
+                class="form-check-input"
             >
-            <span>{{ option.label }}</span>
+            <span>{{ label }}</span>
         </label>
     {% endfor %}
-{% endfor %}
+
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    {% endif %}
+</div>

@@ -20,10 +20,6 @@ class AddressModeRadioSelect(forms.RadioSelect):
     template_name = "widgets/address_mode_radio.html"
 
 
-class SavedAddressRadioSelect(forms.RadioSelect):
-    template_name = "widgets/saved_addresses.html"
-
-
 class ShippingRadioSelect(forms.RadioSelect):
     template_name = "widgets/shipping_radio.html"
 
@@ -74,7 +70,7 @@ class OrderModelForm(ModelForm):
         required=True,
     )
     saved_addresses = forms.ChoiceField(
-        widget=SavedAddressRadioSelect,
+        widget=forms.RadioSelect,
     )
     # noinspection PyTypeChecker
     shipping = ShippingChoiceField(
@@ -176,9 +172,7 @@ class OrderModelForm(ModelForm):
                 ),
                 Div(
                     Div(
-                        HTML(
-                            "{{form.saved_addresses}}"
-                        ),
+                        Field("saved_addresses", template="widgets/saved_addresses.html"),
                         css_class="justify-content-center align-items-center flex-column"
                     ),
                     css_id="saved-address-block",
@@ -353,8 +347,6 @@ class OrderModelForm(ModelForm):
         )
 
         mode = self.cleaned_data.get("address_mode")
-        print(mode)
-        print(self.cleaned_data)
 
         if mode == "saved" and self.cleaned_data.get("saved_addresses"):
             addr = SavedAddress.objects.get(
