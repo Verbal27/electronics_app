@@ -1,7 +1,7 @@
 {% for group, options, index in widget.optgroups %}
     {% for option in options %}
-        <div class="shipping-option mb-3 ">
-            <label for="{{ option.attrs.id }}" class="shipping-card d-flex gap-3">
+        <div class="checkout-card-option mb-3 ">
+            <label for="{{ option.attrs.id }}" class="checkout-card d-flex gap-3">
                 <div class="d-flex gap-3 col">
                     <input
                             type="radio"
@@ -11,7 +11,6 @@
                             {% if option.selected %}checked{% endif %}
                             data-price="{{ option.label.price }}"
                     >
-
                     <div class="">
                         <span class="fw-medium fs-6">{{ option.label.get_code_display }}</span>
                     </div>
