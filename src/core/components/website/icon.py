@@ -11,6 +11,11 @@ class Icon(RenderComponentMixin):
         CHECKOUT = "fa-solid fa-arrow-right"
         BAG = "fa-solid fa-shopping-bag"
         LOCK = "fa-solid fa-lock"
+        MAP_POINTER = "fa-solid fa-location-dot"
+        DELIVERY_MODE = "fa-solid fa-box-open"
+        DELIVERY = "fa-solid fa"
+        CARD = "fa-solid fa-credit-card"
+        SECURE = "fa-solid fa-lock"
 
     def __init__(self, icon_type, css_classes=None, css_style=None):
         self.icon_type = icon_type

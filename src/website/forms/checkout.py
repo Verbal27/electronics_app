@@ -7,6 +7,7 @@ from django import forms
 from django.forms import ModelForm, TypedChoiceField
 from phonenumber_field.formfields import PhoneNumberField
 
+from src.core.components.website.icon import Icon
 from src.core.constants import OrderStatus
 from src.core.models import Order, Payment, OrderItem, ShippingOption
 from src.core.models.order import SavedAddress
@@ -77,7 +78,6 @@ class OrderModelForm(ModelForm):
         queryset=ShippingOption.objects.filter(is_active=True),
         widget=ShippingRadioSelect,
         empty_label=None,
-        initial=ShippingOption.objects.filter(is_active=True).first(),
     )
     payment_method = TypedChoiceField(
         widget=PaymentMethodChoiceField,
@@ -117,6 +117,9 @@ class OrderModelForm(ModelForm):
         self.tax = kwargs.pop('tax', None)
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        active_shipping = ShippingOption.objects.filter(is_active=True).first()
+        if active_shipping:
+            self.fields["shipping"].initial = active_shipping
         if self.user:
             addresses = SavedAddress.objects.filter(user=self.user)
             if addresses.exists():
@@ -158,11 +161,14 @@ class OrderModelForm(ModelForm):
                     Div(
                         Div(
                             HTML(
-                                "<i class='fa-solid fa-location-dot fs-4 text-light-blue'></i>"
+                                Icon(
+                                    icon_type=Icon.TYPES.MAP_POINTER,
+                                    css_classes="fs-4 text-light-blue"
+                                ),
                             ),
                             css_class="bg-light-blue p-2 border rounded-3",
                         ),
-                        HTML("<div class='fw-medium fs-4'>Shipping Information</div>"),
+                        Div(HTML("Shipping Information"), css_class="fw-medium fs-4"),
                         css_class="d-flex align-items-baseline mb-4 gap-2",
                     ),
                 ),
@@ -202,11 +208,14 @@ class OrderModelForm(ModelForm):
                     Div(
                         Div(
                             HTML(
-                                "<i class='fa-solid fa-box-open fs-3 text-light-blue'></i>"
+                                Icon(
+                                    icon_type=Icon.TYPES.DELIVERY_MODE,
+                                    css_classes="fs-3 text-light-blue"
+                                ),
                             ),
                             css_class="bg-light-blue p-2 border rounded-3",
                         ),
-                        HTML("<div class='fw-medium fs-4'>Shipping Method</div>"),
+                        Div(HTML("Shipping Method"), css_class="fw-medium fs-4"),
                         css_class="d-flex align-items-baseline mb-4 gap-2",
                     ),
                 ),
@@ -223,11 +232,14 @@ class OrderModelForm(ModelForm):
                     Div(
                         Div(
                             HTML(
-                                "<i class='fa-solid fa-credit-card fs-4 text-light-blue'></i>"
+                                Icon(
+                                    icon_type=Icon.TYPES.CARD,
+                                    css_classes="fs-4 text-light-blue"
+                                ),
                             ),
                             css_class="bg-light-blue p-2 border rounded-3",
                         ),
-                        HTML("<div class='fw-medium fs-4'>Payment Information</div>"),
+                        Div(HTML("Payment Information"), css_class="fw-medium fs-4"),
                         css_class="d-flex align-items-baseline mb-4 gap-2",
                     ),
                 ),
@@ -260,17 +272,18 @@ class OrderModelForm(ModelForm):
                     Div(
                         Div(
                             HTML(
-                                """
-                                <i class="fa-solid fa-lock text-muted"></i>
-                                <div>Secure Payment</div>
-                                """
+                                Icon(
+                                    icon_type=Icon.TYPES.SECURE,
+                                    css_classes="text-muted"
+                                ),
                             ),
+                            HTML("Secure Payment"),
                             css_class="d-flex align-items-center fw-medium gap-2 align-items-baseline",
                         ),
                         Div(
                             HTML(
                                 """
-                                <div>Your payment information is encrypted and secure
+                                Your payment information is encrypted and secure
                                 """
                             ),
                             css_class="d-flex align-items-center fw-medium text-muted",

@@ -3,14 +3,14 @@ from decimal import Decimal
 from django.db import transaction
 
 from src.core.models import Product, ShippingOption
-from src.website.services import Cart, CartService
+from src.website.services import CartService
 
 
 class CheckoutService:
     def __init__(self, request):
         self.request = request
-        self.cart = Cart(request)
         self.cart_service = CartService(request)
+        self.cart = self.cart_service.cart
 
     def get_initial_data(self, context):
         form = context.get("form")
