@@ -31,6 +31,9 @@ class RegisterView(CreateView):
 
         return redirect(self.get_success_url())
 
+    def get_success_url(self):
+        return reverse_lazy("homepage")
+
     def form_invalid(self, form):
         messages.error(self.request, "There was an error.")
         return super().form_invalid(form)
