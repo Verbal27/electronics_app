@@ -1,4 +1,4 @@
 from .payment import PaymentMethod, PaymentStatus
-from .order import OrderStatus, ShippingMethod
+from .order import OrderStatus
 
-__all__ = ("PaymentMethod", "PaymentStatus", "OrderStatus", "ShippingMethod")
+__all__ = ("PaymentMethod", "PaymentStatus", "OrderStatus")

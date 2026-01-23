@@ -8,17 +8,13 @@ from django.forms import ModelForm, TypedChoiceField
 from phonenumber_field.formfields import PhoneNumberField
 
 from src.core.components.website.icon import Icon
-from src.core.constants import OrderStatus
+from src.core.constants import OrderStatus, PaymentStatus
 from src.core.models import Order, Payment, OrderItem, ShippingOption
 from src.core.models.order import SavedAddress
 
 
 class PaymentMethodChoiceField(forms.RadioSelect):
     template_name = "widgets/payment_method_radio.html"
-
-
-class AddressModeRadioSelect(forms.RadioSelect):
-    template_name = "widgets/address_mode_radio.html"
 
 
 class ShippingRadioSelect(forms.RadioSelect):
@@ -65,14 +61,6 @@ class OrderModelForm(ModelForm):
         ),
         required=False
     )
-    address_mode = forms.ChoiceField(
-        choices=[("saved", "Use a saved address"), ("new", "Enter a new address")],
-        widget=AddressModeRadioSelect,
-        required=True,
-    )
-    saved_addresses = forms.ChoiceField(
-        widget=forms.RadioSelect,
-    )
     # noinspection PyTypeChecker
     shipping = ShippingChoiceField(
         queryset=ShippingOption.objects.filter(is_active=True),
@@ -81,8 +69,9 @@ class OrderModelForm(ModelForm):
     )
     payment_method = TypedChoiceField(
         widget=PaymentMethodChoiceField,
-        choices=[("1", "Cash"), ("2", "Debit Card"), ("3", "Credit Card")],
-        initial="1"
+        choices=[("1", "Cash"), ("2", "Debit/Credit Card")],
+        initial="1",
+        coerce=int
     )
     name_on_card = forms.CharField(
         widget=forms.TextInput(),
@@ -120,31 +109,6 @@ class OrderModelForm(ModelForm):
         active_shipping = ShippingOption.objects.filter(is_active=True).first()
         if active_shipping:
             self.fields["shipping"].initial = active_shipping
-        if self.user:
-            addresses = SavedAddress.objects.filter(user=self.user)
-            if addresses.exists():
-                self.fields["saved_addresses"].choices = [
-                    (
-                        addr.id,
-                        f"{addr.first_name}"
-                        f" {addr.last_name},"
-                        f" {addr.phone},"
-                        f" {addr.email},"
-                        f" {addr.street},"
-                        f" {addr.city},"
-                        f" {addr.state},"
-                        f" {addr.zipcode}",
-                    )
-                    for addr in addresses
-                ]
-                self.fields["saved_addresses"].required = False
-                self.fields["address_mode"].initial = "saved"
-            else:
-                self.fields["address_mode"].initial = "new"
-                self.fields.pop("saved_addresses")
-        else:
-            self.fields["address_mode"].initial = "new"
-            self.fields.pop("saved_addresses")
         self.fields["shipping"].label = ""
         self.fields["payment_method"].label = ""
         self.fields["save_address"].label = "Save this address for future use"
@@ -171,18 +135,6 @@ class OrderModelForm(ModelForm):
                         Div(HTML("Shipping Information"), css_class="fw-medium fs-4"),
                         css_class="d-flex align-items-baseline mb-4 gap-2",
                     ),
-                ),
-                Div(
-                    HTML("{{form.address_mode}}"),
-                    css_id="address_mode"
-                ),
-                Div(
-                    Div(
-                        Field("saved_addresses", template="widgets/saved_addresses.html"),
-                        css_class="justify-content-center align-items-center flex-column"
-                    ),
-                    css_id="saved-address-block",
-                    css_class="align-items-center gap-2",
                 ),
                 Div(
                     Row(
@@ -298,32 +250,23 @@ class OrderModelForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        address_mode = cleaned_data.get("address_mode")
-        saved_address = cleaned_data.get("saved_addresses")
 
-        if address_mode == "saved":
-            if not saved_address:
-                self.add_error(
-                    "saved_addresses",
-                    "Please select a saved address or switch to entering a new address.",
-                )
-        else:
-            required_fields = [
-                "first_name",
-                "last_name",
-                "email",
-                "street",
-                "city",
-                "state",
-                "zipcode",
-                "phone",
-            ]
-            for field in required_fields:
-                if not cleaned_data.get(field):
-                    self.add_error(field, "This field is required.")
+        required_fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "phone",
+            "street",
+            "city",
+            "state",
+            "zipcode",
+        ]
+        for field in required_fields:
+            if not cleaned_data.get(field):
+                self.add_error(field, "This field is required.")
 
         payment_method = cleaned_data.get("payment_method")
-        if payment_method in ("2", "3"):
+        if payment_method == 2:
             card_fields = [
                 "card_number",
                 "expiration_date",
@@ -356,51 +299,36 @@ class OrderModelForm(ModelForm):
         payment = Payment.objects.create(
             payment_method=self.cleaned_data["payment_method"],
             amount=total_amount,
-            status="1",
+            status=PaymentStatus.PENDING,
         )
 
-        mode = self.cleaned_data.get("address_mode")
+        order.first_name = self.cleaned_data["first_name"]
+        order.last_name = self.cleaned_data["last_name"]
+        order.email = self.cleaned_data["email"]
+        order.street = self.cleaned_data["street"]
+        order.city = self.cleaned_data["city"]
+        order.state = self.cleaned_data["state"]
+        order.zipcode = self.cleaned_data["zipcode"]
+        order.phone = self.cleaned_data["phone"]
 
-        if mode == "saved" and self.cleaned_data.get("saved_addresses"):
-            addr = SavedAddress.objects.get(
-                id=self.cleaned_data["saved_addresses"],
+        if self.cleaned_data.get("save_address") and self.user:
+            SavedAddress.objects.update_or_create(
                 user=self.user,
+                defaults={
+                    "first_name": order.first_name,
+                    "last_name": order.last_name,
+                    "email": order.email,
+                    "street": order.street,
+                    "city": order.city,
+                    "state": order.state,
+                    "zipcode": order.zipcode,
+                    "phone": order.phone,
+                },
             )
-            order.first_name = addr.first_name
-            order.last_name = addr.last_name
-            order.email = addr.email
-            order.street = addr.street
-            order.city = addr.city
-            order.state = addr.state
-            order.zipcode = addr.zipcode
-            order.phone = addr.phone
-
-        else:
-            order.first_name = self.cleaned_data["first_name"]
-            order.last_name = self.cleaned_data["last_name"]
-            order.email = self.cleaned_data["email"]
-            order.street = self.cleaned_data["street"]
-            order.city = self.cleaned_data["city"]
-            order.state = self.cleaned_data["state"]
-            order.zipcode = self.cleaned_data["zipcode"]
-            order.phone = self.cleaned_data["phone"]
-
-            if self.cleaned_data.get("save_address") and self.user:
-                SavedAddress.objects.update_or_create(
-                    user=self.user,
-                    first_name=order.first_name,
-                    last_name=order.last_name,
-                    email=order.email,
-                    street=order.street,
-                    city=order.city,
-                    state=order.state,
-                    zipcode=order.zipcode,
-                    phone=order.phone,
-                )
 
         order.payment = payment
         order.status = OrderStatus.PENDING
-        order.shipping = shipping.code
+        order.shipping = shipping
         order.save()
 
         for item in self.cart_items:

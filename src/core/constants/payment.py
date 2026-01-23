@@ -2,9 +2,8 @@ from django.db.models import IntegerChoices
 
 
 class PaymentMethod(IntegerChoices):
-    CARD = 1, "Card"
-    TRANSFER = 2, "Transfer"
-    CASH = 3, "Cash"
+    CARD = 1, "Cash"
+    CASH = 2, "Card"
 
 
 class PaymentStatus(IntegerChoices):

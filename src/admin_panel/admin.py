@@ -4,4 +4,4 @@ from ..core.models import ShippingOption
 
 @admin.register(ShippingOption)
 class ShippingOptionAdmin(admin.ModelAdmin):
-    list_display = ("code", "price", "is_active")
+    list_display = ("name", "price", "delivery_time", "is_active")

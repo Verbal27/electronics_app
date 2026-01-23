@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
@@ -17,16 +18,33 @@ class CheckoutCreateView(LoginRequiredMixin, CreateView):
     template_name = "checkout.html"
 
     def get_initial(self):
-        user = self.request.user
         initial = super().get_initial()
+        user = self.request.user
 
-        initial.update(
+        saved_address = getattr(user, "saved_address", None)
+
+        if saved_address:
+            initial.update(
+                {
+                    "first_name": saved_address.first_name,
+                    "last_name": saved_address.last_name,
+                    "email": saved_address.email,
+                    "phone": saved_address.phone,
+                    "street": saved_address.street,
+                    "city": saved_address.city,
+                    "state": saved_address.state,
+                    "zipcode": saved_address.zipcode,
+                }
+            )
+        else:
+            initial.update(
                 {
                     "first_name": user.first_name,
                     "last_name": user.last_name,
                     "email": user.email,
                 }
             )
+
         return initial
 
     def get_form_kwargs(self):
@@ -38,7 +56,7 @@ class CheckoutCreateView(LoginRequiredMixin, CreateView):
         shipping_price = getattr(default_shipping, "price", 0)
 
         tax_rate = 0.08
-        tax = subtotal * Decimal(tax_rate)
+        tax = (Decimal(subtotal) + Decimal(shipping_price)) * Decimal(tax_rate)
         grand_total = Decimal(subtotal) + Decimal(shipping_price) + tax
 
         kwargs.update(
@@ -59,17 +77,17 @@ class CheckoutCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         checkout_service = CheckoutService(self.request)
-        res = checkout_service.process_checkout(form)
 
-        if res["success"]:
-            self.object = res["data"]["order"]
-            return HttpResponseRedirect(self.get_success_url())
+        with transaction.atomic():
+            stock_check = checkout_service.check_and_reserve_stock()
+            if not stock_check["success"]:
+                messages.error(self.request, stock_check["message"])
+                return self.form_invalid(form)
 
-        messages.error(
-            self.request,
-            res.get("message", "There was an error processing your request."),
-        )
-        return self.form_invalid(form)
+            self.object = form.save()
+
+        Cart(self.request).clear()
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse_lazy("complete", kwargs={"pk": self.object.pk})
@@ -97,7 +115,7 @@ class CheckoutCompleteView(LoginRequiredMixin, TemplateView):
 
         context["order"] = order
 
-        shipping = ShippingOption.objects.filter(code=order.shipping).first()
+        shipping = order.shipping
         if shipping and shipping.delivery_time:
             context["delivery_time_span"] = f"{shipping.delivery_time}"
         else:

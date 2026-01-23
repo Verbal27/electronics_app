@@ -6,8 +6,6 @@
         if (!form) return;
 
         const cardSection = form.querySelector('.card-details');
-        const savedBlock = form.querySelector('#saved-address-block');
-        const newBlock = form.querySelector('#new-address-block');
 
         const shippingPriceEl = document.getElementById('shipping-price');
         const taxEl = document.getElementById('tax');
@@ -24,15 +22,6 @@
             cardSection.style.display = show ? 'block' : 'none';
         }
 
-        function updateAddressVisibility() {
-            if (!savedBlock || !newBlock) return;
-
-            const selected = form.querySelector('input[name="address_mode"]:checked');
-            const mode = selected?.value;
-
-            savedBlock.style.display = mode === 'saved' ? 'flex' : 'none';
-            newBlock.style.display = mode === 'saved' ? 'none' : 'flex';
-        }
 
         function updateTotals(price) {
             if (!shippingPriceEl || !taxEl || !grandTotalEl) return;
@@ -52,10 +41,6 @@
                 updatePaymentVisibility();
             }
 
-            if (t.matches('input[name="address_mode"]')) {
-                updateAddressVisibility();
-            }
-
             if (t.matches('input[name="shipping"]')) {
                 updateTotals(t.dataset.price);
             }
@@ -70,7 +55,6 @@
         });
 
         updatePaymentVisibility();
-        updateAddressVisibility();
 
         const checkedShipping = form.querySelector('input[name="shipping"]:checked');
         if (checkedShipping) {

@@ -1,7 +1,5 @@
 from decimal import Decimal
 
-from django.db import transaction
-
 from src.core.models import Product, ShippingOption
 from src.website.services import CartService
 
@@ -32,48 +30,37 @@ class CheckoutService:
 
         return context
 
-    def process_checkout(self, form):
+    def check_and_reserve_stock(self):
         items = list(self.cart.items())
 
         if not items:
+            return {"success": False, "message": "Your cart is empty."}
+
+        products = {
+            item["id"]: Product.objects.select_for_update().get(pk=item["id"])
+            for item in items
+        }
+
+        unavailable = []
+
+        for item in items:
+            product = products[item["id"]]
+            if product.quantity < item["quantity"]:
+                unavailable.append(
+                    f"{product.name} "
+                    f"(available: {product.quantity}, requested: {item['quantity']})"
+                )
+
+        if unavailable:
             return {
                 "success": False,
-                "message": "Your cart is empty.",
+                "message": "Some products are unavailable.",
+                "data": {"unavailable_items": unavailable},
             }
 
-        with transaction.atomic():
-            products = {
-                item["id"]: Product.objects.select_for_update().get(pk=item["id"])
-                for item in self.cart.items()
-            }
+        for item in items:
+            product = products[item["id"]]
+            product.quantity -= item["quantity"]
+            product.save(update_fields=["quantity"])
 
-            unavailable = []
-            for item in self.cart.items():
-                product = products[item["id"]]
-                requested_qty = item["quantity"]
-
-                if product.quantity < requested_qty:
-                    unavailable.append(
-                        f"{product.name} (available: {product.quantity}, requested: {requested_qty})"
-                    )
-
-            if unavailable:
-                return {
-                    "success": False,
-                    "message": "Some products are unavailable in the quantity you requested.",
-                    "data": {"unavailable_items": unavailable},
-                }
-
-            for item in self.cart.items():
-                product = products[item["id"]]
-                product.quantity -= item["quantity"]
-                product.save(update_fields=["quantity"])
-            order = form.save(commit=True)
-
-        self.cart.clear()
-
-        return {
-            "success": True,
-            "message": "Checkout completed successfully.",
-            "data": {"order": order},
-        }
+        return {"success": True}

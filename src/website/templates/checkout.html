@@ -25,13 +25,13 @@
                     </h4>
                     {% for item in cart_items %}
                         <div class="p-1">
-                            <div class="row">
+                            <div class="row d-flex gap-3">
                                 <div class="col p-0">
                                     <img class="img-fluid border border-0 rounded-4 h-100" src="{{ item.image.url }}"
                                          alt="Card image cap">
                                 </div>
                                 <div class="col p-0">
-                                    <h5 class="fw-medium fs-6">{{ item.name }}</h5>
+                                    <h5 class="fw-medium fs-6 mb-0">{{ item.name }}</h5>
                                     <p class="card-text"><small class="text-muted">Qty: {{ item.quantity }}</small></p>
                                 </div>
                                 <div class="col p-0">
