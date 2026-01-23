@@ -13,6 +13,8 @@ function initUpdateCartQuantity() {
         const cartSubtotalEl = document.querySelector(".total-price");
         const taxAmountEl = document.querySelector("[data-tax]");
         const cartGrandTotalEl = document.querySelector(".grand-total-price");
+        const cartCounts = document.querySelectorAll(".cart-count");
+        const textCounter = document.getElementById("text-counter");
 
         if (!updateUrl || !productId) {
             console.error("Missing required data attributes");
@@ -56,6 +58,14 @@ function initUpdateCartQuantity() {
                 if (cartGrandTotalEl && dt.grand_total) {
                     cartGrandTotalEl.textContent = `$ ${dt.grand_total}`;
                 }
+
+                if (cartCounts.length && dt.cart_items !== undefined) {
+                    cartCounts.forEach(el => {
+                        el.textContent = dt.cart_items;
+                    });
+                    textCounter.textContent = dt.cart_items === 1 ? " item" : " items";
+                }
+
             })
             .catch(error => {
                 console.error("Error updating cart:", error);

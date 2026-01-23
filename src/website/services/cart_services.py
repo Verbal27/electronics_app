@@ -74,6 +74,7 @@ class CartService:
         current = self.cart.cart[product_id]["quantity"]
 
         if current == product.quantity:
+            items_count = sum(item["quantity"] for item in self.cart.items())
             return {
                 "success": True,
                 "message": "Max stock reached",
@@ -81,6 +82,7 @@ class CartService:
                     "quantity": product.quantity,
                     "new_subtotal": price * product.quantity,
                     "has_more": False,
+                    "cart_items": items_count,
                 },
             }
 
@@ -92,6 +94,8 @@ class CartService:
         self.cart.cart[product_id]["quantity"] = new_quantity
         self.cart.save()
 
+        items_count = sum(item["quantity"] for item in self.cart.items())
+
         return {
             "success": True,
             "message": "Product updated successfully",
@@ -99,6 +103,7 @@ class CartService:
                 "quantity": new_quantity,
                 "new_subtotal": subtotal,
                 "has_more": True,
+                "cart_items": items_count,
             },
         }
 
@@ -118,6 +123,7 @@ class CartService:
         new_quantity = current - 1
 
         if current == 1:
+            items_count = sum(item["quantity"] for item in self.cart.items())
             return {
                 "success": True,
                 "message": "Minimum reached",
@@ -125,6 +131,7 @@ class CartService:
                     "quantity": current,
                     "new_subtotal": price * current,
                     "has_more": current < product.quantity,
+                    "cart_items": items_count,
                 },
             }
 
@@ -133,6 +140,8 @@ class CartService:
         self.cart.cart[product_id]["quantity"] = new_quantity
         self.cart.save()
 
+        items_count = sum(item["quantity"] for item in self.cart.items())
+
         return {
             "success": True,
             "message": "Decreased quantity",
@@ -140,6 +149,7 @@ class CartService:
                 "quantity": new_quantity,
                 "new_subtotal": new_subtotal,
                 "has_more": new_quantity < product.quantity,
+                "cart_items": items_count,
             },
         }
 
