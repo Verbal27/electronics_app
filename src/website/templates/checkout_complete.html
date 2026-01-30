@@ -1,0 +1,51 @@
+{% extends "base/website/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block website_content %}
+    <div class="d-flex justify-content-center p-5">
+        <div class="complete-card d-flex justify-content-center bg-white flex-column p-4 border border-1 rounded-3 w-50">
+            <div class="d-flex justify-content-center">
+                <div class="complete-icon d-flex justify-content-center bg-light-green p-4 border border-0 rounded-circle">
+                    <i class="fa-regular fa-circle-check text-light-green fs-1"></i>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center flex-column align-items-center mt-3">
+                <div class="h5">
+                    Order Confirmed!
+                </div>
+                <div class="fs-6 mt-3 text-muted">
+                    Thank you for your purchase
+                </div>
+                <div class="fs-6 mt-1 text-muted">
+                    Order {{ order.id }}
+                </div>
+            </div>
+            <div class="d-flex text-start mt-3 bg-light-grey flex-column p-3 border border-0 rounded-3">
+                <div class="d-flex align-items-baseline gap-2">
+                    <i class="fa-solid fa-box text-light-blue"></i>
+                    <div class="fw-normal fs5">
+                        Estimated Delivery
+                    </div>
+                </div>
+                <div class="text-muted">
+                    {{ delivery_time_span }}
+                </div>
+                <div class="text-muted">
+                    We'll send you tracking information via email
+                </div>
+            </div>
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <button type="button" class="btn btn-add-to-cart">Track Order</button>
+                <a href="{% url "homepage" %}" class="text-decoration-none home-btn">
+                    <button type="button" class="btn cart-btn-second border border-1">Continue Shopping</button>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% include "inc/newsletter.html" %}
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

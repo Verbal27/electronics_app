@@ -2,7 +2,7 @@ from .category import Category
 from .subcategory import Subcategory
 from .product import Product
 from .payment import Payment
-from .order import Order, OrderItem
+from .order import Order, OrderItem, ShippingOption
 
 
-__all__ = ("Category", "Subcategory", "Product", "Payment", "Order", "OrderItem")
+__all__ = ("Category", "Subcategory", "Product", "Payment", "Order", "OrderItem", "ShippingOption")

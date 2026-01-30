@@ -1,0 +1,28 @@
+{% for group, options, index in widget.optgroups %}
+    {% for option in options %}
+        <div class="checkout-card-option mb-3 ">
+            <label for="{{ option.attrs.id }}" class="checkout-card d-flex gap-3">
+                <div class="d-flex gap-3 col">
+                    <input
+                            type="radio"
+                            name="{{ widget.name }}"
+                            value="{{ option.value }}"
+                            id="{{ option.attrs.id }}"
+                            {% if option.selected %}checked{% endif %}
+                            data-price="{{ option.label.price }}"
+                    >
+                    <div class="">
+                        <span class="fw-medium fs-6">{{ option.label.name }}</span>
+                    </div>
+                    <div class="">
+                        <span class="text-muted small">{{ option.label.delivery_time }}</span>
+                    </div>
+                </div>
+
+                <div class="fw-semibold fs-6">
+                    ${{ option.label.price }}
+                </div>
+            </label>
+        </div>
+    {% endfor %}
+{% endfor %}

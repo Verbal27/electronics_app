@@ -49,6 +49,7 @@ class CartService:
             }
 
         self.cart.save()
+
         return {
             "success": True,
             "message": "Added successfully",

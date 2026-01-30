@@ -16,6 +16,7 @@
                                 <li>Ordered for: {{ order.first_name }} {{ order.last_name }}</li>
                                 <li>Address: {{ order.address }}</li>
                                 <li>Order Date: {{ order.created_at }}</li>
+                                <li>Shipping: {{ order.shipping }}</li>
                                 {% for item in order.items.all %}
                                     <li>Product: {{ item.product_name }}</li>
                                 {% endfor %}
