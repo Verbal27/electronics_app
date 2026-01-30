@@ -82,7 +82,7 @@ class CartService:
                     "quantity": product.quantity,
                     "new_subtotal": price * product.quantity,
                     "has_more": False,
-                    "cart_items": items_count,
+                    "items_count": items_count,
                 },
             }
 
@@ -103,7 +103,7 @@ class CartService:
                 "quantity": new_quantity,
                 "new_subtotal": subtotal,
                 "has_more": True,
-                "cart_items": items_count,
+                "items_count": items_count,
             },
         }
 
@@ -131,7 +131,7 @@ class CartService:
                     "quantity": current,
                     "new_subtotal": price * current,
                     "has_more": current < product.quantity,
-                    "cart_items": items_count,
+                    "items_count": items_count,
                 },
             }
 
@@ -149,7 +149,7 @@ class CartService:
                 "quantity": new_quantity,
                 "new_subtotal": new_subtotal,
                 "has_more": new_quantity < product.quantity,
-                "cart_items": items_count,
+                "items_count": items_count,
             },
         }
 

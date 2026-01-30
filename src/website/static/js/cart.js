@@ -59,11 +59,11 @@ function initUpdateCartQuantity() {
                     cartGrandTotalEl.textContent = `$ ${dt.grand_total}`;
                 }
 
-                if (cartCounts.length && dt.cart_items !== undefined) {
+                if (cartCounts.length && dt.items_count !== undefined) {
                     cartCounts.forEach(el => {
-                        el.textContent = dt.cart_items;
+                        el.textContent = dt.items_count;
                     });
-                    textCounter.textContent = dt.cart_items === 1 ? " item" : " items";
+                    textCounter.textContent = dt.items_count === 1 ? " item" : " items";
                 }
 
             })
