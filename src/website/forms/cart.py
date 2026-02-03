@@ -55,17 +55,17 @@ class AddToCartDetailForm(forms.Form):
                     Button(
                         "decrease_quantity",
                         "-",
-                        css_class="qty-btn qty-decrease border-0",
+                        css_class="qty-btn qty-decrease border-0 p-0",
                         type="button",
                     ),
                     Field("quantity", wrapper_class="mt-3"),
                     Button(
                         "increase_quantity",
                         "+",
-                        css_class="qty-btn qty-increase border-0",
+                        css_class="qty-btn qty-increase border-0 p-0",
                         type="button",
                     ),
-                    css_class="d-flex align-items-center border border-1 rounded-3 quantity-wrapper col-3",
+                    css_class="d-flex align-items-center border border-1 rounded-3 quantity-wrapper col-3 p-2",
                 ),
                 Div(
                     HTML(
