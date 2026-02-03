@@ -909,6 +909,14 @@ body {
         width: 100%;
     }
 
+    .related-products {
+        justify-content: center;
+    }
+
+    .product-details {
+        flex-direction: column;
+    }
+
     .google-login {
         width: 100% !important;
     }

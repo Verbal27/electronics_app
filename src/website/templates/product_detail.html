@@ -94,7 +94,7 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex border-bottom border-light-blue">
+        <div class="product-details d-flex border-bottom border-light-blue mt-3">
             <button class="btn btn-tab active w-100"
                     data-target="description">
                 Description
@@ -107,7 +107,7 @@
 
             <button class="btn btn-tab w-100"
                     data-target="reviews">
-                Reviews
+                Reviews(1234)
             </button>
         </div>
         <div id="description" class="tab-content d-flex flex-column mt-5">
@@ -119,7 +119,7 @@
                 {% for spec in specs %}
                     <div class="d-flex spec fs-6 fw-medium border-bottom border-light-blue p-2 row w-100">
                         <div class="d-flex gap-2">
-                            <div class="col-md-4 fs-6 fw-medium">{{ spec.specification_name }}</div>
+                            <div class="col-4 col-md-4 fs-6 fw-medium">{{ spec.specification_name }}</div>
                             <div class="fs-7 fw-medium text-muted">
                                 {{ spec.specification_value }}{{ spec.specification_measurement_unit }}</div>
                         </div>
@@ -143,7 +143,7 @@
             </div>
         </div>
 
-        <div class="d-flex mb-5">
+        <div class="related-products d-flex mb-5 flex-wrap">
             {% for product in related %}
                 <div class="col-auto col-xxl-3 p-2 justify-content-center align-items-center d-inline-block">
                     {{ product }}
