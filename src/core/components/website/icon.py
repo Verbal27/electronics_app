@@ -16,6 +16,8 @@ class Icon(RenderComponentMixin):
         DELIVERY = "fa-solid fa"
         CARD = "fa-solid fa-credit-card"
         SECURE = "fa-solid fa-lock"
+        CHECK = "fa-solid fa-check"
+        CART = "fa-solid fa-cart-shopping"
 
     def __init__(self, icon_type, css_classes=None, css_style=None):
         self.icon_type = icon_type
