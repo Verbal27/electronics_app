@@ -21,6 +21,12 @@
     --color-fifth-light: color-mix(in srgb, var(--color-fifth), white 75%);
     --color-sixth-light: color-mix(in srgb, var(--color-sixth), white 75%);
 
+    --color-success: #34B748;
+
+    --fs-7: 0.8rem !important;
+
+    --border-color-blue: #4477FF;
+
     --font-size-8: 0.875rem;
 }
 
@@ -63,6 +69,15 @@ body {
 
 .bg-blue {
     background: #3959FA;
+}
+
+.border-blue {
+    border-color: var(--border-color-blue) !important;
+}
+
+.btn.active {
+    border-color: var(--border-color-blue) !important;
+    border-radius: 0;
 }
 
 .bg-secondary {
@@ -118,6 +133,14 @@ body {
     color: var(--color-sixth);
 }
 
+.border-promo {
+    border-color: #C8FCDD !important;
+}
+
+.fs-7 {
+    font-size: var(--fs-7);
+}
+
 .fs-8 {
     font-size: var(--font-size-8);
 }
@@ -168,6 +191,18 @@ body {
 
 .text-light-blue {
     color: var(--color-icon-light-blue) !important;
+}
+
+.custom-text-success {
+    color: var(--color-success) !important;
+}
+
+.border-light-blue {
+    border-color: #DBE4F0 !important;
+}
+
+.breadcrumb-nav {
+    --bs-breadcrumb-divider: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E");
 }
 
 .text-light-gray {
@@ -259,24 +294,37 @@ body {
     margin-top: 1rem;
 }
 
-.column {
-    box-shadow: 2px 2px 6px rgb(80, 79, 79);
-    border: 2px solid lightgrey;
-    border-radius: 5px;
-    padding: 1rem;
-    margin-bottom: 0px !important;
-}
-
 .stars {
     justify-content: center;
 }
 
 .big-row {
-    margin-top: 5%;
+    margin-top: 3%;
+}
+
+.spec:last-child {
+    border-bottom: 0px !important;
+}
+
+.gallery-thumb {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, border 0.2s ease;
+}
+
+.gallery-thumb.active,
+.gallery-thumb:hover {
+    opacity: 1;
+    border: 2px solid var(--bs-primary);
 }
 
 .quantity-mb {
     margin-bottom: 5px !important;
+}
+
+.quantity-wrapper {
+    height: 2.5rem !important;
+
 }
 
 .heading-large {
@@ -521,7 +569,6 @@ body {
     line-height: 1;
 }
 
-
 .cart-badge:hover {
     background: #595959;
 }
@@ -723,6 +770,18 @@ body {
 
 .custom-login-main-wrapper {
     width: 30rem !important;
+}
+
+.btn-add-to-cart:hover {
+    color: white !important;
+}
+
+.product-detail-primary {
+    height: 30rem !important;
+}
+
+.product-detail-thumbnail {
+    height: 7rem !important;
 }
 
 @media (max-width: 767.98px) {

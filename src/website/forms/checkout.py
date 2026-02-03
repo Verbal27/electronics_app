@@ -2,9 +2,10 @@ from datetime import date
 from decimal import Decimal
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Row, Column, Field, Div, HTML
+from crispy_forms.layout import Layout, Fieldset, Row, Column, Field, Div, HTML, Submit
 from django import forms
 from django.forms import ModelForm, TypedChoiceField
+from django.urls import reverse
 from phonenumber_field.formfields import PhoneNumberField
 
 from src.core.components.website.icon import Icon
@@ -341,3 +342,21 @@ class OrderModelForm(ModelForm):
             )
 
         return order
+
+
+class BuyNowForm(forms.Form):
+    quantity = forms.IntegerField(widget=forms.HiddenInput)
+
+    def __init__(self, *args, pk=None, quantity=1, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["quantity"].initial = quantity
+
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_action = reverse("buy_now", args=[pk])
+        self.helper.layout = Layout(
+            "quantity",
+            Submit("submit", "Buy Now", css_class="btn btn-primary bg-transparent text-dark"
+                                                  " my-3 border-2 border-light-subtle w-100"),
+        )

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "src.core",
     "src.users",
     "src.website",
+    'django_ckeditor_5',
 ]
 
 MIDDLEWARE = [
@@ -148,5 +149,27 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CKEDITOR_5_CONFIGS = {
+    "product_description": {
+        "toolbar": [
+            "heading", "|",
+            "bold", "italic", "underline",
+            "|",
+            "link", "|",
+            "bulletedList", "numberedList",
+            "|",
+            "blockQuote", "|",
+            "undo", "redo"
+        ],
+        "removePlugins": [
+            "EasyImage",
+            "CKFinder",
+            "ImageToolbar",
+            "ImageCaption",
+        ],
+        "simpleUpload": False,
+    }
+}
 
 PLACEHOLDER_PRODUCT_IMAGE = STATIC_URL + "images/placeholder.png"

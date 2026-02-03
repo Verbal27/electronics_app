@@ -33,6 +33,9 @@ class HomePageListView(ListView):
         ]
         try:
             latest = Product.objects.latest("created_at")
+            context["hero_image"] = (
+                latest.images.filter(is_primary=True).first() or latest.images.first()
+            )
             context["hero_product"] = latest
         except Product.DoesNotExist:
             context["hero_product"] = None
