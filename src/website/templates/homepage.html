@@ -57,9 +57,14 @@
                     <div class="co-auto col-md-6 d-flex justify-content-center">
                         {% if hero_product %}
                             <div class="hero-section w-100">
-                                <div class="hero-bg"
-                                     style="background-image: url('{{ hero_product.image.url }}');"></div>
-
+                                {% if hero_product.image.url %}
+                                    <div class="hero-bg"
+                                         style="background-image: url('{{ hero_product.image.url }}');"></div>
+                                {% else %}
+                                    <div class="">
+                                        Placeholder
+                                    </div>
+                                {% endif %}
                                 <div class="hero-overlay mb-3">
                                     <div class="overlay h-overlay d-flex justify-content-between align-items-center p-4 w-100">
                                         <div class="hero-content text-start">

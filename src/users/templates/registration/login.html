@@ -6,10 +6,39 @@
 
 {% block website_content %}
 
-    <div class="d-flex d-flex-center flex-column min-vh-100">
-        <div class="container-login container-fluid ">
-            {% crispy form %}
+        <div class="d-flex justify-content-center my-5">
+            <div class="border border-2 border-light-grey rounded-4 bg-white custom-login-main-wrapper p-5">
+                <div class="d-flex flex-column align-items-center">
+                    <div class="fs-2 fw-bold">
+                        Welcome Back
+                    </div>
+                    <div class="fs-7 fw-medium mb-3 text-light-gray-dark">
+                        Sign in to your account to continue
+                    </div>
+                    <div class="d-flex justify-content-around gap-3 mt-3 flex-wrap">
+                        {% crispy google %}
+                        {% crispy github %}
+                    </div>
+                    <div class="d-flex justify-content-center w-100 my-4">
+                        <div class="col border-2 border-top align-self-center"></div>
+                        <div class="text-light-gray-dark mx-3 fw-semibold fs-7">OR EMAIL</div>
+                        <div class="col border-2 border-top align-self-center"></div>
+                    </div>
+                    {% crispy login_form %}
+                    <div class="d-flex gap-2 mt-5">
+                        <div class="fs-7 text-light-gray-dark fw-medium">
+                            Don't have an account?
+                        </div>
+                        <div class="fs-7">
+                            <a href="{% url "register" %}" class="fw-bold text-decoration-none">Create one now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
+    {% include "inc/newsletter.html" %}
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/auth.js' %}"></script>
 {% endblock %}
