@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from src.website.forms import RegisterForm, UserLoginForm, UserLogoutForm
+from src.website.forms.auth import GoogleLoginForm, GitHubLoginForm
 from src.website.services.auth import AuthService
 
 
@@ -38,6 +39,12 @@ class RegisterView(CreateView):
         messages.error(self.request, "There was an error.")
         return super().form_invalid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["google"] = GoogleLoginForm()
+        context["github"] = GitHubLoginForm()
+        return context
+
 
 class UserLoginView(LoginView):
     template_name = "registration/login.html"
@@ -52,24 +59,23 @@ class UserLoginView(LoginView):
             messages.success(self.request, "User logged in.")
             return redirect(self.get_success_url())
 
-        if result.error == "invalid_form":
-            messages.error(self.request, "Invalid data.")
-            return redirect("login")
+        messages.error(self.request, "Invalid username or password.")
+        return self.form_invalid(form)
 
-        if result.error == "authentication_failed":
-            messages.error(self.request, "Invalid username or password.")
-            return redirect("login")
+    def form_invalid(self, form):
+        return self.render_to_response(
+            self.get_context_data(form=form)
+        )
 
-        messages.error(self.request, "Unexpected login error.")
-        return redirect("login")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["login_form"] = context["form"]
+        context["google"] = GoogleLoginForm()
+        context["github"] = GitHubLoginForm()
+        return context
 
     def get_success_url(self):
         return reverse_lazy("homepage")
-
-    def post(self, request, *args, **kwargs):
-        if "register" in request.POST:
-            return redirect("register")
-        return super().post(request, *args, **kwargs)
 
 
 class UserLogoutView(LoginRequiredMixin, LogoutView):
