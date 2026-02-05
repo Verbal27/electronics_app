@@ -20,6 +20,8 @@
     --color-fourth-light: color-mix(in srgb, var(--color-fourth), white 75%);
     --color-fifth-light: color-mix(in srgb, var(--color-fifth), white 75%);
     --color-sixth-light: color-mix(in srgb, var(--color-sixth), white 75%);
+
+    --font-size-8: 0.875rem;
 }
 
 @media (max-width: 768px) {
@@ -114,6 +116,10 @@ body {
 
 .text-sixth {
     color: var(--color-sixth);
+}
+
+.fs-8 {
+    font-size: var(--font-size-8);
 }
 
 .bg-first {
@@ -602,6 +608,14 @@ body {
     border: none !important;
 }
 
+.password-wrapper.border-danger {
+    border-color: #dc3545 !important;
+}
+
+.asteriskField {
+    display: none;
+}
+
 .form-check-label {
     font-size: 14px !important;
     font-weight: 500;
@@ -631,6 +645,21 @@ body {
 
 .cart-placeholder {
     width: 37%;
+}
+
+.password-wrapper {
+    margin-bottom: 0 !important;
+}
+
+.custompasswordwidget {
+    border: 0 !important;
+    background-color: var(--color-light-grey-dark) !important;
+}
+
+.custompasswordwidget:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 .popular-subcategories-img {

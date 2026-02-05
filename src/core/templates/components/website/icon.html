@@ -1,1 +1,2 @@
-<i class="{{ css_classes }} {{ icon_type }}"{% if css_style %} style="{{ css_style }}"{% endif %}></i>
+<i class="{{ icon_type }}{% if css_classes %} {{ css_classes }}{% endif %}"
+   {% if css_style %}style="{{ css_style }}"{% endif %}></i>
