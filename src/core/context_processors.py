@@ -1,4 +1,3 @@
-
 from src.core.models.category import Category
 from src.website.forms import UserLogoutForm
 from src.website.forms.newsletter import NewsletterForm

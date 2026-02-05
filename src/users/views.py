@@ -36,7 +36,7 @@ class RegisterView(CreateView):
         return reverse_lazy("homepage")
 
     def form_invalid(self, form):
-        messages.error(self.request, "There was an error.")
+        messages.error(self.request, "There are some fields that must be reviewed")
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -63,9 +63,8 @@ class UserLoginView(LoginView):
         return self.form_invalid(form)
 
     def form_invalid(self, form):
-        return self.render_to_response(
-            self.get_context_data(form=form)
-        )
+        messages.error(self.request, "There are some fields that must be reviewed")
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

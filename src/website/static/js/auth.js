@@ -11,12 +11,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const input = wrapper.querySelector("input.password-field");
         if (!input) return;
 
+        const icon = toggleBtn.querySelector("i");
+        if (!icon) return;
+
         if (input.type === "password") {
             input.type = "text";
-            toggleBtn.classList.replace("fa-eye", "fa-eye-slash");
+            icon.classList.replace("fa-eye", "fa-eye-slash");
         } else {
             input.type = "password";
-            toggleBtn.classList.replace("fa-eye-slash", "fa-eye");
+            icon.classList.replace("fa-eye-slash", "fa-eye");
         }
     });
 });

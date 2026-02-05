@@ -3,10 +3,12 @@ from crispy_forms.layout import Layout, Submit, Row, Column, Field, Div, HTML
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.urls import reverse_lazy
+from django.utils.safestring import mark_safe
 
 from src.core.components.website.icon import Icon
 from src.core.components.website.iconbutton import IconButton
 from src.users.models import CustomUser
+from src.website.forms.widgets.CustomPasswordWidget import CustomPasswordWidget
 
 
 class RegisterForm(UserCreationForm):
@@ -27,19 +29,27 @@ class RegisterForm(UserCreationForm):
             attrs={"placeholder": "name@example.com"}
         ),
     )
-    agreement = forms.BooleanField(required=True, label="I agree to the Terms of Service and Privacy Policy")
+    password1 = forms.CharField(
+        widget=CustomPasswordWidget(icon=Icon(icon_type=Icon.TYPES.EYE)), label="Password"
+    )
+    agreement = forms.BooleanField(
+        label=mark_safe(
+            'I agree to the '
+            '<a href="/terms/" class="text-decoration-none">Terms of Service</a> '
+            'and '
+            '<a href="/privacy/" class="text-decoration-none">Privacy Policy</a>'
+        ),
+        error_messages={
+            "required": "You must accept our terms and conditions in order to create an account"
+        },
+    )
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.fields["password1"].help_text = ""
         self.helper.form_method = "post"
         self.helper.form_action = "register"
-        self.fields["first_name"].label = ""
-        self.fields["last_name"].label = ""
-        self.fields["email"].label = ""
-        self.fields["password1"].label = ""
-        self.fields["password1"].help_text = ""
-        self.fields["password2"].label = ""
         self.fields["password2"].help_text = "Minimum 8 characters with letters and numbers"
         self.fields["password1"].widget.attrs["placeholder"] = "*********"
         self.fields["password2"].widget.attrs["placeholder"] = "*********"
@@ -48,105 +58,50 @@ class RegisterForm(UserCreationForm):
         self.helper.layout = Layout(
             Row(
                 Column(
-                    HTML(
-                        """
-                        <div class='fw-medium fs-6 mb-1 text-light-gray-dark'>
-                            First Name
-                        </div>
-                        """
+                    Field(
+                        "first_name",
+                        css_class="bg-light-grey-dark",
+                        wrapper_class="username-field-wrapper w-100",
                     ),
-                    Div(
-                        HTML(
-                            Icon(
-                                icon_type=Icon.TYPES.USER,
-                                css_classes="text-light-gray"
-                            ),
-                        ),
-                        Field(
-                            "first_name",
-                            css_class="remove-outline border-0 bg-transparent",
-                            wrapper_class="username-field-wrapper w-100",
-                            show_errors=False,
-                        ),
-                        css_class="d-flex align-items-baseline border border-1 "
-                                  "border-light-gray rounded-3 px-2 py-1 bg-light-grey-dark"
-                    ),
+
                     css_class="form-group col-md-6 mb-0"
                 ),
                 Column(
-                    HTML(
-                        """
-                        <div class='fw-medium fs-6 mb-1 text-light-gray-dark'>
-                            Last Name
-                        </div>
-                        """
+                    Field(
+                        "last_name",
+                        css_class="bg-light-grey-dark",
+                        wrapper_class="username-field-wrapper w-100"
                     ),
-                    Div(
-                        Field(
-                            "last_name",
-                            css_class="remove-outline border-0 bg-transparent",
-                            wrapper_class="username-field-wrapper w-100"
-                        ),
-                        css_class="d-flex align-items-baseline border border-1 "
-                                  "border-light-gray rounded-3 px-2 py-1 bg-light-grey-dark"
-                    ),
+
                     css_class="form-group col-md-6 mb-0"
                 ),
                 css_class="mb-3"
             ),
-            HTML(
-                """
-                <div class='fw-medium fs-6 mb-1 text-light-gray-dark'>
-                    Email Address
-                </div>
-                """
+            Field(
+                "email",
+                css_class="bg-light-grey-dark",
+                wrapper_class="username-field-wrapper w-100"
             ),
-            Div(
-                HTML(
-                    Icon(
-                        icon_type=Icon.TYPES.ENVELOPE,
-                        css_classes="text-light-gray"
-                    ),
-                ),
-                Field(
-                    "email",
-                    css_class="remove-outline border-0 bg-transparent",
-                    wrapper_class="username-field-wrapper w-100"
-                ),
-                css_class="d-flex align-items-baseline border border-1 "
-                          "border-light-gray rounded-3 px-2 py-1 bg-light-grey-dark mb-3"
+            Field(
+                "password1",
+                wrapper_class="password-wrapper mt-3",
+                css_class_on_error="is-invalid"
             ),
             HTML(
-                """
-                <div class="fw-semibold fs-6 mb-1 text-light-gray-dark">
-                    Password
-                </div>
-                """
+                '''
+                {% if form.password1.errors %}
+                    <div class="text-danger fs-8">
+                        <strong>{{ form.password1.errors|striptags }}</strong>
+                    </div>
+                {% endif %}
+                '''
             ),
-            Div(
-                Field(
-                    "password1",
-                    css_class="password-field remove-outline border-0 bg-transparent",
-                    wrapper_class="username-field-wrapper w-100 mt-3"
-                ),
-                HTML(
-                    Icon(
-                        icon_type=Icon.TYPES.EYE,
-                        css_classes="text-light-gray show-hide-btn"
-                    ),
-                ),
-                css_class="password-wrapper d-flex align-items-baseline border border-1 "
-                          "border-light-gray rounded-3 px-2 py-1 bg-light-grey-dark mb-3"
+            Field(
+                "password2",
+                css_class="d-flex border-light-gray bg-light-grey-dark",
+                wrapper_class="password-wrapper mt-3"
             ),
-            HTML(
-                """
-                <div class="fw-semibold fs-6 mb-1 text-light-gray-dark">
-                    Repeat Password
-                </div>
-                """
-            ),
-            Field("password2", css_class="password-wrapper d-flex p-2 px-3 border-light-gray bg-light-grey-dark"),
-            "agreement",
+            Field("agreement", wrapper_class="mt-3"),
             Submit("submit", "Create Account", css_class="btn btn-primary btn-lg w-100"),
         )
 
@@ -185,11 +140,9 @@ class RegisterForm(UserCreationForm):
 class UserLoginForm(AuthenticationForm):
     username = forms.EmailField(
         widget=forms.EmailInput(attrs={"placeholder": "name@example.com"}),
-        label="Email Address"
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "**********"}),
-        label="Password"
+        widget=CustomPasswordWidget(icon=Icon(icon_type=Icon.TYPES.EYE)),
     )
     keep_signed = forms.BooleanField(required=False, label="Keep me signed in")
 
@@ -197,8 +150,8 @@ class UserLoginForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
 
         self.helper = FormHelper()
-        self.fields["username"].label = ""
         self.fields["password"].label = ""
+        self.fields["username"].label = ""
         self.helper.form_method = "post"
         self.helper.form_class = "needs-validation w-100"
         self.helper.attrs = {"novalidate": ""}
@@ -211,20 +164,10 @@ class UserLoginForm(AuthenticationForm):
                     </div>
                     """
                 ),
-                Div(
-                    HTML(
-                        Icon(
-                            icon_type=Icon.TYPES.ENVELOPE,
-                            css_classes="text-light-gray"
-                        ),
-                    ),
-                    Field(
-                        "username",
-                        css_class="remove-outline border-0 bg-transparent",
-                        wrapper_class="username-field-wrapper w-100"
-                    ),
-                    css_class="d-flex align-items-baseline border border-1 "
-                              "border-light-gray rounded-3 px-2 py-1 bg-light-grey-dark"
+                Field(
+                    "username",
+                    css_class="remove-outline bg-light-grey-dark",
+                    wrapper_class="username-field-wrapper w-100"
                 ),
                 Div(
                     HTML(
@@ -243,20 +186,21 @@ class UserLoginForm(AuthenticationForm):
                     ),
                     css_class="d-flex justify-content-between w-100"
                 ),
-                Div(
-                    Field(
-                        "password",
-                        css_class="password-field remove-outline border-0 bg-transparent",
-                        wrapper_class="username-field-wrapper w-100 mt-3"
-                    ),
-                    HTML(
-                        Icon(
-                            icon_type=Icon.TYPES.EYE,
-                            css_classes="text-light-gray show-hide-btn"
-                        ),
-                    ),
-                    css_class="password-wrapper d-flex align-items-baseline border border-1 "
-                              "border-light-gray rounded-3 px-2 py-1 bg-light-grey-dark"
+                Field(
+                    "password",
+                    css_class="password-field remove-outline border-0 bg-transparent",
+                    wrapper_class="username-field-wrapper w-100 mt-3",
+                    placeholder="*********",
+                    css_class_on_error="is-invalid"
+                ),
+                HTML(
+                    '''
+                    {% if form.password.errors %}
+                        <div class="text-danger fs-8">
+                            <strong>{{ form.password.errors|striptags }}</strong>
+                        </div>
+                    {% endif %}
+                    '''
                 ),
                 Field("keep_signed", wrapper_class="mt-3 text-light-gray-dark fw-semibold",
                       css_class=""),
