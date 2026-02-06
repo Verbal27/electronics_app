@@ -793,6 +793,7 @@ body {
     justify-content: center;
     overflow: hidden;
     border-radius: 0.75rem;
+    height: 27rem !important;
 }
 
 .product-detail-thumbnail {
