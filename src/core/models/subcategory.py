@@ -1,4 +1,5 @@
 from django.core.files.storage import default_storage
+from django.urls import reverse
 
 from .category import Category
 from django.db import models
@@ -23,3 +24,6 @@ class Subcategory(models.Model):
         return bool(
             self.image and self.image.name and default_storage.exists(self.image.name)
         )
+
+    def get_absolute_url(self):
+        return reverse("subcategory_products", args=[self.pk])

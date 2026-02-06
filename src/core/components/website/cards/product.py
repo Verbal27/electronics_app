@@ -20,12 +20,14 @@ class ProductCard(RenderComponentMixin, MediaDefiningComponent):
         self.form = self.form_class(product_id=product.id)
 
     def get_context(self):
+        images = self.product.images.all()
         return {
             "product": self.product,
             "product_name": self.product.name,
             "product_description": self.product.description,
             "product_price": self.product.price,
-            "product_image_url": self.product.image.url,
+            "product_images": images,
+            "primary_image": images.filter(is_primary=True).first(),
             "product_subcategory": self.product.subcategory,
             "product_detail_url": reverse("product_detail", args=[self.product.pk]),
             "css_classes": self.css_classes,

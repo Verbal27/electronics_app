@@ -36,7 +36,7 @@ class CartAddView(View):
             messages.success(request, "Product added successfully.")
             return redirect("homepage")
         else:
-            messages.error(request, f"Cannot add product. Max available: {data["max_available"]}")
+            messages.error(request, f"Cannot add product. Max available: {data['max_available']}")
             return redirect("product_detail", pk=product_id)
 
 
