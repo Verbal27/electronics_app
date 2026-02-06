@@ -27,13 +27,3 @@ class Subcategory(models.Model):
 
     def get_absolute_url(self):
         return reverse("subcategory_products", args=[self.pk])
-
-    def get_breadcrumb(self):
-        return [
-            {"label": "Home", "url": reverse("homepage")},
-            {
-                "label": self.category.name,
-                "url": self.category.get_absolute_url(),
-            },
-            {"label": self.name, "url": self.get_absolute_url()},
-        ]
