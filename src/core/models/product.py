@@ -35,16 +35,6 @@ class Product(models.Model):
                 or self.images.first()
         )
 
-    def get_breadcrumb(self):
-        return [
-            {"label": "Home", "url": reverse("homepage")},
-            {
-                "label": self.subcategory.category.name,
-                "url": self.subcategory.category.get_absolute_url(),
-            },
-            {"label": self.name, "url": self.get_absolute_url()},
-        ]
-
 
 class ProductImage(models.Model):
     product = models.ForeignKey(

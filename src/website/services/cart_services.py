@@ -44,7 +44,7 @@ class CartService:
             self.cart.cart[product_id] = {
                 "id": product_id,
                 "name": product.name,
-                "price": float(price),
+                "price": Decimal(price).quantize(Decimal(".00")),
                 "quantity": qty_to_add,
                 "subcategory": product.subcategory_id,
             }
