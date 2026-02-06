@@ -1,3 +1,4 @@
+from electronics_app.settings import PRODUCT_PLACEHOLDER_IMAGE
 from src.core.utils.subcategory_list import list_subcategories
 from src.core.components.website.cards import ProductCard
 from src.website.forms.newsletter import NewsletterForm
@@ -17,6 +18,7 @@ class HomePageListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["placeholder_image"] = PRODUCT_PLACEHOLDER_IMAGE
         featured = Product.objects.annotate(
             total_sold=Sum("orderitem__quantity")
         ).order_by("-total_sold", "-created_at")[:4]
