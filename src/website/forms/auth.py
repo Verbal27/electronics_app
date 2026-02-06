@@ -13,31 +13,28 @@ from src.website.forms.widgets.CustomPasswordWidget import CustomPasswordWidget
 
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(
-        widget=forms.TextInput(
-            attrs={"placeholder": "Jane"}
-        ),
+        widget=forms.TextInput(),
         max_length=100,
     )
     last_name = forms.CharField(
-        widget=forms.TextInput(
-            attrs={"placeholder": "Doe"}
-        ),
+        widget=forms.TextInput(),
         max_length=100,
     )
     email = forms.EmailField(
-        widget=forms.EmailInput(
-            attrs={"placeholder": "name@example.com"}
-        ),
+        widget=forms.EmailInput(),
     )
     password1 = forms.CharField(
         widget=CustomPasswordWidget(icon=Icon(icon_type=Icon.TYPES.EYE)), label="Password"
     )
+    password2 = forms.CharField(
+        widget=CustomPasswordWidget(icon=Icon(icon_type=Icon.TYPES.EYE)), label="Password confirmation"
+    )
     agreement = forms.BooleanField(
         label=mark_safe(
             'I agree to the '
-            '<a href="/terms/" class="text-decoration-none">Terms of Service</a> '
+            '<a href="javascript:void(0)" class="text-decoration-none">Terms of Service</a> '
             'and '
-            '<a href="/privacy/" class="text-decoration-none">Privacy Policy</a>'
+            '<a href="javascript:void(0)" class="text-decoration-none">Privacy Policy</a>'
         ),
         error_messages={
             "required": "You must accept our terms and conditions in order to create an account"
@@ -51,8 +48,6 @@ class RegisterForm(UserCreationForm):
         self.helper.form_method = "post"
         self.helper.form_action = "register"
         self.fields["password2"].help_text = "Minimum 8 characters with letters and numbers"
-        self.fields["password1"].widget.attrs["placeholder"] = "*********"
-        self.fields["password2"].widget.attrs["placeholder"] = "*********"
         self.helper.form_class = "needs-validation"
         self.helper.attrs = {"novalidate": ""}
         self.helper.layout = Layout(
@@ -60,7 +55,7 @@ class RegisterForm(UserCreationForm):
                 Column(
                     Field(
                         "first_name",
-                        css_class="bg-light-grey-dark",
+                        css_class="bg-light-grey-dark remove-outline",
                         wrapper_class="username-field-wrapper w-100",
                     ),
 
@@ -69,7 +64,7 @@ class RegisterForm(UserCreationForm):
                 Column(
                     Field(
                         "last_name",
-                        css_class="bg-light-grey-dark",
+                        css_class="bg-light-grey-dark remove-outline",
                         wrapper_class="username-field-wrapper w-100"
                     ),
 
@@ -79,7 +74,7 @@ class RegisterForm(UserCreationForm):
             ),
             Field(
                 "email",
-                css_class="bg-light-grey-dark",
+                css_class="bg-light-grey-dark remove-outline",
                 wrapper_class="username-field-wrapper w-100"
             ),
             Field(
@@ -98,8 +93,17 @@ class RegisterForm(UserCreationForm):
             ),
             Field(
                 "password2",
-                css_class="d-flex border-light-gray bg-light-grey-dark",
-                wrapper_class="password-wrapper mt-3"
+                wrapper_class="password-wrapper mt-3",
+                css_class_on_error="is-invalid"
+            ),
+            HTML(
+                '''
+                {% if form.password2.errors %}
+                    <div class="text-danger fs-8">
+                        <strong>{{ form.password1.errors|striptags }}</strong>
+                    </div>
+                {% endif %}
+                '''
             ),
             Field("agreement", wrapper_class="mt-3"),
             Submit("submit", "Create Account", css_class="btn btn-primary btn-lg w-100"),
@@ -180,7 +184,7 @@ class UserLoginForm(AuthenticationForm):
                     HTML(
                         """
                         <div class='fs-6 mb-1 mt-3'>
-                            <a href="" class="text-decoration-none fw-semibold">Forgot?</a>
+                            <a href="javascript:void(0)" class="text-decoration-none fw-semibold">Forgot?</a>
                         </div>
                         """
                     ),
