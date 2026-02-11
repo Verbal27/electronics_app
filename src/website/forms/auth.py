@@ -5,8 +5,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 
+from src.core.components.website.button import Button
 from src.core.components.website.icon import Icon
 from src.core.components.website.iconbutton import IconButton
+from src.core.components.website.span import Span
 from src.users.models import CustomUser
 from src.website.forms.widgets.CustomPasswordWidget import CustomPasswordWidget
 
@@ -29,12 +31,26 @@ class RegisterForm(UserCreationForm):
     password2 = forms.CharField(
         widget=CustomPasswordWidget(icon=Icon(icon_type=Icon.TYPES.EYE)), label="Password confirmation"
     )
+    privacy_policy = Button(
+        label="Privacy policy",
+        style=Button.Styles.LINK,
+        url='javascript:void(0)',
+        css_class='text-decoration-none p-0 fs-8 align-baseline'
+    ).render()
+
+    terms = Button(
+        label="Terms of use",
+        style=Button.Styles.LINK,
+        url='javascript:void(0)',
+        css_class='text-decoration-none p-0 fs-8 align-baseline'
+    ).render()
+
     agreement = forms.BooleanField(
         label=mark_safe(
-            'I agree to the '
-            '<a href="javascript:void(0)" class="text-decoration-none">Terms of Service</a> '
-            'and '
-            '<a href="javascript:void(0)" class="text-decoration-none">Privacy Policy</a>'
+            f'I agree to the '
+            f'{terms} '
+            f'and '
+            f'{privacy_policy}'
         ),
         error_messages={
             "required": "You must accept our terms and conditions in order to create an account"
@@ -44,6 +60,11 @@ class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.fields["email"].label = ""
+        self.fields["first_name"].label = ""
+        self.fields["last_name"].label = ""
+        self.fields["password1"].label = ""
+        self.fields["password2"].label = ""
         self.fields["password1"].help_text = ""
         self.helper.form_method = "post"
         self.helper.form_action = "register"
@@ -53,34 +74,62 @@ class RegisterForm(UserCreationForm):
         self.helper.layout = Layout(
             Row(
                 Column(
+                    HTML(
+                        Span(
+                            content="First Name",
+                            css_classes="fw-medium fs-6 mb-1 mt-3 text-light-gray-dark"
+                        )
+                    ),
                     Field(
                         "first_name",
                         css_class="bg-light-grey-dark remove-outline",
                         wrapper_class="username-field-wrapper w-100",
                     ),
-
                     css_class="form-group col-md-6 mb-0"
                 ),
                 Column(
+                    HTML(
+                        Span(
+                            content="Last Name",
+                            css_classes="fw-medium fs-6 mb-1 mt-3 text-light-gray-dark"
+                        )
+                    ),
                     Field(
                         "last_name",
                         css_class="bg-light-grey-dark remove-outline",
                         wrapper_class="username-field-wrapper w-100"
                     ),
-
                     css_class="form-group col-md-6 mb-0"
                 ),
                 css_class="mb-3"
             ),
-            Field(
-                "email",
-                css_class="bg-light-grey-dark remove-outline",
-                wrapper_class="username-field-wrapper w-100"
+            Div(
+                HTML(
+                    Span(
+                        content="Email Address",
+                        css_classes="fw-medium fs-6 mb-1 mt-3 text-light-gray-dark"
+                    )
+                ),
+                Field(
+                    "email",
+                    css_class="bg-light-grey-dark remove-outline",
+                    wrapper_class="username-field-wrapper w-100"
+                ),
+                css_class="mt-3"
             ),
-            Field(
-                "password1",
-                wrapper_class="password-wrapper mt-3",
-                css_class_on_error="is-invalid"
+            Div(
+                HTML(
+                    Span(
+                        content="Password",
+                        css_classes="fw-medium fs-6 mb-1 text-light-gray-dark mt-3"
+                    )
+                ),
+                Field(
+                    "password1",
+                    wrapper_class="password-wrapper",
+                    css_class_on_error="is-invalid"
+                ),
+                css_class="mt-3"
             ),
             HTML(
                 '''
@@ -91,10 +140,19 @@ class RegisterForm(UserCreationForm):
                 {% endif %}
                 '''
             ),
-            Field(
-                "password2",
-                wrapper_class="password-wrapper mt-3",
-                css_class_on_error="is-invalid"
+            Div(
+                HTML(
+                    Span(
+                        content="Password confirm",
+                        css_classes="fw-medium fs-6 mb-1 text-light-gray-dark"
+                    )
+                ),
+                Field(
+                    "password2",
+                    wrapper_class="password-wrapper",
+                    css_class_on_error="is-invalid"
+                ),
+                css_class="mt-3"
             ),
             HTML(
                 '''
@@ -162,11 +220,10 @@ class UserLoginForm(AuthenticationForm):
         self.helper.layout = Layout(
             Div(
                 HTML(
-                    """
-                    <div class='fw-medium fs-6 mb-1 text-light-gray-dark'>
-                        Email Address
-                    </div>
-                    """
+                    Span(
+                        content="Email Address",
+                        css_classes="fw-medium fs-6 mb-1 text-light-gray-dark"
+                    )
                 ),
                 Field(
                     "username",
@@ -175,18 +232,18 @@ class UserLoginForm(AuthenticationForm):
                 ),
                 Div(
                     HTML(
-                        """
-                        <div class='fw-medium fs-6 mb-1 mt-3 text-light-gray-dark'>
-                            Password
-                        </div>
-                        """
+                        Span(
+                            content="Password",
+                            css_classes="fw-medium fs-6 mb-1 mt-3 text-light-gray-dark"
+                        )
                     ),
                     HTML(
-                        """
-                        <div class='fs-6 mb-1 mt-3'>
-                            <a href="javascript:void(0)" class="text-decoration-none fw-semibold">Forgot?</a>
-                        </div>
-                        """
+                        Button(
+                            label="Forgot ?",
+                            style=Button.Styles.LINK,
+                            url='javascript:void(0)',
+                            css_class='text-decoration-none p-0 fs-8 align-baseline h-100 d-flex align-self-end'
+                        )
                     ),
                     css_class="d-flex justify-content-between w-100"
                 ),

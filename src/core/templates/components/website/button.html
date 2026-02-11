@@ -1,0 +1,6 @@
+{% if url %}<a href="{{ url }}"{% else %}
+    <button type="{{ type }}"{% endif %} class="btn {{ style }} {% if css_class %}{{ css_class }}{% endif %}"{% if id %}
+            id="{{ id }}"{% endif %}>
+    {% if icon %}<i class="fas {{ icon }}"></i>{% endif %}
+    <span class="{{ label_classes }}">{{ label }}</span>
+    {% if url %}</a>{% else %}</button>{% endif %}
