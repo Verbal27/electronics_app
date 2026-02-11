@@ -23,7 +23,7 @@ class CartService:
         product_id = str(product_id)
         stock_available = product.quantity
         existing_qty = self.cart.cart.get(product_id, {}).get("quantity", 0)
-        price = float(product.price)
+        price = str(product.price)
 
         remaining_capacity = stock_available - existing_qty
         if remaining_capacity == 0:
