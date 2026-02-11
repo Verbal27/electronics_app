@@ -31,9 +31,6 @@ ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
 
 AUTH_USER_MODEL = "users.CustomUser"
 
-PRODUCT_PLACEHOLDER_IMAGE = "/static/images/istockphoto-946854240-612x612.jpg"
-SUBCATEGORY_EMPTY_CART_PLACEHOLDER_IMAGE = "/static/images/8428362.png"
-
 LOGIN_REDIRECT_URL = "homepage"
 LOGOUT_REDIRECT_URL = 'homepage'
 LOGIN_URL = reverse_lazy('login')
@@ -172,4 +169,5 @@ CKEDITOR_5_CONFIGS = {
     }
 }
 
-PLACEHOLDER_PRODUCT_IMAGE = STATIC_URL + "images/placeholder.png"
+PRODUCT_PLACEHOLDER_IMAGE = STATIC_URL + "images/istockphoto-946854240-612x612.jpg"
+SUBCATEGORY_EMPTY_CART_PLACEHOLDER_IMAGE = STATIC_URL + "images/8428362.png"
