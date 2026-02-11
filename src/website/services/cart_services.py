@@ -23,7 +23,7 @@ class CartService:
         product_id = str(product_id)
         stock_available = product.quantity
         existing_qty = self.cart.cart.get(product_id, {}).get("quantity", 0)
-        price = Decimal(product.price)
+        price = float(product.price)
 
         remaining_capacity = stock_available - existing_qty
         if remaining_capacity == 0:
@@ -44,7 +44,7 @@ class CartService:
             self.cart.cart[product_id] = {
                 "id": product_id,
                 "name": product.name,
-                "price": Decimal(price).quantize(Decimal(".00")),
+                "price": price,
                 "quantity": qty_to_add,
                 "subcategory": product.subcategory_id,
             }
@@ -196,7 +196,7 @@ class CartService:
                 "name": product.name,
                 "price": Decimal(price).quantize(Decimal(".00")),
                 "quantity": quantity,
-                "image": product.primary_image,
+                "image": product.image_url,
                 "description": product.description,
                 "subcategory": product.subcategory,
                 "remove_form": RemoveFromCartForm(product_id=product_id),
