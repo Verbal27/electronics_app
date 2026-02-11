@@ -1,3 +1,4 @@
+from electronics_app.settings import PRODUCT_PLACEHOLDER_IMAGE
 from .subcategory import Subcategory
 from django.urls import reverse
 from django.db import models
@@ -23,10 +24,16 @@ class Product(models.Model):
         return reverse("product_detail", args=[self.pk])
 
     @property
-    def stock_status(self):
+    def is_low_stock(self):
         if self.quantity >= 10:
-            return "In Stock"
-        return "Low Stock"
+            return False
+        return True
+
+    @property
+    def stock_status(self):
+        if self.is_low_stock:
+            return "Low stock"
+        return "In stock"
 
     @property
     def primary_image(self):
@@ -34,6 +41,13 @@ class Product(models.Model):
                 self.images.filter(is_primary=True).first()
                 or self.images.first()
         )
+
+    @property
+    def image_url(self):
+        primary = self.primary_image
+        if primary:
+            return primary.url
+        return PRODUCT_PLACEHOLDER_IMAGE
 
 
 class ProductImage(models.Model):
@@ -60,7 +74,9 @@ class ProductImage(models.Model):
 
     @property
     def url(self):
-        return self.image.url
+        if self.image and hasattr(self.image, 'url'):
+            return self.image.url
+        return PRODUCT_PLACEHOLDER_IMAGE
 
 
 class Specification(models.Model):

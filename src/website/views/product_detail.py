@@ -36,10 +36,9 @@ class ProductDetailView(DetailView):
         service = CartService(self.request)
         current_qty = service.cart.cart.get(str(product.id), {}).get("quantity", 0)
 
-        stock_label_content = product.stock_status
         stock_css = (
             "text-warning"
-            if stock_label_content == "Low Stock"
+            if product.is_low_stock
             else "custom-text-success"
         )
 
@@ -62,10 +61,9 @@ class ProductDetailView(DetailView):
                 quantity=current_qty or 1,
             ),
             "images": product.images.all(),
-            "primary_image": product.primary_image,
+            "primary_image": product.image_url,
             "stock_label": Span(
-                content=stock_label_content,
-                title=stock_label_content,
+                content=product.stock_status,
                 css_classes=stock_css,
             ),
             "stock_icon": Icon(
