@@ -156,7 +156,7 @@
                                             <div class="subcategory-card bg-white rounded-4 px-5 text-center h-100 d-flex flex-column justify-content-start align-items-center">
                                                 <div class="{{ subcategory.bg_color }} p-3 rounded-3 d-inline-flex justify-content-center align-items-center">
                                                     {% if subcategory.has_valid_image %}
-                                                        <img src="{{ subcategory.image.url }}"
+                                                        <img src="{{ subcategory.has_valid_image }}"
                                                              class="popular-subcategories-img" alt="image">
                                                     {% else %}
                                                         <img src="{% static sub_placeholder_image %}"
