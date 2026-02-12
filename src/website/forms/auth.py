@@ -1,37 +1,170 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Fieldset, Row, Column, Field, Div, HTML
+from crispy_forms.layout import Layout, Submit, Row, Column, Field, Div, HTML
 from django import forms
-from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.urls import reverse
+from django.urls import reverse_lazy
+from django.utils.safestring import mark_safe
 
+from src.core.components.website.button import Button
+from src.core.components.website.icon import Icon
+from src.core.components.website.iconbutton import IconButton
+from src.core.components.website.span import Span
 from src.users.models import CustomUser
+from src.website.forms.widgets.CustomPasswordWidget import CustomPasswordWidget
 
 
 class RegisterForm(UserCreationForm):
-    first_name = forms.CharField(widget=forms.TextInput, max_length=100, required=True)
-    last_name = forms.CharField(widget=forms.TextInput, max_length=100, required=True)
-    email = forms.EmailField(widget=forms.EmailInput, required=True)
+    first_name = forms.CharField(
+        widget=forms.TextInput(),
+        max_length=100,
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(),
+        max_length=100,
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(),
+    )
+    password1 = forms.CharField(
+        widget=CustomPasswordWidget(icon=Icon(icon_type=Icon.TYPES.EYE)), label="Password"
+    )
+    password2 = forms.CharField(
+        widget=CustomPasswordWidget(icon=Icon(icon_type=Icon.TYPES.EYE)), label="Password confirmation"
+    )
+    privacy_policy = Button(
+        label="Privacy policy",
+        style=Button.Styles.LINK,
+        url='javascript:void(0)',
+        css_class='text-decoration-none p-0 fs-8 align-baseline'
+    ).render()
+
+    terms = Button(
+        label="Terms of use",
+        style=Button.Styles.LINK,
+        url='javascript:void(0)',
+        css_class='text-decoration-none p-0 fs-8 align-baseline'
+    ).render()
+
+    agreement = forms.BooleanField(
+        label=mark_safe(
+            f'I agree to the '
+            f'{terms} '
+            f'and '
+            f'{privacy_policy}'
+        ),
+        error_messages={
+            "required": "You must accept our terms and conditions in order to create an account"
+        },
+    )
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.fields["email"].label = ""
+        self.fields["first_name"].label = ""
+        self.fields["last_name"].label = ""
+        self.fields["password1"].label = ""
+        self.fields["password2"].label = ""
+        self.fields["password1"].help_text = ""
         self.helper.form_method = "post"
         self.helper.form_action = "register"
+        self.fields["password2"].help_text = "Minimum 8 characters with letters and numbers"
         self.helper.form_class = "needs-validation"
         self.helper.attrs = {"novalidate": ""}
         self.helper.layout = Layout(
-            Fieldset(
-                "Registration form",
-                Row(
-                    Column("first_name", css_class="form-group col-md-6 mb-0"),
-                    Column("last_name", css_class="form-group col-md-6 mb-0"),
+            Row(
+                Column(
+                    HTML(
+                        Span(
+                            content="First Name",
+                            css_classes="fw-medium fs-6 mb-1 mt-3 text-light-gray-dark"
+                        )
+                    ),
+                    Field(
+                        "first_name",
+                        css_class="bg-light-grey-dark remove-outline",
+                        wrapper_class="username-field-wrapper w-100",
+                    ),
+                    css_class="form-group col-md-6 mb-0"
                 ),
-                "email",
-                "password1",
-                "password2"
+                Column(
+                    HTML(
+                        Span(
+                            content="Last Name",
+                            css_classes="fw-medium fs-6 mb-1 mt-3 text-light-gray-dark"
+                        )
+                    ),
+                    Field(
+                        "last_name",
+                        css_class="bg-light-grey-dark remove-outline",
+                        wrapper_class="username-field-wrapper w-100"
+                    ),
+                    css_class="form-group col-md-6 mb-0"
+                ),
+                css_class="mb-3"
             ),
-            Submit("submit", "Register", css_class="btn btn-primary btn-lg"),
+            Div(
+                HTML(
+                    Span(
+                        content="Email Address",
+                        css_classes="fw-medium fs-6 mb-1 mt-3 text-light-gray-dark"
+                    )
+                ),
+                Field(
+                    "email",
+                    css_class="bg-light-grey-dark remove-outline",
+                    wrapper_class="username-field-wrapper w-100"
+                ),
+                css_class="mt-3"
+            ),
+            Div(
+                HTML(
+                    Span(
+                        content="Password",
+                        css_classes="fw-medium fs-6 mb-1 text-light-gray-dark mt-3"
+                    )
+                ),
+                Field(
+                    "password1",
+                    wrapper_class="password-wrapper",
+                    css_class_on_error="is-invalid"
+                ),
+                css_class="mt-3"
+            ),
+            HTML(
+                '''
+                {% if form.password1.errors %}
+                    <div class="text-danger fs-8">
+                        <strong>{{ form.password1.errors|striptags }}</strong>
+                    </div>
+                {% endif %}
+                '''
+            ),
+            Div(
+                HTML(
+                    Span(
+                        content="Password confirm",
+                        css_classes="fw-medium fs-6 mb-1 text-light-gray-dark"
+                    )
+                ),
+                Field(
+                    "password2",
+                    wrapper_class="password-wrapper",
+                    css_class_on_error="is-invalid"
+                ),
+                css_class="mt-3"
+            ),
+            HTML(
+                '''
+                {% if form.password2.errors %}
+                    <div class="text-danger fs-8">
+                        <strong>{{ form.password1.errors|striptags }}</strong>
+                    </div>
+                {% endif %}
+                '''
+            ),
+            Field("agreement", wrapper_class="mt-3"),
+            Submit("submit", "Create Account", css_class="btn btn-primary btn-lg w-100"),
         )
 
     def clean_email(self):
@@ -67,48 +200,130 @@ class RegisterForm(UserCreationForm):
 
 
 class UserLoginForm(AuthenticationForm):
-    username = forms.EmailField(label="Email", widget=forms.EmailInput())
+    username = forms.EmailField(
+        widget=forms.EmailInput(attrs={"placeholder": "name@example.com"}),
+    )
+    password = forms.CharField(
+        widget=CustomPasswordWidget(icon=Icon(icon_type=Icon.TYPES.EYE)),
+    )
+    keep_signed = forms.BooleanField(required=False, label="Keep me signed in")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["username"].widget.attrs.update({"placeholder": "Email"})
-        self.fields["password"].widget.attrs.update({"placeholder": "Password"})
-
         self.helper = FormHelper()
+        self.fields["password"].label = ""
+        self.fields["username"].label = ""
         self.helper.form_method = "post"
-        self.helper.form_class = "needs-validation"
+        self.helper.form_class = "needs-validation w-100"
         self.helper.attrs = {"novalidate": ""}
-
         self.helper.layout = Layout(
-            HTML("<h3 class='mb-3'>Login form</h3>"),
-            Div(Field("username"), css_class="form-group"),
-            Div(Field("password", wrapper_class="pt-3"), css_class="form-group"),
             Div(
-                Submit("login", "Login", css_class="btn btn-primary my-2 w-30 "),
-                HTML("<p class='mb-3'>Not yet registered ?</p>"),
-                Submit("register", "Register", css_class="btn btn-primary my-2 w-30"),
-                css_class="form-group d-flex justify-content-between", )
+                HTML(
+                    Span(
+                        content="Email Address",
+                        css_classes="fw-medium fs-6 mb-1 text-light-gray-dark"
+                    )
+                ),
+                Field(
+                    "username",
+                    css_class="remove-outline bg-light-grey-dark",
+                    wrapper_class="username-field-wrapper w-100"
+                ),
+                Div(
+                    HTML(
+                        Span(
+                            content="Password",
+                            css_classes="fw-medium fs-6 mb-1 mt-3 text-light-gray-dark"
+                        )
+                    ),
+                    HTML(
+                        Button(
+                            label="Forgot ?",
+                            style=Button.Styles.LINK,
+                            url='javascript:void(0)',
+                            css_class='text-decoration-none p-0 fs-8 align-baseline h-100 d-flex align-self-end'
+                        )
+                    ),
+                    css_class="d-flex justify-content-between w-100"
+                ),
+                Field(
+                    "password",
+                    css_class="password-field remove-outline border-0 bg-transparent",
+                    wrapper_class="username-field-wrapper w-100 mt-3",
+                    placeholder="*********",
+                    css_class_on_error="is-invalid"
+                ),
+                HTML(
+                    '''
+                    {% if form.password.errors %}
+                        <div class="text-danger fs-8">
+                            <strong>{{ form.password.errors|striptags }}</strong>
+                        </div>
+                    {% endif %}
+                    '''
+                ),
+                Field("keep_signed", wrapper_class="mt-3 text-light-gray-dark fw-semibold",
+                      css_class=""),
+                Submit(
+                    "login",
+                    "Sign In",
+                    css_class="btn btn-primary rounded-3 w-100"
+                ),
+                css_class="d-flex flex-column"
+            ),
         )
 
     def clean(self):
-        username = self.cleaned_data.get("username")
-        password = self.cleaned_data.get("password")
-        try:
-            user_obj = CustomUser.objects.get(email=username)
-        except CustomUser.DoesNotExist:
-            raise forms.ValidationError("User with that email does not exist.")
-        user_name = user_obj.username
-        if user_obj is not None and password:
-            self.user_cache = authenticate(
-                self.request, username=user_name, password=password
-            )
-            if self.user_cache is None:
-                raise self.get_invalid_login_error()
-            else:
-                self.confirm_login_allowed(self.user_cache)
+        cleaned_data = super().clean()
 
-        return self.cleaned_data
+        username = cleaned_data.get("username")
+        if username and not CustomUser.objects.filter(email=username).exists():
+            raise forms.ValidationError("User with that email does not exist.")
+
+        return cleaned_data
+
+
+class GoogleLoginForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(GoogleLoginForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "get"
+        self.helper.form_class = "google-login"
+        self.helper.form_action = reverse_lazy("homepage")
+        self.helper.layout = Layout(
+            HTML(
+                IconButton(
+                    name="Google",
+                    label="Google",
+                    icon=Icon(Icon.TYPES.GOOGLE),
+                    css_classes="d-flex flex-row-reverse align-items-baseline border border-1"
+                                " rounded-3 border-light-grey bg-white px-5 py-2 gap-2 w-100 justify-content-center",
+                    icon_css_classes=""
+                )
+            )
+        )
+
+
+class GitHubLoginForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(GitHubLoginForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "get"
+        self.helper.form_class = "github-login"
+        self.helper.form_action = reverse_lazy("homepage")
+        self.helper.layout = Layout(
+            HTML(
+                IconButton(
+                    name="GitHub",
+                    label="Gihub",
+                    icon=Icon(Icon.TYPES.GITHUB),
+                    css_classes="d-flex flex-row-reverse align-items-baseline border border-1"
+                                " rounded-3 border-light-grey bg-white px-5 py-2 gap-2 w-100 justify-content-center",
+                    icon_css_classes=""
+                )
+            )
+        )
 
 
 class UserLogoutForm(forms.Form):
@@ -116,7 +331,7 @@ class UserLogoutForm(forms.Form):
         super(UserLogoutForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_action = reverse("logout")
+        self.helper.form_action = reverse_lazy("logout")
         self.helper.layout = Layout(
             Submit("logout", "Logout", css_class="dropdown-item"),
         )
