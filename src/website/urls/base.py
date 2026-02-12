@@ -30,6 +30,8 @@ urlpatterns = [
     ])),
     path("checkout/", include([
         path("", views.CheckoutCreateView.as_view(), name="checkout"),
+        path("buynow/<int:pk>/", views.BuyNowView.as_view(), name="buy_now"),
         path("complete/<int:pk>/", views.CheckoutCompleteView.as_view(), name="complete"),
-    ]), )
+    ]), ),
+    path("ckeditor5/", include("django_ckeditor_5.urls")),
 ]

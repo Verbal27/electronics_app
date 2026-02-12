@@ -1,6 +1,9 @@
 {% extends "base/website/base.html" %}
 
 {% block website_content %}
+    {% if breadcrumbs %}
+        {% include "inc/breadcrumbs.html" %}
+    {% endif %}
     <div class="container py-5 min-vh-100">
 
         {% if query %}

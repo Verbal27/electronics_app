@@ -1,5 +1,5 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Div, HTML, Button
+from crispy_forms.layout import Submit, Layout, Div, HTML, Button, Field
 from django import forms
 from django.urls import reverse
 
@@ -30,9 +30,8 @@ class AddToCartDetailForm(forms.Form):
 
         self.fields["quantity"].widget = forms.NumberInput(
             attrs={
-                "class": "col col-md-4 d-flex justify-content-center mx-md-2 quantity "
-                "border-0 bg-transparent text-dark fw-semibold text-center",
-                "style": "pointer-events: none; display: inline-flex;",
+                "class": "quantity border-0 bg-transparent text-dark fw-semibold text-center",
+                "style": "pointer-events: none",
                 "min": "1",
                 "id": f"quantity-{self.product_id}",
                 "data-max": str(max_qty),
@@ -40,6 +39,7 @@ class AddToCartDetailForm(forms.Form):
                 "value": "1",
             }
         )
+        self.fields["quantity"].label = ""
         self.fields["quantity"].widget.attrs.update(
             {
                 "data-product-id": str(self.product_id),
@@ -51,26 +51,36 @@ class AddToCartDetailForm(forms.Form):
         self.helper.form_action = reverse("add_to_cart", args=[product_id])
         self.helper.layout = Layout(
             Div(
-                Button(
-                    "decrease_quantity",
-                    "-",
-                    css_class="btn bg-white border rounded-3 text-dark qty-btn qty-decrease",
-                    type="button"
+                Div(
+                    Button(
+                        "decrease_quantity",
+                        "-",
+                        css_class="qty-btn qty-decrease border-0 p-0",
+                        type="button",
+                    ),
+                    Field("quantity", wrapper_class="mt-3"),
+                    Button(
+                        "increase_quantity",
+                        "+",
+                        css_class="qty-btn qty-increase border-0 p-0",
+                        type="button",
+                    ),
+                    css_class="d-flex align-items-center border border-1 rounded-3 quantity-wrapper col-3 p-2",
                 ),
-                "quantity",
-                Button(
-                    "increase_quantity",
-                    "+",
-                    css_class="btn bg-white border rounded-3 text-dark qty-btn qty-increase",
-                    type="button"
+                Div(
+                    HTML(
+                        IconButton(
+                            name="add_to_cart",
+                            label="Add To Cart",
+                            icon=Icon(Icon.TYPES.BAG),
+                            css_classes="btn btn-add-to-cart d-flex w-100 flex-row-reverse"
+                                        " align-items-baseline gap-2 justify-content-center",
+                        ),
+                    ),
+                    css_class="d-flex w-100"
                 ),
-                css_class="d-flex align-items-center gap-2",
-            ),
-            Submit(
-                "add_to_cart",
-                "Add To Cart",
-                css_class="btn btn-primary btn-update-cart add-to-cart d-inline-block h-100",
-            ),
+                css_class="d-flex align-items-base gap-3",
+            )
         )
 
 

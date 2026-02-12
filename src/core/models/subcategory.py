@@ -1,5 +1,6 @@
-from django.core.files.storage import default_storage
+from django.urls import reverse
 
+from electronics_app.settings import SUBCATEGORY_EMPTY_CART_PLACEHOLDER_IMAGE
 from .category import Category
 from django.db import models
 
@@ -20,6 +21,15 @@ class Subcategory(models.Model):
 
     @property
     def has_valid_image(self):
-        return bool(
-            self.image and self.image.name and default_storage.exists(self.image.name)
-        )
+        if self.image and self.image.storage.exists(self.image.name):
+            return True
+        return False
+
+    @property
+    def image_url(self):
+        if self.image and self.has_valid_image:
+            return self.image.url
+        return SUBCATEGORY_EMPTY_CART_PLACEHOLDER_IMAGE
+
+    def get_absolute_url(self):
+        return reverse("subcategory_products", args=[self.pk])

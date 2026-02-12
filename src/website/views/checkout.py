@@ -4,11 +4,12 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.views import View
 
 from src.core.models import ShippingOption, Order
 from src.website.services import Cart, CartService, CheckoutService
-from src.website.forms.checkout import OrderModelForm
+from src.website.forms.checkout import OrderModelForm, BuyNowForm
 from django.views.generic import CreateView, TemplateView
 from django.urls import reverse_lazy
 
@@ -122,3 +123,20 @@ class CheckoutCompleteView(LoginRequiredMixin, TemplateView):
             context["delivery_time_span"] = "3–5 business days"
 
         return context
+
+
+class BuyNowView(LoginRequiredMixin, View):
+    form_class = BuyNowForm
+
+    def post(self, request, pk):
+        quantity = int(request.POST.get("quantity", 1))
+        cart_service = CartService(self.request)
+
+        cart_service.cart.clear()
+        result = cart_service.add_product(pk, quantity)
+
+        if not result["success"]:
+            messages.error(request, result["message"])
+            return redirect("product_detail", pk=pk)
+
+        return redirect("checkout")
