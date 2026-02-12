@@ -73,8 +73,14 @@ class ProductImage(models.Model):
         return f"Image for {self.product.name}"
 
     @property
+    def has_product_image(self):
+        if self.image and self.image.storage.exists(self.image.name):
+            return True
+        return False
+
+    @property
     def url(self):
-        if self.image and hasattr(self.image, 'url'):
+        if self.image and self.has_product_image:
             return self.image.url
         return PRODUCT_PLACEHOLDER_IMAGE
 

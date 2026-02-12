@@ -21,7 +21,13 @@ class Subcategory(models.Model):
 
     @property
     def has_valid_image(self):
-        if self.image and hasattr(self.image, 'url'):
+        if self.image and self.image.storage.exists(self.image.name):
+            return True
+        return False
+
+    @property
+    def image_url(self):
+        if self.image and self.has_valid_image:
             return self.image.url
         return SUBCATEGORY_EMPTY_CART_PLACEHOLDER_IMAGE
 
