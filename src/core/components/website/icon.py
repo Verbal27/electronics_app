@@ -16,6 +16,8 @@ class Icon(RenderComponentMixin):
         DELIVERY = "fa-solid fa"
         CARD = "fa-solid fa-credit-card"
         SECURE = "fa-solid fa-lock"
+        CHECK = "fa-solid fa-check"
+        CART = "fa-solid fa-cart-shopping"
         GOOGLE = "fa-brands fa-google"
         GITHUB = "fa-brands fa-github"
         ENVELOPE = "fa-regular fa-envelope"

@@ -1,4 +1,3 @@
-from electronics_app.settings import PRODUCT_PLACEHOLDER_IMAGE
 from src.core.components.base import RenderComponentMixin, MediaDefiningComponent
 from src.website.forms.cart import AddToCartForm
 from django.urls import reverse
@@ -26,7 +25,7 @@ class ProductCard(RenderComponentMixin, MediaDefiningComponent):
             "product_name": self.product.name,
             "product_description": self.product.description,
             "product_price": self.product.price,
-            "product_image_url": self.product.image.url if self.product.image else PRODUCT_PLACEHOLDER_IMAGE,
+            "product_image_url": self.product.image_url,
             "product_subcategory": self.product.subcategory,
             "product_detail_url": reverse("product_detail", args=[self.product.pk]),
             "css_classes": self.css_classes,

@@ -1,35 +1,84 @@
-from electronics_app.settings import PLACEHOLDER_PRODUCT_IMAGE
-from src.website.services.cart_services import CartService
-from src.website.forms.cart import AddToCartDetailForm
+from django.urls import reverse
 from django.views.generic import DetailView
+
+from src.core.components.website.cards import ProductCard
+from src.core.components.website.icon import Icon
+from src.core.components.website.span import Span
 from src.core.models import Product
+from src.website.forms.cart import AddToCartDetailForm
+from src.website.forms.checkout import BuyNowForm
+from src.website.services import CartService
 
 
 class ProductDetailView(DetailView):
     model = Product
     template_name = "product_detail.html"
     context_object_name = "product"
-    form_class = AddToCartDetailForm
+
+    def get_breadcrumb(self):
+        product = self.object
+        return [
+            {"label": "Home", "url": reverse("homepage")},
+            {
+                "label": product.subcategory.category.name,
+                "url": product.subcategory.category.get_absolute_url(),
+            },
+            {
+                "label": product.name,
+                "url": product.get_absolute_url(),
+            },
+        ]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        product = self.get_object()
+        product = self.object
 
         service = CartService(self.request)
         current_qty = service.cart.cart.get(str(product.id), {}).get("quantity", 0)
 
-        if not product.image:
-            context.update({
-                "product_image": PLACEHOLDER_PRODUCT_IMAGE
-            })
-        else:
-            context.update({
-                "product_image": product.image.url
-            })
-
-        context["form"] = self.form_class(
-            product_id=product.id,
-            product=product,
-            current_qty=current_qty
+        stock_css = (
+            "text-warning"
+            if product.is_low_stock
+            else "custom-text-success"
         )
+
+        related_products = (
+            Product.objects
+            .filter(subcategory__category=product.subcategory.category)
+            .exclude(id=product.id)
+            .prefetch_related("images")[:2]
+        )
+
+        context.update({
+            "breadcrumbs": self.get_breadcrumb(),
+            "form": AddToCartDetailForm(
+                product_id=product.id,
+                product=product,
+                current_qty=current_qty,
+            ),
+            "buy_now": BuyNowForm(
+                pk=product.id,
+                quantity=current_qty or 1,
+            ),
+            "images": product.images.all(),
+            "primary_image": product.image_url,
+            "stock_label": Span(
+                content=product.stock_status,
+                css_classes=stock_css,
+            ),
+            "stock_icon": Icon(
+                icon_type=Icon.TYPES.CHECK,
+                css_classes=stock_css,
+            ),
+            "specs": product.specification.all(),
+            "related": [
+                ProductCard(
+                    request=self.request,
+                    product=related,
+                    css_classes="default",
+                )
+                for related in related_products
+            ],
+        })
+
         return context

@@ -1,4 +1,4 @@
-from .checkout import CheckoutCreateView, CheckoutCompleteView
+from .checkout import CheckoutCreateView, CheckoutCompleteView, BuyNowView
 from .homepage import HomePageListView
 from .product_detail import ProductDetailView
 from .cabinet import CabinetTemplateView
@@ -28,4 +28,5 @@ __all__ = (
     "CheckoutCompleteView",
     "CabinetTemplateView",
     "ProductsListView",
+    "BuyNowView",
 )

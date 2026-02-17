@@ -4,9 +4,6 @@ from django.views.generic import TemplateView, View
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.contrib import messages
-from django.conf import settings
-
-subcat_placeholder = settings.SUBCATEGORY_EMPTY_CART_PLACEHOLDER_IMAGE
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +17,6 @@ class CartListView(TemplateView):
         cart_context = service.get_cart_context()
         context.update(cart_context)
 
-        context["sub_placeholder_image"] = subcat_placeholder
         return context
 
 
