@@ -1,0 +1,13 @@
+{% extends 'cabinet_base.html' %}
+
+{% block content %}
+    {% for address in saved_addresses %}
+        {{ address.first_name }}
+        {{ address.last_name }}
+        {{ address.email }}
+        {{ address.street }}
+        {{ address.city }}
+        {{ address.state }}
+        {{ address.zipcode }}
+    {% endfor %}
+{% endblock %}

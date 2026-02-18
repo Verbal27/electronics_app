@@ -1,7 +1,6 @@
 from .checkout import CheckoutCreateView, CheckoutCompleteView, BuyNowView
 from .homepage import HomePageListView
 from .product_detail import ProductDetailView
-from .cabinet import CabinetTemplateView
 from .cart import (
     CartListView,
     CartAddView,
@@ -26,7 +25,6 @@ __all__ = (
     "CartDropView",
     "CheckoutCreateView",
     "CheckoutCompleteView",
-    "CabinetTemplateView",
     "ProductsListView",
     "BuyNowView",
 )

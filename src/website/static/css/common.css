@@ -23,11 +23,11 @@
 
     --color-success: #34B748;
 
-    --fs-7: 0.8rem !important;
+    --fs-7: 0.875rem !important;
 
     --border-color-blue: #4477FF;
 
-    --font-size-8: 0.875rem;
+    --font-size-8: 0.7rem;
 }
 
 @media (max-width: 768px) {
@@ -798,6 +798,26 @@ body {
 
 .product-detail-thumbnail {
     height: 7rem !important;
+}
+
+.active-tab {
+    border: 1px;
+    border-radius: var(--bs-border-radius-xxl) !important;
+    background-color: white;
+}
+
+.nav-link {
+    padding: 0 !important;
+}
+
+.order-card-img {
+    height: 2.5rem !important;
+    width: 2.5rem !important;
+}
+
+.cabinet-profile-image {
+    height: 3.5rem !important;
+    width: 3.5rem !important;
 }
 
 @media (max-width: 767.98px) {

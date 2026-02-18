@@ -1,6 +1,13 @@
 from django.urls import include, path
-
-from src.users.views import RegisterView, UserLoginView, LogoutView
+from src.users.views import (
+    RegisterView,
+    UserLoginView,
+    UserLogoutView,
+    OrderListView,
+    AccountInfoView,
+    AddressListView,
+    AllOrderListView
+)
 from src.website import views
 from src.website.views.homepage import SubscribeView, SearchView
 
@@ -9,8 +16,15 @@ urlpatterns = [
     path("products/", views.ProductsListView.as_view(), name="products"),
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", UserLoginView.as_view(), name="login"),
-    path("logout/", LogoutView.as_view(), name="logout"),
-    path("cabinet/", views.CabinetTemplateView.as_view(), name="cabinet"),
+    path("logout/", UserLogoutView.as_view(), name="logout"),
+    path("cabinet/", include([
+        path("orders/", include([
+            path("", OrderListView.as_view(), name="orders"),
+            path("all/", AllOrderListView.as_view(), name="all-orders")
+        ])),
+        path("account-info/", AccountInfoView.as_view(), name="account-info"),
+        path("addresses/", AddressListView.as_view(), name="addresses"),
+    ])),
     path("subscribe/", SubscribeView.as_view(), name="subscribe"),
     path("search/", SearchView.as_view(), name="search"),
     path("<int:pk>/", include([

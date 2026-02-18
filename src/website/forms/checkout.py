@@ -327,6 +327,9 @@ class OrderModelForm(ModelForm):
                 },
             )
 
+            self.user.phone = order.phone
+            self.user.save(update_fields=["phone"])
+
         order.payment = payment
         order.status = OrderStatus.PENDING
         order.shipping = shipping

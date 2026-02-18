@@ -1,0 +1,50 @@
+{% load static %}
+<div class="order-card {{ css_classes }} col col-md-9">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex flex-column mb-2">
+            <div class="d-flex gap-2 align-items-baseline">
+                <i class="fa-solid fa-box"></i>
+                <div class="fs-7">
+                    Order #{{ order.id }}
+                </div>
+                <div class="border border-0 bg-dark rounded-4 text-white fs-8 px-2">
+                    {{ order.get_status_display }}
+                </div>
+            </div>
+            <div class="text-muted fs-8">
+                {{ order.created_at }}
+            </div>
+        </div>
+        <div class="d-flex flex-column text-end">
+            <div class="text-muted">
+                Total
+            </div>
+            <div class="fs-7 fw-medium">
+                ${{ payment.amount }}
+            </div>
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        {% for item in items %}
+            <div class="d-flex gap-2">
+                <img src="{{ item.product.image_url }}" width="50" class="order-card-img border-0 rounded-3">
+                <div class="d-flex flex-column fs-8 justify-content-center">
+                    <div class="fs-8">
+                        {{ item.product_name }}
+                    </div>
+                    <div class="text-muted">
+                        Qty: {{ item.quantity }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="d-flex col col-md-3 justify-content-center">
+    <a href="#" class="text-decoration-none text-dark">
+        <div class="fs-7 fw-medium">
+            View Details
+            <i class="fa-solid fa-angle-right"></i>
+        </div>
+    </a>
+</div>

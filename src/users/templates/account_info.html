@@ -1,0 +1,9 @@
+{% extends "cabinet_base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="border border-1 border-light-grey p-3 rounded-3 bg-white">
+        {% crispy form %}
+    </div>
+{% endblock %}

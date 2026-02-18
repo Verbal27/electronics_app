@@ -1,0 +1,49 @@
+{% extends "base/website/base.html" %}
+{% load crispy_forms_tags static base_tags %}
+
+{% block website_content %}
+    <div class="d-flex d-flex-center flex-column min-vh-100 mt-4">
+        <div class="container">
+            {% if user.is_authenticated %}
+                <div class="border border-1 rounded-3 row p-2 bg-white">
+                    <div class="col col-md-2 d-flex justify-content-center align-self-center">
+                        <div class="border border-1 rounded-circle p-2">
+                            <img src="{{ user.profile_image_url }}" class="cabinet-profile-image">
+                        </div>
+                        <i class="fa-solid fa-camera align-self-end"></i>
+                    </div>
+                    <div class="col col-md-8">
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex gap-2 fs-6 fw-semibold">
+                                {{ user.first_name }}
+                                {{ user.last_name }}
+                            </div>
+                            <div class="text-muted fs-8">
+                                {{ user.email }}
+                            </div>
+                            <div class="text-muted fs-8">
+                                Member since {{ user.month_year_joined }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-md-2 align-self-center">
+                        <a name="edit_profile" href="{% url 'account-info' %}"
+                                class="border border-1 rounded-3 bg-white px-2 py-1 fs-8 fw-semibold text-decoration-none text-dark">
+                            Edit Profile
+                        </a>
+                    </div>
+                </div>
+                <nav class="nav nav-pills nav-fill rounded-5 p-1 bg-light-grey-dark mt-4 mb-5">
+                    <a class="nav-link {% is_active 'orders' %}" href="{% url 'orders' %}">Orders</a>
+                    <a class="nav-link {% is_active 'account-info' %}" href="{% url 'account-info' %}">Account Info</a>
+                    <a class="nav-link {% is_active 'addresses' %}" href="{% url 'addresses' %}">Addresses</a>
+                    {#                    <a class="nav-link {% is_active 'payment-methods' %}" href="{% url 'payment-methods' %}">Payment Methods</a>#}
+                </nav>
+                {% block content %}
+                {% endblock %}
+            {% else %}
+                <h1>You are not logged in</h1>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

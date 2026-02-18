@@ -1,0 +1,22 @@
+{% extends "cabinet_base.html" %}
+
+{% block content %}
+    <div class="d-flex border border-1 rounded-3 flex-column bg-white">
+        <div class="d-flex justify-content-between">
+            <div class="fs-7 fw-medium m-3 align-self-center">
+                Order History
+            </div>
+            <a href="{% url 'all-orders' %}" class="text-decoration-none">
+                <button type="button" name="all-orders" class="btn btn-light bg-white fs-8 fw-medium m-3">View
+                    All
+                </button>
+            </a>
+        </div>
+
+        {% for order in order_cards %}
+            <div class="d-flex border border-1 rounded-3 m-3 p-3 flex-wrap">
+                {{ order }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

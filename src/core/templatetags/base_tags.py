@@ -14,3 +14,11 @@ def component_js():
 @register.simple_tag
 def component_css():
     return mark_safe(''.join([component.render_css() for component in MediaDefiningComponentClass.components]))
+
+
+@register.simple_tag(takes_context=True)
+def is_active(context, url_name):
+    request = context['request']
+    if request.resolver_match.url_name == url_name:
+        return "active-tab"
+    return ""

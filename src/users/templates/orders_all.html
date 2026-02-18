@@ -1,0 +1,11 @@
+{% extends "cabinet_base.html" %}
+
+{% block content %}
+    <div class="d-flex border border-1 rounded-3 flex-column mt-5 bg-white">
+        {% for order in order_cards %}
+            <div class="d-flex border border-1 rounded-3 m-3 p-3 flex-wrap">
+                {{ order }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
