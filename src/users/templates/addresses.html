@@ -1,13 +1,57 @@
 {% extends 'cabinet_base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
-    {% for address in saved_addresses %}
-        {{ address.first_name }}
-        {{ address.last_name }}
-        {{ address.email }}
-        {{ address.street }}
-        {{ address.city }}
-        {{ address.state }}
-        {{ address.zipcode }}
-    {% endfor %}
+    <div class="d-flex border border-1 rounded-3 flex-column bg-white mb-4">
+        <div class="fs-7 fw-medium m-3">
+            Saved Addresses
+        </div>
+        {% if saved_addresses %}
+            {% for address in saved_addresses %}
+                <div class="row border border-1 rounded-3 m-3 p-3">
+                    <div class="col col-md-10">
+                        <div class="d-flex gap-1 align-items-baseline">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <div class="fs-6 fw-semibold">
+                                Home
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1 mt-4">
+                            <div class="fs-6 fw-medium">
+                                {{ address.first_name }}
+                            </div>
+                            <div class="fs-6 fw-medium">
+                                {{ address.last_name }}
+                            </div>
+                        </div>
+                        <div class="fs-7">
+                            {{ address.street }}
+                        </div>
+                        <div class="d-flex gap-1">
+                            <div class="fs-7">
+                                {{ address.city }},
+                            </div>
+                            <div class="fs-7">
+                                {{ address.state }},
+                            </div>
+                            <div class="fs-7">
+                                {{ address.zipcode }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-md-2 d-flex  justify-content-around align-items-baseline">
+                        <a href="{% url 'address-update' address.pk %}" class="text-decoration-none text-dark">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        {% crispy delete_address %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="align-self-center fs-2 fw-semibold mb-5">
+                No saved addresses
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

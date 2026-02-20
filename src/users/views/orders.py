@@ -1,21 +1,26 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 from django.views.generic import ListView
 
 from src.core.components.cabinet.order_card import OrderCard
+from src.core.components.cabinet_context import CabinetContextMixin
 from src.core.models import Order
 
 
-class OrderListView(LoginRequiredMixin, ListView):
+class OrderListView(LoginRequiredMixin, CabinetContextMixin, ListView):
     model = Order
     template_name = "orders.html"
     context_object_name = "orders"
+    paginate_by = 10
 
     def get_queryset(self):
         return (
-            Order.objects.filter(user=self.request.user)
+            Order.objects
+            .filter(user=self.request.user, status=1)
             .select_related("payment")
             .prefetch_related("items__product")
-            .order_by("-created_at")[:4]
+            .order_by("-created_at")
         )
 
     def get_context_data(self, **kwargs):
@@ -30,10 +35,45 @@ class OrderListView(LoginRequiredMixin, ListView):
         return context
 
 
-class AllOrderListView(LoginRequiredMixin, ListView):
+class OrderInfiniteScrollView(LoginRequiredMixin, ListView):
+    model = Order
+    paginate_by = 10
+    context_object_name = "orders"
+
+    def get_queryset(self):
+        return (
+            Order.objects
+            .filter(user=self.request.user, status=1)
+            .select_related("payment", "shipping")
+            .prefetch_related("items__product")
+            .order_by("-created_at")
+        )
+
+    def render_to_response(self, context, **response_kwargs):
+        orders = context["orders"]
+
+        order_cards = [
+            OrderCard(self.request, order)
+            for order in orders
+        ]
+
+        html = render_to_string(
+            "partials/order_list_items.html",
+            {"order_cards": order_cards},
+            request=self.request
+        )
+
+        return JsonResponse({
+            "html": html,
+            "has_next": context["page_obj"].has_next()
+        })
+
+
+class AllOrderListView(LoginRequiredMixin, CabinetContextMixin, ListView):
     model = Order
     template_name = "orders_all.html"
     context_object_name = "orders"
+    paginate_by = 10
 
     def get_queryset(self):
         return (
@@ -53,3 +93,37 @@ class AllOrderListView(LoginRequiredMixin, ListView):
         ]
 
         return context
+
+
+class AllOrdersInfiniteScrollView(LoginRequiredMixin, ListView):
+    model = Order
+    paginate_by = 10
+    context_object_name = "orders"
+
+    def get_queryset(self):
+        return (
+            Order.objects
+            .filter(user=self.request.user)
+            .select_related("payment", "shipping")
+            .prefetch_related("items__product")
+            .order_by("-created_at")
+        )
+
+    def render_to_response(self, context, **response_kwargs):
+        orders = context["orders"]
+
+        order_cards = [
+            OrderCard(self.request, order)
+            for order in orders
+        ]
+
+        html = render_to_string(
+            "partials/order_list_items.html",
+            {"order_cards": order_cards},
+            request=self.request
+        )
+
+        return JsonResponse({
+            "html": html,
+            "has_next": context["page_obj"].has_next()
+        })

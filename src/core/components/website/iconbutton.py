@@ -13,6 +13,7 @@ class IconButton(RenderComponentMixin, MediaDefiningComponent):
     def __init__(self,
                  name,
                  icon: Icon,
+                 btn_type=None,
                  css_classes=None,
                  label=None,
                  value=None,
@@ -20,6 +21,7 @@ class IconButton(RenderComponentMixin, MediaDefiningComponent):
                  icon_css_classes=None
                  ):
         self.name = name
+        self.type = btn_type
         self.value = value
         self.label = label
         self.icon = icon
@@ -30,6 +32,7 @@ class IconButton(RenderComponentMixin, MediaDefiningComponent):
     def get_context(self):
         return {
             "name": self.name,
+            "type": self.type,
             "value": self.value,
             "label": self.label,
             "css_classes": self.css_classes,

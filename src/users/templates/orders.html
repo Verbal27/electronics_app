@@ -1,22 +1,31 @@
 {% extends "cabinet_base.html" %}
 
 {% block content %}
-    <div class="d-flex border border-1 rounded-3 flex-column bg-white">
+    <div class="d-flex border border-1 rounded-3 flex-column bg-white mb-4">
         <div class="d-flex justify-content-between">
             <div class="fs-7 fw-medium m-3 align-self-center">
                 Order History
             </div>
             <a href="{% url 'all-orders' %}" class="text-decoration-none">
-                <button type="button" name="all-orders" class="btn btn-light bg-white fs-8 fw-medium m-3">View
-                    All
+                <button type="button" name="all-orders" class="btn btn-light bg-white fs-8 fw-medium m-3">
+                    View All
                 </button>
             </a>
         </div>
+        {% if order_cards %}
 
-        {% for order in order_cards %}
-            <div class="d-flex border border-1 rounded-3 m-3 p-3 flex-wrap">
-                {{ order }}
+            <div class="orders-container" id="orders-container" data-infinite-url="{% url 'orders-infinite' %}">
+                {% include "partials/order_list_items.html" %}
+                <div id="sentinel" class="bg-light-green d-block"></div>
             </div>
-        {% endfor %}
+
+            <div id="loading" class="text-center py-3 d-none">
+                Loading...
+            </div>
+        {% else %}
+            <div class="align-self-center fs-2 fw-semibold mb-5">
+                No orders yet
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

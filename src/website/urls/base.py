@@ -6,7 +6,8 @@ from src.users.views import (
     OrderListView,
     AccountInfoView,
     AddressListView,
-    AllOrderListView
+    AllOrderListView, ProfileImageUpdateView, OrderInfiniteScrollView, AllOrdersInfiniteScrollView, TwoFactorView,
+    CustomPasswordChangeView, AdditionalDataView, ChangeSavedAddressView, DeleteAddressView
 )
 from src.website import views
 from src.website.views.homepage import SubscribeView, SearchView
@@ -20,10 +21,25 @@ urlpatterns = [
     path("cabinet/", include([
         path("orders/", include([
             path("", OrderListView.as_view(), name="orders"),
-            path("all/", AllOrderListView.as_view(), name="all-orders")
+            path("all/", AllOrderListView.as_view(), name="all-orders"),
+            path("infinite/", OrderInfiniteScrollView.as_view(), name="orders-infinite"),
+            path("all-infinite/", AllOrdersInfiniteScrollView.as_view(), name="all-orders-infinite")
         ])),
-        path("account-info/", AccountInfoView.as_view(), name="account-info"),
-        path("addresses/", AddressListView.as_view(), name="addresses"),
+        path("account-info/", include([
+            path("", AccountInfoView.as_view(), name="account-info"),
+            path("preferences-update/", AdditionalDataView.as_view(), name="preferences-update"),
+            path("two-factor/", TwoFactorView.as_view(), name="two-factor"),
+            path("password-change/", CustomPasswordChangeView.as_view(), name="password-change")
+        ])),
+        path("addresses/", include([
+            path("", AddressListView.as_view(), name="addresses"),
+            path("<int:pk>/update/", ChangeSavedAddressView.as_view(), name="address-update"),
+            path("<int:pk>/delete/", DeleteAddressView.as_view(), name="delete-address")
+        ])),
+        # path("payment-methods/", include([
+        #     path("",),
+        # ])),
+        path("update-image/", ProfileImageUpdateView.as_view(), name="update-image")
     ])),
     path("subscribe/", SubscribeView.as_view(), name="subscribe"),
     path("search/", SearchView.as_view(), name="search"),

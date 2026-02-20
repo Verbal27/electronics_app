@@ -22,6 +22,11 @@ class CustomUser(AbstractUser):
         blank=True,
         null=True
     )
+    order_updates = models.BooleanField(default=True)
+    promo_emails = models.BooleanField(default=False)
+    product_recommendations = models.BooleanField(default=False)
+    two_factor_auth = models.BooleanField(default=False)
+    last_password_change = models.DateField(null=True)
 
     def __str__(self):
         return self.email
