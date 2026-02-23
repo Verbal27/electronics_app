@@ -1,5 +1,5 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, HTML
+from crispy_forms.layout import Layout, Submit, HTML, Fieldset
 from django import forms
 from django.urls import reverse
 
@@ -18,12 +18,15 @@ class ChangeSavedAddress(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.layout = Layout(
-            "first_name",
-            "last_name",
-            "street",
-            "city",
-            "state",
-            "zipcode",
+            Fieldset(
+                "Change saved address",
+                "first_name",
+                "last_name",
+                "street",
+                "city",
+                "state",
+                "zipcode",
+            ),
             Submit(
                 "submit",
                 "Save Changes",
