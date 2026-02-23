@@ -4,13 +4,13 @@
 
 {% block content %}
     <div class="d-flex border border-1 rounded-3 flex-column bg-white mb-4">
-        <div class="fs-7 fw-medium m-3">
+        <div class="fs-6 fw-semibold m-3">
             Saved Addresses
         </div>
         {% if saved_addresses %}
             {% for address in saved_addresses %}
                 <div class="row border border-1 rounded-3 m-3 p-3">
-                    <div class="col col-md-10">
+                    <div class="col-12 col-md-10">
                         <div class="d-flex gap-1 align-items-baseline">
                             <i class="fa-solid fa-location-dot"></i>
                             <div class="fs-6 fw-semibold">

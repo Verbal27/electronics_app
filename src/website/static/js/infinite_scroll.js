@@ -4,7 +4,7 @@ function initOrdersInfiniteScroll(options = {}) {
         sentinelSelector = '#sentinel',
         loadingSelector = '#loading',
         url,
-        initialPage = 1
+        initialPage = 2
     } = options;
 
     let page = initialPage;
@@ -71,12 +71,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
 
     const url = container.dataset.infiniteUrl;
+    const initialPage = parseInt(container.dataset.nextPage || 2);
 
     initOrdersInfiniteScroll({
         url: url,
         containerSelector: '#orders-container',
         sentinelSelector: '#sentinel',
         loadingSelector: '#loading',
-        initialPage: 1
+        initialPage: initialPage
     });
 });

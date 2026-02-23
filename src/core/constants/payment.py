@@ -2,8 +2,8 @@ from django.db.models import IntegerChoices
 
 
 class PaymentMethod(IntegerChoices):
-    CARD = 1, "Cash"
-    CASH = 2, "Card"
+    CASH = 1, "Cash"
+    CARD = 2, "Card"
 
 
 class PaymentStatus(IntegerChoices):
@@ -11,3 +11,9 @@ class PaymentStatus(IntegerChoices):
     FAILED = 2, "Failed"
     COMPLETED = 3, "Completed"
     REFUNDED = 4, "Refunded"
+
+
+class CardTypes(IntegerChoices):
+    VISA = 1, "Visa"
+    MASTERCARD = 2, "Mastercard"
+    AMEX = 3, "American Express"

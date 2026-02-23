@@ -212,6 +212,7 @@ body {
 .text-light-gray {
     color: var(--color-light-gray) !important;
 }
+
 .text-light-gray-dark {
     color: var(--color-light-gray-dark) !important;
 }
@@ -864,7 +865,7 @@ body {
 }
 
 .orders-container::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 3px;
 }
 
@@ -882,9 +883,71 @@ body {
     box-shadow: none !important;
 }
 
+.method-card {
+    width: 38rem !important;
+}
+
+.more-items-card {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    overflow: hidden;
+}
+
+.count-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay-text {
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
+.translate-middle {
+    transform: translate(10%, -50%) !important;
+}
+
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.swiper-pagination {
+    position: relative !important;
+}
+
 @media (max-width: 767.98px) {
     .container-bg {
         padding: 2.5rem 1rem !important;
+    }
+
+    .custom-nav {
+        display: flex;
+        flex-direction: column;
+        border-radius: 1rem !important;
+    }
+
+    .media-flex-col {
+        flex-direction: column;
     }
 
     .hero-section {
@@ -1027,6 +1090,22 @@ body {
         padding: 1rem !important;
     }
 
+    .method-card {
+        width: 100% !important;
+        justify-content: center;
+    }
+
+    .edit-profile-btn {
+        width: 100%;
+    }
+
+    .change-password-btn {
+        font-size: .7rem !important;
+    }
+
+    .media-limit-text {
+        max-width: 6rem !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) {

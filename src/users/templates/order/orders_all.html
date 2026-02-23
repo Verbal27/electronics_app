@@ -1,8 +1,10 @@
 {% extends "cabinet_base.html" %}
 
+{% load static %}
+
 {% block content %}
     <div class="d-flex border border-1 rounded-3 flex-column bg-white mb-4">
-        <div class="fs-7 fw-medium mx-3 my-4">
+        <div class="fs-6 fw-semibold m-3">
             Order History
         </div>
         {% if order_cards %}
@@ -20,4 +22,8 @@
             </div>
         {% endif %}
     </div>
+{% endblock %}
+{% block js %}
+{{ block.super }}
+            <script src="{% static 'js/swiper.js' %}"></script>
 {% endblock %}

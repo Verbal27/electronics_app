@@ -29,19 +29,19 @@
                     </div>
                     <div class="col col-md-2 align-self-center">
                         <a name="edit_profile" href="{% url 'account-info' %}">
-                            <button class="btn btn-secondary text-dark bg-white border-1 border-light-grey fs-8">
+                            <button class="btn btn-secondary text-dark bg-white border-1 border-light-grey fs-8 edit-profile-btn">
                                 Edit Profile
                             </button>
                         </a>
                     </div>
                 </div>
-                <nav class="nav nav-pills nav-fill rounded-5 p-1 bg-light-grey-dark mt-4 mb-5">
-                    <a class="nav-link {% is_active 'orders' 'all-orders' 'orders-infinite' %}"
+                <nav class="nav nav-pills nav-fill rounded-5 p-1 bg-light-grey-dark mt-4 mb-4 custom-nav">
+                    <a class="nav-link {% is_active 'orders' 'all-orders' 'orders-infinite' 'order-detail' %}"
                        href="{% url 'orders' %}">Orders</a>
-                    <a class="nav-link {% is_active 'account-info' %}" href="{% url 'account-info' %}">Account Info</a>
+                    <a class="nav-link {% is_active 'account-info' 'password-change' %}" href="{% url 'account-info' %}">Account Info</a>
                     <a class="nav-link {% is_active 'addresses' 'address-update' %}" href="{% url 'addresses' %}">Addresses</a>
-{#                    <a class="nav-link {% is_active 'payment-methods' %}" href="{% url 'payment-methods' %}">Payment#}
-{#                        Methods</a>#}
+                    <a class="nav-link {% is_active 'payment-methods' 'add-payment-method' 'update-method' %}" href="{% url 'payment-methods' %}">Payment
+                        Methods</a>
                 </nav>
                 {% block content %}
                 {% endblock %}

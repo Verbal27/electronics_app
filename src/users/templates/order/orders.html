@@ -1,12 +1,14 @@
 {% extends "cabinet_base.html" %}
 
+{% load static %}
+
 {% block content %}
     <div class="d-flex border border-1 rounded-3 flex-column bg-white mb-4">
         <div class="d-flex justify-content-between">
-            <div class="fs-7 fw-medium m-3 align-self-center">
+            <div class="fs-6 fw-semibold m-3 align-self-center">
                 Order History
             </div>
-            <a href="{% url 'all-orders' %}" class="text-decoration-none">
+            <a href="{% url 'all-orders' %}" class="text-decoration-none d-flex">
                 <button type="button" name="all-orders" class="btn btn-light bg-white fs-8 fw-medium m-3">
                     View All
                 </button>
@@ -14,7 +16,7 @@
         </div>
         {% if order_cards %}
 
-            <div class="orders-container" id="orders-container" data-infinite-url="{% url 'orders-infinite' %}">
+            <div class="orders-container" id="orders-container" data-infinite-url="{% url 'orders-infinite' %}" data-next-page="{{ page_obj.next_page_number }}">
                 {% include "partials/order_list_items.html" %}
                 <div id="sentinel" class="bg-light-green d-block"></div>
             </div>
@@ -28,4 +30,8 @@
             </div>
         {% endif %}
     </div>
+{% endblock %}
+{% block js %}
+{{ block.super }}
+            <script src="{% static 'js/swiper.js' %}"></script>
 {% endblock %}

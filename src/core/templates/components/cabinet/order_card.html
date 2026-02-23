@@ -1,5 +1,5 @@
 {% load static %}
-<div class="order-card {{ css_classes }} col col-md-9">
+<div class="order-card {{ css_classes }} col col-md-9 d-flex flex-column">
     <div class="d-flex justify-content-between">
         <div class="d-flex flex-column mb-2">
             <div class="d-flex gap-2 align-items-baseline">
@@ -24,24 +24,39 @@
             </div>
         </div>
     </div>
-    <div class="d-flex gap-2">
-        {% for item in items %}
-            <div class="d-flex gap-2">
-                <img src="{{ item.product.image_url }}" width="50" class="order-card-img border-0 rounded-3">
-                <div class="d-flex flex-column fs-8 justify-content-center">
-                    <div class="fs-8">
-                        {{ item.product_name }}
-                    </div>
-                    <div class="text-muted">
-                        Qty: {{ item.quantity }}
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper h-auto">
+            {% for show_item in show_items %}
+                <div class="swiper-slide">
+                    <div class="d-flex gap-2 ordered-item-card">
+                        <img src="{{ show_item.product.image_url }}" class="order-card-img border-0 rounded-3">
+                        <div class="d-flex flex-column fs-8 justify-content-center ordered-item-context">
+                            <div class="fs-8 text-nowrap text-truncate">
+                                {{ show_item.product_name }}
+                            </div>
+                            <div class="text-muted">
+                                Qty: {{ show_item.quantity }}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+            {% if count > 3 %}
+                <div class="swiper-slide d-flex">
+                    <div class="more-items-card position-relative rounded-3">
+                        <img src="{{ count_image }}" class="count-image rounded-3">
+                        <div class="overlay-text position-absolute top-50 translate-middle d-flex">
+                            + {{ more_to_show }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="swiper-pagination d-flex mt-4 justify-content-center"></div>
     </div>
 </div>
 <div class="d-flex col col-md-3 justify-content-center">
-    <a href="#" class="text-decoration-none text-dark">
+    <a href="{% url "order-detail" order.id %}" class="text-decoration-none text-dark">
         <div class="fs-7 fw-medium">
             View Details
             <i class="fa-solid fa-angle-right"></i>

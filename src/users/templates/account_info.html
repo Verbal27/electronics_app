@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="border border-1 border-light-grey p-3 rounded-3 bg-white">
+    <div class="border border-1 border-light-grey p-3 rounded-3 bg-white mb-4">
         {% crispy form %}
         <div class="border-bottom border-1 my-4"></div>
         <div class="fs-6 fw-semibold mb-3">
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <a href="{% url "password-change" %}">
-                <button type="button" class="btn btn-secondary text-dark bg-white border-1 border-light-grey fs-7">
+                <button type="button" class="btn btn-secondary text-dark bg-white border-1 border-light-grey fs-7 change-password-btn">
                     Change Password
                 </button>
             </a>

@@ -7,7 +7,8 @@ from src.users.views import (
     AccountInfoView,
     AddressListView,
     AllOrderListView, ProfileImageUpdateView, OrderInfiniteScrollView, AllOrdersInfiniteScrollView, TwoFactorView,
-    CustomPasswordChangeView, AdditionalDataView, ChangeSavedAddressView, DeleteAddressView
+    CustomPasswordChangeView, AdditionalDataView, ChangeSavedAddressView, DeleteAddressView, PaymentListView,
+    DeleteMethodView, OrderDetailView, AddPaymentView, SetDefaultCardView, UpdateSavedMethodView
 )
 from src.website import views
 from src.website.views.homepage import SubscribeView, SearchView
@@ -23,7 +24,8 @@ urlpatterns = [
             path("", OrderListView.as_view(), name="orders"),
             path("all/", AllOrderListView.as_view(), name="all-orders"),
             path("infinite/", OrderInfiniteScrollView.as_view(), name="orders-infinite"),
-            path("all-infinite/", AllOrdersInfiniteScrollView.as_view(), name="all-orders-infinite")
+            path("all-infinite/", AllOrdersInfiniteScrollView.as_view(), name="all-orders-infinite"),
+            path("<int:pk>/order-detail/", OrderDetailView.as_view(), name="order-detail"),
         ])),
         path("account-info/", include([
             path("", AccountInfoView.as_view(), name="account-info"),
@@ -33,12 +35,16 @@ urlpatterns = [
         ])),
         path("addresses/", include([
             path("", AddressListView.as_view(), name="addresses"),
-            path("<int:pk>/update/", ChangeSavedAddressView.as_view(), name="address-update"),
-            path("<int:pk>/delete/", DeleteAddressView.as_view(), name="delete-address")
+            path("<int:pk>/update-address/", ChangeSavedAddressView.as_view(), name="address-update"),
+            path("<int:pk>/delete-address/", DeleteAddressView.as_view(), name="delete-address")
         ])),
-        # path("payment-methods/", include([
-        #     path("",),
-        # ])),
+        path("payment-methods/", include([
+            path("", PaymentListView.as_view(), name="payment-methods"),
+            path("add-payment-method/", AddPaymentView.as_view(), name="add-payment-method"),
+            path("<int:pk>/update-method/", UpdateSavedMethodView.as_view(), name="update-method"),
+            path("<int:pk>/delete-method/", DeleteMethodView.as_view(), name="delete-method"),
+            path("<int:pk>/make-default/", SetDefaultCardView.as_view(), name="make-default")
+        ])),
         path("update-image/", ProfileImageUpdateView.as_view(), name="update-image")
     ])),
     path("subscribe/", SubscribeView.as_view(), name="subscribe"),

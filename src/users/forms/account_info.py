@@ -31,12 +31,12 @@ class UserDataForm(forms.ModelForm):
             Div(
                 Field("first_name", css_class="bg-light-grey", wrapper_class="col fs-7 fw-medium"),
                 Field("last_name", css_class="bg-light-grey", wrapper_class="col fs-7 fw-medium"),
-                css_class="d-flex flex-wrap gap-2 mt-3"
+                css_class="d-flex gap-2 mt-3 media-flex-col"
             ),
             Div(
                 Field("email", css_class="bg-light-grey", wrapper_class="col fs-7 fw-medium"),
                 Field("phone", css_class="bg-light-grey", wrapper_class="col fs-7 fw-medium"),
-                css_class="d-flex flex-wrap gap-2"
+                css_class="d-flex gap-2 media-flex-col"
             ),
             Submit("save", "Save changes", css_class="btn btn-add-to-cart mt-2 fs-7")
         )

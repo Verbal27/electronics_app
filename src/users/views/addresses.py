@@ -13,7 +13,7 @@ from src.users.forms.addresses import ChangeSavedAddress, RemoveSavedAddressForm
 
 class AddressListView(LoginRequiredMixin, CabinetContextMixin, ListView):
     model = SavedAddress
-    template_name = "addresses.html"
+    template_name = "address/addresses.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -30,7 +30,7 @@ class AddressListView(LoginRequiredMixin, CabinetContextMixin, ListView):
 class ChangeSavedAddressView(LoginRequiredMixin, CabinetContextMixin, UpdateView):
     model = SavedAddress
     form_class = ChangeSavedAddress
-    template_name = "address_update.html"
+    template_name = "address/address_update.html"
     success_url = reverse_lazy("addresses")
 
     def get_form(self, *args, **kwargs):

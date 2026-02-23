@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from src.core.components.cabinet.order_card import OrderCard
 from src.core.components.cabinet_context import CabinetContextMixin
@@ -10,7 +10,7 @@ from src.core.models import Order
 
 class OrderListView(LoginRequiredMixin, CabinetContextMixin, ListView):
     model = Order
-    template_name = "orders.html"
+    template_name = "order/orders.html"
     context_object_name = "orders"
     paginate_by = 10
 
@@ -26,12 +26,13 @@ class OrderListView(LoginRequiredMixin, CabinetContextMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        last_order_cards = [
+        order_cards = [
             OrderCard(self.request, order)
             for order in context["orders"]
         ]
 
-        context["order_cards"] = last_order_cards
+        context["order_cards"] = order_cards
+
         return context
 
 
@@ -71,7 +72,7 @@ class OrderInfiniteScrollView(LoginRequiredMixin, ListView):
 
 class AllOrderListView(LoginRequiredMixin, CabinetContextMixin, ListView):
     model = Order
-    template_name = "orders_all.html"
+    template_name = "order/orders_all.html"
     context_object_name = "orders"
     paginate_by = 10
 
@@ -127,3 +128,17 @@ class AllOrdersInfiniteScrollView(LoginRequiredMixin, ListView):
             "html": html,
             "has_next": context["page_obj"].has_next()
         })
+
+
+class OrderDetailView(LoginRequiredMixin, CabinetContextMixin, DetailView):
+    model = Order
+    template_name = "order/order_detail.html"
+    context_object_name = "order"
+
+    def get_queryset(self):
+        return (
+            Order.objects
+            .filter(user=self.request.user)
+            .select_related("payment", "shipping")
+            .prefetch_related("items__product")
+        )

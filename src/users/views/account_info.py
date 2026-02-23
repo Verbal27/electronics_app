@@ -97,7 +97,7 @@ class TwoFactorView(LoginRequiredMixin, View):
         return redirect(reverse_lazy("account-info"))
 
 
-class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
+class CustomPasswordChangeView(LoginRequiredMixin, CabinetContextMixin, PasswordChangeView):
     form_class = ChangePasswordForm
     template_name = "password_change.html"
     success_url = reverse_lazy("account-info")

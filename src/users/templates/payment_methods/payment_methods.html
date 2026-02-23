@@ -1,0 +1,71 @@
+{% extends "cabinet_base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="d-flex border border-1 rounded-3 flex-column bg-white mb-4">
+        <div class="d-flex justify-content-between">
+        <div class="fs-6 fw-semibold m-3">
+            Payment Methods
+        </div>
+        <div class="d-flex m-3">
+            <a href="{% url 'add-payment-method' %}" class="text-decoration-none">
+                <button type="button" class="btn btn-secondary bg-dark text-white fs-7">
+                    <i class="fa-solid fa-plus"></i>
+                    Add New Card
+                </button>
+            </a>
+        </div>
+        </div>
+        {% if methods_with_forms %}
+            <div class="d-flex flex-wrap justify-content-around">
+                {% for item in methods_with_forms %}
+                    <div class="method-card row border border-1 rounded-3 m-3 p-3">
+                        <div class="col-12 col-md-10">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex border-0 bg-light-grey-dark p-2 rounded-3">
+                                    <i class="fa-regular fa-credit-card fs-3"></i>
+                                </div>
+
+                                <div class="d-flex gap-1 align-items-baseline flex-column">
+                                    <div class="fs-6 fw-semibold d-flex gap-1">
+                                        <span class="d-inline-block text-truncate media-limit-text">
+                                        {{ item.method.get_card_type_display }}
+                                        </span>
+                                        {% if item.method.is_default %}
+                                            <div class="fs-7 border-0 rounded-3 bg-light-grey-dark px-2">
+                                                Default
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        **** {{ item.method.last_4 }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="">
+                                {{ item.method.name_on_card }}
+                            </div>
+                            <div>
+                                Expires {{ item.method.month_year }}
+                            </div>
+                        </div>
+                        <div class="col col-md-2 d-flex  justify-content-around align-items-baseline mt-2">
+                            <a href="{% url 'update-method' item.method.pk %}" class="text-decoration-none text-dark">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
+                            {% crispy item.delete_form %}
+                        </div>
+                        {% if not item.method.is_default %}
+                            {% crispy item.default_form %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="align-self-center fs-2 fw-semibold mb-5">
+                No saved payment methods
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

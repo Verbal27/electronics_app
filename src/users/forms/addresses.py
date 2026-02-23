@@ -24,7 +24,11 @@ class ChangeSavedAddress(forms.ModelForm):
             "city",
             "state",
             "zipcode",
-            Submit("submit", "Save Changes", css_classes="btn btn-secondary bg-white")
+            Submit(
+                "submit",
+                "Save Changes",
+                css_classes="btn btn-secondary text-dark bg-white border-1 border-light-grey fs-7"
+            )
         )
 
 
