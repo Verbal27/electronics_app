@@ -30,7 +30,7 @@ function initOrdersInfiniteScroll(options = {}) {
 
         try {
             const response = await fetch(`${url}?page=${page}`, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                headers: {'X-Requested-With': 'XMLHttpRequest'}
             });
 
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -71,7 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
 
     const url = container.dataset.infiniteUrl;
-    const initialPage = parseInt(container.dataset.nextPage || 2);
+    const nextPage = container.dataset.nextPage;
+
+    if (!nextPage) return;
+
+    const initialPage = parseInt(nextPage);
+
 
     initOrdersInfiniteScroll({
         url: url,

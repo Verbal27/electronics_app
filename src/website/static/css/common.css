@@ -816,8 +816,8 @@ body {
 }
 
 .order-card-img {
-    height: 2.5rem !important;
-    width: 2.5rem !important;
+    height: 3.5rem !important;
+    width: 3.5rem !important;
 }
 
 .cabinet-profile-image {
@@ -888,8 +888,8 @@ body {
 }
 
 .more-items-card {
-    width: 2.5rem !important;
-    height: 2.5rem !important;
+    width: 3.5rem !important;
+    height: 3.5rem !important;
     overflow: hidden;
 }
 
@@ -908,7 +908,7 @@ body {
 }
 
 .translate-middle {
-    transform: translate(10%, -50%) !important;
+    transform: translate(40%, -50%) !important;
 }
 
 .swiper {
@@ -917,11 +917,14 @@ body {
 }
 
 .swiper-slide {
-    text-align: center;
     font-size: 1rem;
-    display: flex;
     justify-content: center;
     align-items: center;
+    height: 3.5rem !important;
+}
+
+.ordered-item-card {
+    height: 100%;
 }
 
 .swiper-slide img {
@@ -933,6 +936,7 @@ body {
 
 .swiper-pagination {
     position: relative !important;
+    min-height: 20px;
 }
 
 @media (max-width: 767.98px) {

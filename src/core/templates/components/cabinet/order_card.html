@@ -24,35 +24,37 @@
             </div>
         </div>
     </div>
-    <div class="swiper mySwiper">
-        <div class="swiper-wrapper h-auto">
-            {% for show_item in show_items %}
-                <div class="swiper-slide">
-                    <div class="d-flex gap-2 ordered-item-card">
-                        <img src="{{ show_item.product.image_url }}" class="order-card-img border-0 rounded-3">
-                        <div class="d-flex flex-column fs-8 justify-content-center ordered-item-context">
-                            <div class="fs-8 text-nowrap text-truncate">
-                                {{ show_item.product_name }}
-                            </div>
-                            <div class="text-muted">
-                                Qty: {{ show_item.quantity }}
+    <div class="swiper-container-wrapper">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper h-auto">
+                {% for show_item in show_items %}
+                    <div class="swiper-slide">
+                        <div class="d-flex gap-2 ordered-item-card">
+                            <img src="{{ show_item.product.image_url }}" class="order-card-img border-0 rounded-3">
+                            <div class="d-flex flex-column fs-8 justify-content-center ordered-item-context text-truncate">
+                                <div class="fs-8 text-nowrap text-truncate">
+                                    {{ show_item.product_name }}
+                                </div>
+                                <div class="text-muted">
+                                    Qty: {{ show_item.quantity }}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-            {% if count > 3 %}
-                <div class="swiper-slide d-flex">
-                    <div class="more-items-card position-relative rounded-3">
-                        <img src="{{ count_image }}" class="count-image rounded-3">
-                        <div class="overlay-text position-absolute top-50 translate-middle d-flex">
-                            + {{ more_to_show }}
+                {% endfor %}
+                {% if more_to_show %}
+                    <div class="swiper-slide d-flex">
+                        <div class="more-items-card position-relative rounded-3">
+                            <img src="{{ count_image }}" class="count-image rounded-3">
+                            <div class="overlay-text position-absolute top-50 translate-middle d-flex">
+                                + {{ more_to_show }}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
+            <div class="swiper-pagination d-flex mt-4 justify-content-center"></div>
         </div>
-        <div class="swiper-pagination d-flex mt-4 justify-content-center"></div>
     </div>
 </div>
 <div class="d-flex col col-md-3 justify-content-center">
