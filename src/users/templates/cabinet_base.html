@@ -5,7 +5,7 @@
     <div class="min-vh-100 d-flex flex-column">
         <div class="container mt-4">
             {% if user.is_authenticated %}
-                <div class="border border-1 rounded-3 row p-2 bg-white">
+                <div class="border border-0 shadow-sm rounded-3 row p-2 bg-white">
                     <div class="col col-md-2 d-flex justify-content-center align-items-center align-self-center">
                         <div class="position-relative">
                             <img src="{{ user.profile_image_url }}"

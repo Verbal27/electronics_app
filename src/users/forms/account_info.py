@@ -143,8 +143,14 @@ class ChangePasswordForm(PasswordChangeForm):
             "old_password",
             "new_password1",
             "new_password2",
-            Submit("submit", "Change Password",
-                   css_class="btn btn-secondary text-dark bg-white border-1 border-light-grey fs-7")
+            Div(
+                Submit(
+                    "submit",
+                    "Change Password",
+                    css_class="btn btn-secondary text-dark bg-white border-1 fs-7"
+                ),
+                css_class="d-flex justify-content-center mt-3"
+            )
         )
 
     def save(self, commit=True):

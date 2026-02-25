@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="d-flex border border-1 rounded-3 flex-column bg-white mb-4">
+    <div class="d-flex border border-0 shadow-sm rounded-3 flex-column bg-white mb-4">
         <div class="d-flex justify-content-between">
         <div class="fs-6 fw-semibold m-3">
             Payment Methods
@@ -18,9 +18,9 @@
         </div>
         </div>
         {% if methods_with_forms %}
-            <div class="d-flex flex-wrap justify-content-around">
+            <div class="row px-3">
                 {% for item in methods_with_forms %}
-                    <div class="method-card row border border-1 rounded-3 m-3 p-3">
+                    <div class="method-card row border border-1 rounded-3 m-3 p-3 col col-md-6">
                         <div class="col-12 col-md-10">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="d-flex border-0 bg-light-grey-dark p-2 rounded-3">
@@ -63,7 +63,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <div class="align-self-center fs-2 fw-semibold mb-5">
+            <div class="align-self-center fs-5 fw-semibold mb-5">
                 No saved payment methods
             </div>
         {% endif %}

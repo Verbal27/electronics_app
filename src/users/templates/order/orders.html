@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block content %}
-    <div class="d-flex border border-1 rounded-3 flex-column bg-white mb-4">
+    <div class="d-flex border border-0 shadow-sm rounded-3 flex-column bg-white mb-4">
     <div class="d-flex justify-content-between">
         <div class="fs-6 fw-semibold m-3 align-self-center">
             Order History
@@ -32,7 +32,7 @@
             Loading...
         </div>
     {% else %}
-        <div class="align-self-center fs-2 fw-semibold mb-5">
+        <div class="align-self-center fs-5 fw-semibold mb-5">
             No orders yet
         </div>
     {% endif %}
