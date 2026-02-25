@@ -47,6 +47,14 @@ class Order(models.Model):
         verbose_name_plural = "Orders"
         ordering = ["-created_at"]
 
+    @property
+    def date_created(self):
+        return self.created_at.strftime('%B %d, %Y')
+
+    @property
+    def get_year(self):
+        return self.created_at.strftime('%Y')
+
 
 class OrderItem(models.Model):
     product_name = models.CharField(max_length=100)

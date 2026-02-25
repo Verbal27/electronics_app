@@ -4,8 +4,6 @@ from src.core.components.base import RenderComponentMixin, MediaDefiningComponen
 class OrderCard(RenderComponentMixin, MediaDefiningComponent):
     template_name = "components/cabinet/order_card.html"
 
-    MAX_VISIBLE_ITEMS = 5
-
     class Media:
         css = {
             "all": ("css/components/order_card.css",)
