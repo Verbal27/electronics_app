@@ -1,5 +1,12 @@
+from decimal import Decimal
+from statistics import mean
+
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView
 
 from src.core.components.website.cards import ProductCard
 from src.core.components.website.icon import Icon
@@ -7,6 +14,7 @@ from src.core.components.website.span import Span
 from src.core.models import Product
 from src.website.forms.cart import AddToCartDetailForm
 from src.website.forms.checkout import BuyNowForm
+from src.website.forms.product_detail import ReviewForm
 from src.website.services import CartService
 
 
@@ -35,6 +43,14 @@ class ProductDetailView(DetailView):
 
         service = CartService(self.request)
         current_qty = service.cart.cart.get(str(product.id), {}).get("quantity", 0)
+
+        review_form = ReviewForm(product=product.id)
+
+        reviews = product.reviews.all()
+
+        product_ratings = [review.rating for review in reviews]
+
+        overall_rating = Decimal(mean(product_ratings)).quantize(Decimal(".0")) if product_ratings else None
 
         stock_css = (
             "text-warning"
@@ -79,6 +95,41 @@ class ProductDetailView(DetailView):
                 )
                 for related in related_products
             ],
+            "reviews": product.reviews.all(),
+            "reviews_count": product.reviews.count(),
+            "review_form": review_form,
+            "product_ratings": len(product_ratings),
+            "overall_rating": overall_rating
         })
 
         return context
+
+
+class PostReviewView(LoginRequiredMixin, CreateView):
+    form_class = ReviewForm
+
+    def get_success_url(self):
+        return reverse("product_detail", args=[self.object.product.id])
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        self.product = get_object_or_404(Product, pk=self.kwargs["pk"])
+        kwargs["product"] = self.product.pk
+        return kwargs
+
+    def form_valid(self, form):
+        if not form.errors:
+            with transaction.atomic():
+                self.object = form.save(commit=False)
+                self.object.product = self.product
+                self.object.user = self.request.user
+                self.object.save()
+
+                messages.success(self.request, "Review created successfully!")
+                return redirect(self.get_success_url())
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        if form.errors:
+            messages.error(self.request, "Something went wrong")
+        return super().form_invalid(form)

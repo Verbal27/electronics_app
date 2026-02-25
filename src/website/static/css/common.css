@@ -60,7 +60,7 @@
 }
 
 body {
-    background: #F7FBFC;
+    background-color: #FFFFFF !important;
 }
 
 .bg-primary {
@@ -183,6 +183,10 @@ body {
 
 .bg-light-grey {
     background-color: var(--color-light-grey) !important;
+}
+
+.bg-light-gray {
+    background-color: var(--color-light-gray) !important;
 }
 
 .bg-light-grey-dark {
@@ -915,6 +919,15 @@ body {
 .swiper-pagination {
     position: relative !important;
     min-height: 20px;
+}
+
+.review-card:last-child {
+    border: 0 !important;
+}
+
+.review-user-image {
+    width: 2.5rem;
+    height: 2.5rem;
 }
 
 @media (max-width: 767.98px) {

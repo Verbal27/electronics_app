@@ -11,7 +11,7 @@
             <div class="col-md-6 mb-4 column">
                 <div class="product-image-wrapper">
                     <img src="{{ primary_image }}" class="w-100 border border-0 rounded-3 product-detail-primary"
-                     alt="Product Image">
+                         alt="Product Image">
                 </div>
                 <div class="card-body">
                     <div class="row g-2 d-flex justify-content-between">
@@ -44,7 +44,9 @@
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star-half-alt"></i>
                             </div>
-                            <span class="text-muted fs-7">(128 reviews)</span>
+                            <span class="text-muted fs-7">{% if reviews_count != 0 %}({{ reviews_count }}
+                                {% if reviews_count == 1 %}review{% else %}reviews{% endif %}
+                                ){% endif %}</span>
                         </div>
                         <div class="fs-7 fw-semibold text-start stock-label">
                             {{ stock_icon }}{{ stock_label }}
@@ -109,7 +111,7 @@
 
             <button class="btn btn-tab w-100"
                     data-target="reviews">
-                Reviews(1234)
+                Reviews{% if reviews_count != 0 %}({{ reviews_count }}){% endif %}
             </button>
         </div>
         <div id="description" class="tab-content d-flex flex-column mt-5">
@@ -131,7 +133,97 @@
         </div>
 
         <div id="reviews" class="tab-content d-none mt-5">
-            reviews
+            <div class="row w-100">
+                <div class="col col-md-4">
+                    <div class="d-flex border border-1 rounded-3 bg-light-grey justify-content-center flex-column p-3">
+                        <div class="fs-5 text-muted d-flex justify-content-center">
+                            Overall Rating
+                        </div>
+                        <div class="fs-1 fw-bold d-flex justify-content-center">
+                            {% if reviews %}{{ overall_rating }}{% else %}0{% endif %}
+                        </div>
+                        <div class="text-warning me-2 d-flex justify-content-center my-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="fs-6 d-flex justify-content-center">
+                            Based on {{ product_ratings }} reviews
+                        </div>
+                        <button type="button" class="btn btn-secondary bg-dark text-white mt-4 mb-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                            Write a review
+                        </button>
+                    </div>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Review</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {% crispy review_form %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-md-8">
+                    {% if reviews %}
+                        {% for review in reviews %}
+                            <div class="review-card d-flex border-bottom flex-column p-2">
+                                <div class="d-flex justify-content-between w-100">
+                                    <div class="d-flex">
+                                        <div class="review-user-image">
+                                            <img src="{{ review.user.image }}">
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <div class="d-flex gap-2">
+                                                <div class="fw-semibold">
+                                                    {{ review.user.first_name }}
+                                                </div>
+                                                <div class="fw-semibold">
+                                                    {{ review.user.last_name }}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex gap-2 align-items-baseline">
+                                                <div class="d-flex text-warning fs-8">
+                                                    {% for _ in review.stars %}
+                                                        <i class="fas fa-star"></i>
+                                                    {% endfor %}
+                                                    {% for _ in review.empty_stars %}
+                                                        <i class="fa-regular fa-star"></i>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="d-flex fs-8 text-light-gray">
+                                                    {{ review.time_since }} ago
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex border border-0 h-100 px-2 py-1 bg-light-green text-light-green rounded-5 align-items-center fs-8">
+                                        Verified purchase
+                                    </div>
+                                </div>
+                                <div class="d-flex mt-3 mb-4">
+                                    {{ review.text }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="fs-4">
+                            no reviews yet
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
 
         <div class="d-flex justify-content-between mt-5">
