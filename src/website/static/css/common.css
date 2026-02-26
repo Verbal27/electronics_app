@@ -28,6 +28,8 @@
     --border-color-blue: #4477FF;
 
     --font-size-8: 0.7rem;
+
+    --font-size-9: 0.7rem;
 }
 
 @media (max-width: 768px) {
@@ -147,6 +149,10 @@ body {
 
 .fs-8 {
     font-size: var(--font-size-8);
+}
+
+.fs-9 {
+    font-size: var(--font-size-9);
 }
 
 .bg-first {

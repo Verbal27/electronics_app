@@ -12,8 +12,10 @@ class ReviewForm(forms.ModelForm):
         model = ProductReview
         fields = ["title", "text", "rating"]
 
-    def __init__(self, *args, product=None, **kwargs):
+    def __init__(self, *args, user=None, product=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.user = user
+        self.product = product
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.form_action = reverse("post_review", args=[product])

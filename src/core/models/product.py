@@ -1,7 +1,10 @@
+from django.apps import apps
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from django.utils.timesince import timesince
 
+from electronics_app import settings
 from electronics_app.settings import PRODUCT_PLACEHOLDER_IMAGE
 from .subcategory import Subcategory
 from django.urls import reverse
@@ -142,3 +145,33 @@ class ProductReview(models.Model):
     @property
     def empty_stars(self):
         return range(5 - self.rating)
+
+    @property
+    def is_verified_purchase(self):
+        OrderItem = apps.get_model("core", "OrderItem")
+
+        return OrderItem.objects.filter(
+            order__user=self.user,
+            product=self.product,
+            order__status__in=[1, 2, 3],
+        ).exists()
+
+    @classmethod
+    def check_cooldown(cls, user, product):
+        last_review = (
+            cls.objects
+            .filter(user=user, product=product)
+            .order_by("-created_at")
+            .first()
+        )
+
+        if not last_review:
+            return
+
+        cooldown_until = last_review.created_at + settings.REVIEW_COOLDOWN
+
+        if timezone.now() < cooldown_until:
+            remaining = cooldown_until - timezone.now()
+            raise ValidationError(
+                f"You can review again in {remaining.seconds // 60} minutes."
+            )

@@ -134,7 +134,7 @@
 
         <div id="reviews" class="tab-content d-none mt-5">
             <div class="row w-100">
-                <div class="col col-md-4">
+                <div class="col-12 col-md-4">
                     <div class="d-flex border border-1 rounded-3 bg-light-grey justify-content-center flex-column p-3">
                         <div class="fs-5 text-muted d-flex justify-content-center">
                             Overall Rating
@@ -152,7 +152,7 @@
                         <div class="fs-6 d-flex justify-content-center">
                             Based on {{ product_ratings }} reviews
                         </div>
-                        <button type="button" class="btn btn-secondary bg-dark text-white mt-4 mb-2"
+                        <button type="button" class="btn btn-secondary bg-dark text-white mt-4 mb-2 fs-8"
                                 data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">
                             Write a review
@@ -175,7 +175,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col col-md-8">
+                <div class="col-12 col-md-8 p-2">
                     {% if reviews %}
                         {% for review in reviews %}
                             <div class="review-card d-flex border-bottom flex-column p-2">
@@ -208,9 +208,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex border border-0 h-100 px-2 py-1 bg-light-green text-light-green rounded-5 align-items-center fs-8">
-                                        Verified purchase
-                                    </div>
+                                    {% if review.is_verified_purchase %}
+                                        <div class="d-flex border border-0 h-100 px-2 py-1 bg-light-green text-light-green rounded-5 align-items-center fs-9">
+                                            Verified purchase
+                                        </div>
+                                    {% else %}
+                                        <div class="d-flex border border-0 h-100 px-2 py-1 bg-fourth text-danger rounded-5 align-items-center fs-9">
+                                            Not verified
+                                        </div>
+                                    {% endif %}
                                 </div>
                                 <div class="d-flex mt-3 mb-4">
                                     {{ review.text }}
@@ -218,8 +224,8 @@
                             </div>
                         {% endfor %}
                     {% else %}
-                        <div class="fs-4">
-                            no reviews yet
+                        <div class="fs-4 d-flex justify-content-center">
+                            No reviews yet
                         </div>
                     {% endif %}
                 </div>

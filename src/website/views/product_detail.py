@@ -3,6 +3,7 @@ from statistics import mean
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
@@ -12,6 +13,7 @@ from src.core.components.website.cards import ProductCard
 from src.core.components.website.icon import Icon
 from src.core.components.website.span import Span
 from src.core.models import Product
+from src.core.models.product import ProductReview
 from src.website.forms.cart import AddToCartDetailForm
 from src.website.forms.checkout import BuyNowForm
 from src.website.forms.product_detail import ReviewForm
@@ -99,13 +101,14 @@ class ProductDetailView(DetailView):
             "reviews_count": product.reviews.count(),
             "review_form": review_form,
             "product_ratings": len(product_ratings),
-            "overall_rating": overall_rating
+            "overall_rating": overall_rating,
         })
 
         return context
 
 
 class PostReviewView(LoginRequiredMixin, CreateView):
+    model = ProductReview
     form_class = ReviewForm
 
     def get_success_url(self):
@@ -114,10 +117,20 @@ class PostReviewView(LoginRequiredMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         self.product = get_object_or_404(Product, pk=self.kwargs["pk"])
+        kwargs["user"] = self.request.user
         kwargs["product"] = self.product.pk
         return kwargs
 
     def form_valid(self, form):
+        try:
+            self.model.check_cooldown(
+                user=self.request.user,
+                product=self.product,
+            )
+        except ValidationError as e:
+            messages.error(self.request, e.message)
+            return redirect("product_detail", pk=self.product.pk)
+
         if not form.errors:
             with transaction.atomic():
                 self.object = form.save(commit=False)
