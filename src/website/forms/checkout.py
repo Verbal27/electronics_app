@@ -12,6 +12,7 @@ from phonenumber_field.formfields import PhoneNumberField
 
 from src.core.components.website.icon import Icon
 from src.core.constants import OrderStatus
+from src.core.constants.payment import CardTypes
 from src.core.models import Order, Payment, OrderItem, ShippingOption
 from src.core.models.order import SavedAddress
 from src.core.models.payment import PaymentMethods
@@ -309,7 +310,7 @@ class OrderModelForm(ModelForm):
             last_4 = self.cleaned_data["card_number"][-4:]
             brand = self.detect_brand(self.cleaned_data["card_number"])
             is_default = not PaymentMethods.objects.filter(user=self.user).exists()
-            if brand != 0:
+            if brand is not None:
                 card_instance = PaymentMethods.objects.create(
                     user=self.user,
                     token=token,
@@ -375,11 +376,11 @@ class OrderModelForm(ModelForm):
 
     def detect_brand(self, number):
         if number.startswith("4"):
-            return 1
+            return CardTypes.VISA
         elif number.startswith(("51", "52", "53", "54", "55")):
-            return 2
+            return CardTypes.MASTERCARD
         elif number.startswith(("34", "37")):
-            return 3
+            return CardTypes.AMEX
         return 0
 
 

@@ -32,14 +32,14 @@ class CustomUser(AbstractUser):
         return self.email
 
     @property
-    def has_product_image(self):
+    def has_profile_image(self):
         if self.profile_image and self.profile_image.storage.exists(self.profile_image.name):
             return True
         return False
 
     @property
     def profile_image_url(self):
-        if self.profile_image and self.has_product_image:
+        if self.profile_image and self.has_profile_image:
             return self.profile_image.url
         return PROFILE_IMAGE_PLACEHOLDER
 

@@ -14,6 +14,7 @@ class PaymentStatus(IntegerChoices):
 
 
 class CardTypes(IntegerChoices):
+    UNKNOWN = 0, "Unknown"
     VISA = 1, "Visa"
     MASTERCARD = 2, "Mastercard"
     AMEX = 3, "American Express"

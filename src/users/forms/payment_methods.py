@@ -9,6 +9,7 @@ from django.urls import reverse
 
 from src.core.components.website import Icon
 from src.core.components.website.iconbutton import IconButton
+from src.core.constants.payment import CardTypes
 from src.core.models.payment import PaymentMethods
 
 
@@ -103,11 +104,11 @@ class AddNewMethod(forms.ModelForm):
 
     def detect_brand(self, number):
         if number.startswith("4"):
-            return 1
+            return CardTypes.VISA
         elif number.startswith(("51", "52", "53", "54", "55")):
-            return 2
+            return CardTypes.MASTERCARD
         elif number.startswith(("34", "37")):
-            return 3
+            return CardTypes.AMEX
         return 0
 
 
