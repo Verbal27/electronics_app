@@ -1,11 +1,12 @@
-from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import Avg
 from django.utils import timezone
 from django.utils.timesince import timesince
 
 from electronics_app import settings
 from electronics_app.settings import PRODUCT_PLACEHOLDER_IMAGE
+from .product_review import ProductReviewQuerySet
 from .subcategory import Subcategory
 from django.urls import reverse
 from django.db import models
@@ -57,6 +58,12 @@ class Product(models.Model):
         if primary:
             return primary.url
         return PRODUCT_PLACEHOLDER_IMAGE
+
+    @property
+    def overall_rating(self):
+        return (
+            self.reviews.aggregate(avg=Avg("rating"))["avg"]
+        )
 
 
 class ProductImage(models.Model):
@@ -130,6 +137,7 @@ class ProductReview(models.Model):
     title = models.CharField(max_length=100)
     text = models.TextField(null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    objects = ProductReviewQuerySet.as_manager()
 
     def __str__(self):
         return f"{self.user.first_name}{self.user.last_name} - {self.product.name} ({self.rating}/5)"
@@ -145,16 +153,6 @@ class ProductReview(models.Model):
     @property
     def empty_stars(self):
         return range(5 - self.rating)
-
-    @property
-    def is_verified_purchase(self):
-        OrderItem = apps.get_model("core", "OrderItem")
-
-        return OrderItem.objects.filter(
-            order__user=self.user,
-            product=self.product,
-            order__status__in=[1, 2, 3],
-        ).exists()
 
     @classmethod
     def check_cooldown(cls, user, product):

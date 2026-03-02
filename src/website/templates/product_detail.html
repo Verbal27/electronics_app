@@ -140,7 +140,7 @@
                             Overall Rating
                         </div>
                         <div class="fs-1 fw-bold d-flex justify-content-center">
-                            {% if reviews %}{{ overall_rating }}{% else %}0{% endif %}
+                            {% if product.overall_rating %}{{ overall_rating }}{% else %}0{% endif %}
                         </div>
                         <div class="text-warning me-2 d-flex justify-content-center my-2">
                             <i class="fas fa-star"></i>
@@ -176,53 +176,17 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-8 p-2">
-                    {% if reviews %}
-                        {% for review in reviews %}
-                            <div class="review-card d-flex border-bottom flex-column p-2">
-                                <div class="d-flex justify-content-between w-100">
-                                    <div class="d-flex">
-                                        <div class="review-user-image">
-                                            <img src="{{ review.user.image }}">
-                                        </div>
-                                        <div class="d-flex flex-column">
-                                            <div class="d-flex gap-2">
-                                                <div class="fw-semibold">
-                                                    {{ review.user.first_name }}
-                                                </div>
-                                                <div class="fw-semibold">
-                                                    {{ review.user.last_name }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex gap-2 align-items-baseline">
-                                                <div class="d-flex text-warning fs-8">
-                                                    {% for _ in review.stars %}
-                                                        <i class="fas fa-star"></i>
-                                                    {% endfor %}
-                                                    {% for _ in review.empty_stars %}
-                                                        <i class="fa-regular fa-star"></i>
-                                                    {% endfor %}
-                                                </div>
-                                                <div class="d-flex fs-8 text-light-gray">
-                                                    {{ review.time_since }} ago
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% if review.is_verified_purchase %}
-                                        <div class="d-flex border border-0 h-100 px-2 py-1 bg-light-green text-light-green rounded-5 align-items-center fs-9">
-                                            Verified purchase
-                                        </div>
-                                    {% else %}
-                                        <div class="d-flex border border-0 h-100 px-2 py-1 bg-fourth text-danger rounded-5 align-items-center fs-9">
-                                            Not verified
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <div class="d-flex mt-3 mb-4">
-                                    {{ review.text }}
-                                </div>
-                            </div>
-                        {% endfor %}
+                    {% if reviews_count %}
+                        <div class="reviews-container"
+                             id="reviews-container"
+                             data-infinite-url="{% url 'reviews_infinite' product.id %}"
+                                {% if next_reviews_page %}
+                             data-next-page="{{ next_reviews_page }}"
+                                {% endif %}>
+                            {% include "partials/reviews_list.html" with reviews=reviews_page_obj %}
+                            <div id="sentinel"></div>
+                        </div>
+                        <div id="loading" class="d-none">Loading...</div>
                     {% else %}
                         <div class="fs-4 d-flex justify-content-center">
                             No reviews yet
@@ -257,4 +221,5 @@
 {% block js %}
     {{ block.super }}
     <script src="{% static 'js/product_detail.js' %}"></script>
+    <script src="{% static 'js/reviews_infinite_scroll.js' %}"></script>
 {% endblock %}

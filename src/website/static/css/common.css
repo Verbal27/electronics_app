@@ -936,6 +936,28 @@ body {
     height: 2.5rem;
 }
 
+.reviews-container {
+    overflow: auto;
+    height: 16rem !important;
+    width: auto;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    padding-left: .7rem;
+}
+
+.reviews-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.reviews-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.reviews-container::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+
 @media (max-width: 767.98px) {
     .container-bg {
         padding: 2.5rem 1rem !important;
