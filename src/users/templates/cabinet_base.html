@@ -36,11 +36,13 @@
                     </div>
                 </div>
                 <nav class="nav nav-pills nav-fill rounded-5 p-1 bg-light-grey-dark mt-4 mb-4 custom-nav">
-                    <a class="nav-link {% is_active 'orders' 'all-orders' 'orders-infinite' 'order-detail' %}"
+                    <a class="nav-link {% is_active 'orders' 'orders-infinite' 'order-detail' %}"
                        href="{% url 'orders' %}">Orders</a>
-                    <a class="nav-link {% is_active 'account-info' 'password-change' %}" href="{% url 'account-info' %}">Account Info</a>
+                    <a class="nav-link {% is_active 'account-info' 'password-change' %}"
+                       href="{% url 'account-info' %}">Account Info</a>
                     <a class="nav-link {% is_active 'addresses' 'address-update' %}" href="{% url 'addresses' %}">Addresses</a>
-                    <a class="nav-link {% is_active 'payment-methods' 'add-payment-method' 'update-method' %}" href="{% url 'payment-methods' %}">Payment
+                    <a class="nav-link {% is_active 'payment-methods' 'add-payment-method' 'update-method' %}"
+                       href="{% url 'payment-methods' %}">Payment
                         Methods</a>
                 </nav>
                 {% block content %}

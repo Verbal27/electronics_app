@@ -847,28 +847,6 @@ body {
     object-fit: contain;
 }
 
-.orders-container {
-    overflow: auto;
-    height: 85.5rem !important;
-    width: auto;
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-    padding-left: .7rem;
-}
-
-.orders-container::-webkit-scrollbar {
-    width: 6px;
-}
-
-.orders-container::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.orders-container::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 3px;
-}
-
 .order-updates {
     outline: none;
     border: none;

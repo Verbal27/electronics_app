@@ -1,9 +1,7 @@
 from .auth import RegisterView, UserLoginView, UserLogoutView
 from .orders import (
     OrderListView,
-    AllOrderListView,
     OrderInfiniteScrollView,
-    AllOrdersInfiniteScrollView,
     OrderDetailView
 )
 from .account_info import (
@@ -23,7 +21,7 @@ from .payment_methods import (
 )
 
 __all__ = ["RegisterView", "UserLoginView", "UserLogoutView", "OrderListView", "AccountInfoView", "AddressListView",
-           "AllOrderListView", "ProfileImageUpdateView", "OrderInfiniteScrollView", "AllOrdersInfiniteScrollView",
+           "ProfileImageUpdateView", "OrderInfiniteScrollView",
            "TwoFactorView", "CustomPasswordChangeView", "AdditionalDataView", "ChangeSavedAddressView",
            "DeleteAddressView", "PaymentListView", "DeleteMethodView", "OrderDetailView", "AddPaymentView",
            "SetDefaultCardView", "UpdateSavedMethodView"]

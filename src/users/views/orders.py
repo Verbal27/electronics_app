@@ -17,7 +17,7 @@ class OrderListView(LoginRequiredMixin, CabinetContextMixin, ListView):
     def get_queryset(self):
         return (
             Order.objects
-            .filter(user=self.request.user, status=1)
+            .filter(user=self.request.user)
             .select_related("payment")
             .prefetch_related("items__product")
             .order_by("-created_at")
@@ -37,66 +37,6 @@ class OrderListView(LoginRequiredMixin, CabinetContextMixin, ListView):
 
 
 class OrderInfiniteScrollView(LoginRequiredMixin, ListView):
-    model = Order
-    paginate_by = 10
-    context_object_name = "orders"
-
-    def get_queryset(self):
-        return (
-            Order.objects
-            .filter(user=self.request.user, status=1)
-            .select_related("payment", "shipping")
-            .prefetch_related("items__product")
-            .order_by("-created_at")
-        )
-
-    def render_to_response(self, context, **response_kwargs):
-        orders = context["orders"]
-
-        order_cards = [
-            OrderCard(self.request, order)
-            for order in orders
-        ]
-
-        html = render_to_string(
-            "partials/order_list_items.html",
-            {"order_cards": order_cards},
-            request=self.request
-        )
-
-        return JsonResponse({
-            "html": html,
-            "has_next": context["page_obj"].has_next()
-        })
-
-
-class AllOrderListView(LoginRequiredMixin, CabinetContextMixin, ListView):
-    model = Order
-    template_name = "order/orders_all.html"
-    context_object_name = "orders"
-    paginate_by = 10
-
-    def get_queryset(self):
-        return (
-            Order.objects
-            .filter(user=self.request.user)
-            .select_related("payment")
-            .prefetch_related("items__product")
-            .order_by("-created_at")
-        )
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context["order_cards"] = [
-            OrderCard(self.request, order)
-            for order in context["orders"]
-        ]
-
-        return context
-
-
-class AllOrdersInfiniteScrollView(LoginRequiredMixin, ListView):
     model = Order
     paginate_by = 10
     context_object_name = "orders"

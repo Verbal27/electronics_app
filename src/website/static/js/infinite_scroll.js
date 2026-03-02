@@ -58,8 +58,8 @@ function initOrdersInfiniteScroll(options = {}) {
             loadMoreOrders();
         }
     }, {
-        root: container,
-        rootMargin: '200px',
+        root: null,
+        rootMargin: '400px 0px',
         threshold: 0
     });
 

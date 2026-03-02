@@ -6,7 +6,7 @@ from src.users.views import (
     OrderListView,
     AccountInfoView,
     AddressListView,
-    AllOrderListView, ProfileImageUpdateView, OrderInfiniteScrollView, AllOrdersInfiniteScrollView, TwoFactorView,
+    ProfileImageUpdateView, OrderInfiniteScrollView, TwoFactorView,
     CustomPasswordChangeView, AdditionalDataView, ChangeSavedAddressView, DeleteAddressView, PaymentListView,
     DeleteMethodView, OrderDetailView, AddPaymentView, SetDefaultCardView, UpdateSavedMethodView
 )
@@ -22,9 +22,7 @@ urlpatterns = [
     path("cabinet/", include([
         path("orders/", include([
             path("", OrderListView.as_view(), name="orders"),
-            path("all/", AllOrderListView.as_view(), name="all-orders"),
             path("infinite/", OrderInfiniteScrollView.as_view(), name="orders-infinite"),
-            path("all-infinite/", AllOrdersInfiniteScrollView.as_view(), name="all-orders-infinite"),
             path("<int:pk>/order-detail/", OrderDetailView.as_view(), name="order-detail"),
         ])),
         path("account-info/", include([
