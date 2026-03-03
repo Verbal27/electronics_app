@@ -57,7 +57,7 @@
                             {% crispy item.delete_form %}
                         </div>
                         {% if not item.method.is_default %}
-                            {% crispy item.default_form %}
+                            {% crispy item.default_payment_form %}
                         {% endif %}
                     </div>
                 {% endfor %}

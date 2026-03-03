@@ -52,7 +52,7 @@ class Order(models.Model):
         return self.created_at.strftime('%B %d, %Y')
 
     @property
-    def get_year(self):
+    def year_created(self):
         return self.created_at.strftime('%Y')
 
 

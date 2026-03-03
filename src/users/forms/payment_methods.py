@@ -4,6 +4,7 @@ from datetime import date
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Div, Field, Column, Row, Fieldset
 from django import forms
+from django.db import transaction
 from django.forms import TypedChoiceField
 from django.urls import reverse
 
@@ -109,7 +110,7 @@ class AddNewMethod(forms.ModelForm):
             return CardTypes.MASTERCARD
         elif number.startswith(("34", "37")):
             return CardTypes.AMEX
-        return 0
+        return CardTypes.UNKNOWN
 
 
 class ChangeSavedMethod(forms.ModelForm):
@@ -145,20 +146,21 @@ class ChangeSavedMethod(forms.ModelForm):
         )
 
     def save(self, commit=True):
-        instance = super().save(commit=False)
+        with transaction.atomic():
+            instance = super().save(commit=False)
 
-        if instance.is_default:
-            PaymentMethods.objects.filter(
-                user=self.user,
-                is_default=True
-            ).exclude(pk=instance.pk).update(is_default=False)
+            if instance.is_default:
+                PaymentMethods.objects.filter(
+                    user=self.user,
+                    is_default=True
+                ).exclude(pk=instance.pk).update(is_default=False)
 
-        else:
-            if not PaymentMethods.objects.filter(user=self.user, is_default=True).exclude(pk=instance.pk).exists():
-                instance.is_default = True
+            else:
+                if not PaymentMethods.objects.filter(user=self.user, is_default=True).exclude(pk=instance.pk).exists():
+                    instance.is_default = True
 
-        if commit:
-            instance.save()
+            if commit:
+                instance.save()
 
         return instance
 
@@ -183,7 +185,7 @@ class RemoveSavedMethodForm(forms.Form):
         )
 
 
-class SetDefaultForm(forms.Form):
+class SetDefaultPaymentForm(forms.Form):
 
     def __init__(self, pk, *args, **kwargs):
         super().__init__(*args, **kwargs)

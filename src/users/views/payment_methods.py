@@ -1,13 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, View, CreateView, UpdateView
 
 from src.core.components.cabinet_context import CabinetContextMixin
 from src.core.models.payment import PaymentMethods
-from src.users.forms.payment_methods import RemoveSavedMethodForm, AddNewMethod, SetDefaultForm, ChangeSavedMethod
+from src.users.forms.payment_methods import (
+    RemoveSavedMethodForm,
+    AddNewMethod,
+    SetDefaultPaymentForm,
+    ChangeSavedMethod
+)
 
 
 class AddPaymentView(LoginRequiredMixin, CabinetContextMixin, CreateView):
@@ -22,14 +26,12 @@ class AddPaymentView(LoginRequiredMixin, CabinetContextMixin, CreateView):
         return kwargs
 
     def form_valid(self, form):
-        with transaction.atomic():
-            self.object = form.save()
+        self.object = form.save()
         messages.success(self.request, "Card added successfully!")
         return redirect(self.get_success_url())
 
     def form_invalid(self, form):
-        if form.errors:
-            messages.error(self.request, "There was a problem adding new card")
+        messages.error(self.request, "There was a problem adding new card")
         return super().form_invalid(form)
 
 
@@ -62,7 +64,7 @@ class PaymentListView(LoginRequiredMixin, CabinetContextMixin, ListView):
             methods_with_forms.append({
                 "method": method,
                 "delete_form": RemoveSavedMethodForm(pk=method.id),
-                "default_form": SetDefaultForm(pk=method.id),
+                "default_payment_form": SetDefaultPaymentForm(pk=method.id),
             })
 
         context["methods_with_forms"] = methods_with_forms
@@ -97,13 +99,10 @@ class UpdateSavedMethodView(LoginRequiredMixin, CabinetContextMixin, UpdateView)
         return PaymentMethods.objects.filter(user=self.request.user)
 
     def form_valid(self, form):
-        with transaction.atomic():
-            response = super().form_valid(form)
-
+        response = super().form_valid(form)
         messages.success(self.request, "Payment method updated successfully")
         return response
 
     def form_invalid(self, form):
-        if form.errors:
-            messages.error(self.request, "There was an error.")
+        messages.error(self.request, "There was an error.")
         return super().form_invalid(form)

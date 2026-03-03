@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
@@ -42,15 +41,12 @@ class ChangeSavedAddressView(LoginRequiredMixin, CabinetContextMixin, UpdateView
         return SavedAddress.objects.filter(user=self.request.user)
 
     def form_valid(self, form):
-        with transaction.atomic():
-            response = super().form_valid(form)
-
+        response = super().form_valid(form)
         messages.success(self.request, "Address updated successfully")
         return response
 
     def form_invalid(self, form):
-        if form.errors:
-            messages.error(self.request, "There was an error.")
+        messages.error(self.request, "There was an error.")
         return super().form_invalid(form)
 
 

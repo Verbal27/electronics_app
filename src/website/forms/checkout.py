@@ -12,7 +12,7 @@ from phonenumber_field.formfields import PhoneNumberField
 
 from src.core.components.website.icon import Icon
 from src.core.constants import OrderStatus
-from src.core.constants.payment import CardTypes
+from src.core.constants.payment import CardTypes, PaymentMethod
 from src.core.models import Order, Payment, OrderItem, ShippingOption
 from src.core.models.order import SavedAddress
 from src.core.models.payment import PaymentMethods
@@ -305,7 +305,7 @@ class OrderModelForm(ModelForm):
         total_amount = subtotal + shipping.price + tax
 
         card_instance = None
-        if self.cleaned_data.get("payment_method") == 2 and self.cleaned_data.get("save_card"):
+        if self.cleaned_data.get("payment_method") == PaymentMethod.CARD and self.cleaned_data.get("save_card"):
             token = "pm_" + uuid.uuid4().hex
             last_4 = self.cleaned_data["card_number"][-4:]
             brand = self.detect_brand(self.cleaned_data["card_number"])
@@ -381,7 +381,7 @@ class OrderModelForm(ModelForm):
             return CardTypes.MASTERCARD
         elif number.startswith(("34", "37")):
             return CardTypes.AMEX
-        return 0
+        return CardTypes.UNKNOWN
 
 
 class BuyNowForm(forms.Form):

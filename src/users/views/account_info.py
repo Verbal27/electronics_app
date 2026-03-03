@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
-from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -22,15 +21,12 @@ class AccountInfoView(LoginRequiredMixin, CabinetContextMixin, UpdateView):
         return self.request.user
 
     def form_valid(self, form):
-        with transaction.atomic():
-            response = super().form_valid(form)
-
+        response = super().form_valid(form)
         messages.success(self.request, "Profile updated successfully")
         return response
 
     def form_invalid(self, form):
-        if form.errors:
-            messages.error(self.request, "There was an error.")
+        messages.error(self.request, "There was an error.")
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
