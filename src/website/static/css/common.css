@@ -23,7 +23,7 @@
 
     --color-success: #34B748;
 
-    --fs-7: 0.875rem !important;
+    --fs-7: 0.8rem;
 
     --border-color-blue: #4477FF;
 
@@ -1111,6 +1111,10 @@ body {
 
     .custom-login-main-wrapper {
         padding: 1rem !important;
+    }
+
+    .verified-label {
+        font-size: .45rem !important;
     }
 
     .method-card {

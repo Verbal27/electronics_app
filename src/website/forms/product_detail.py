@@ -6,7 +6,13 @@ from django.urls import reverse
 from src.core.models.product import ProductReview
 
 
+class CustomRatingField(forms.NumberInput):
+    template_name = ""
+
+
 class ReviewForm(forms.ModelForm):
+    text = forms.CharField(max_length=500)
+    rating = forms.CharField(widget=CustomRatingField)
 
     class Meta:
         model = ProductReview
@@ -20,8 +26,8 @@ class ReviewForm(forms.ModelForm):
         self.helper.form_method = "post"
         self.helper.form_action = reverse("post_review", args=[product])
         self.helper.layout = Layout(
+            "rating",
             "title",
             "text",
-            "rating",
             Submit("submit_review", "Submit", css_class="btn btn-secondary bg-dark text-white")
         )

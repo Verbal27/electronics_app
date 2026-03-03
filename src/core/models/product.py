@@ -1,3 +1,6 @@
+from decimal import Decimal
+from math import floor
+
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Avg
@@ -61,9 +64,22 @@ class Product(models.Model):
 
     @property
     def overall_rating(self):
-        return (
-            self.reviews.aggregate(avg=Avg("rating"))["avg"]
-        )
+        avg = self.reviews.aggregate(avg=Avg("rating"))["avg"] or 0
+        return Decimal(str(avg)).quantize(Decimal(".0"))
+
+    @property
+    def product_stars(self):
+        return range(floor(self.overall_rating))
+
+    @property
+    def product_empty_stars(self):
+        return range(floor(5 - self.overall_rating))
+
+    @property
+    def has_half_star(self):
+        rating = self.overall_rating or 0
+        fraction = rating - floor(rating)
+        return 0.25 <= fraction < 0.75
 
 
 class ProductImage(models.Model):
