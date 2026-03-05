@@ -36,12 +36,12 @@
                     </div>
                 </div>
                 <nav class="nav nav-pills nav-fill rounded-5 p-1 bg-light-grey-dark mt-4 mb-4 custom-nav">
-                    <a class="nav-link {% is_active 'orders' 'orders-infinite' 'order-detail' %}"
+                    <a class="nav-link {% active_nav_class 'orders' 'orders-infinite' 'order-detail' %}"
                        href="{% url 'orders' %}">Orders</a>
-                    <a class="nav-link {% is_active 'account-info' 'password-change' %}"
+                    <a class="nav-link {% active_nav_class 'account-info' 'password-change' %}"
                        href="{% url 'account-info' %}">Account Info</a>
-                    <a class="nav-link {% is_active 'addresses' 'address-update' %}" href="{% url 'addresses' %}">Addresses</a>
-                    <a class="nav-link {% is_active 'payment-methods' 'add-payment-method' 'update-method' %}"
+                    <a class="nav-link {% active_nav_class 'addresses' 'address-update' %}" href="{% url 'addresses' %}">Addresses</a>
+                    <a class="nav-link {% active_nav_class 'payment-methods' 'add-payment-method' 'update-method' %}"
                        href="{% url 'payment-methods' %}">Payment
                         Methods</a>
                 </nav>
@@ -55,7 +55,7 @@
 {% endblock %}
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'js/image_change.js' %}"></script>
+    <script src="{% static 'js/userProfileImageChange.js' %}"></script>
     <script src="{% static 'js/infinite_scroll.js' %}"></script>
-    <script src="{% static 'js/toggle.js' %}"></script>
+    <script src="{% static 'js/userProfileSettings.js' %}"></script>
 {% endblock %}

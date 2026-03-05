@@ -41,7 +41,7 @@ class Payment(models.Model):
         return self.payment_method == PaymentMethod.CARD
 
     @property
-    def card_brand(self):
+    def card_brand_label(self):
         if self.is_card and self.card:
             return self.card.get_card_type_display()
         return None
