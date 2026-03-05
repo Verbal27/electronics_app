@@ -47,7 +47,6 @@
                                 {% for _ in product.product_empty_stars %}
                                     <i class="fa-regular fa-star"></i>
                                 {% endfor %}
-
                             </div>
                             <span class="text-muted fs-7">{% if reviews_count != 0 %}({{ reviews_count }}
                                 {% if reviews_count == 1 %}review{% else %}reviews{% endif %}
@@ -145,7 +144,7 @@
                             Overall Rating
                         </div>
                         <div class="fs-1 fw-bold d-flex justify-content-center">
-                            {% if product.overall_rating %}{{ overall_rating }}{% else %}0{% endif %}
+                            {% if product.overall_rating_display %}{{ product.overall_rating_display }}{% else %}0{% endif %}
                         </div>
                         <div class="text-warning me-2 d-flex justify-content-center my-2">
                             {% for _ in product.product_stars %}
@@ -157,28 +156,33 @@
                             {% for _ in product.product_empty_stars %}
                                 <i class="fa-regular fa-star"></i>
                             {% endfor %}
-
                         </div>
                         <div class="fs-6 d-flex justify-content-center">
                             Based on {{ product_ratings }} reviews
                         </div>
                         <button type="button" class="btn btn-secondary bg-dark text-white mt-4 mb-2 fs-8"
                                 data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
+                                data-bs-target="#exampleModal"
+                                id="open-review-btn">
                             Write a review
                         </button>
                     </div>
 
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Write a review</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                                    <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Write a review</h1>
                                 </div>
-                                <div class="modal-body">
+                                <div class="d-flex gap-1 px-4 mt-4">
+                                    <div class="text-muted">
+                                        Reviewing:
+                                    </div>
+                                    <div class="fw-semibold">
+                                        {{ product.name }}
+                                    </div>
+                                </div>
+                                <div class="modal-body p-0">
                                     {% crispy review_form %}
                                 </div>
                             </div>
@@ -232,4 +236,5 @@
     {{ block.super }}
     <script src="{% static 'js/product_detail.js' %}"></script>
     <script src="{% static 'js/reviews_infinite_scroll.js' %}"></script>
+    <script src="{% static 'js/stars_rating.js' %}"></script>
 {% endblock %}

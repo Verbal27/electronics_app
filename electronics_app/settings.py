@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
 
 AUTH_USER_MODEL = "users.CustomUser"
 
-REVIEW_COOLDOWN = timedelta(minutes=5)
+REVIEW_COOLDOWN = timedelta(minutes=60)
 
 LOGIN_REDIRECT_URL = "homepage"
 LOGOUT_REDIRECT_URL = 'homepage'

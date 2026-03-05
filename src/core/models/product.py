@@ -1,4 +1,3 @@
-from decimal import Decimal
 from math import floor
 
 from django.core.exceptions import ValidationError
@@ -14,6 +13,7 @@ from .subcategory import Subcategory
 from django.urls import reverse
 from django.db import models
 
+from ..constants.review import ModerationStatus
 from ...users.models import CustomUser
 
 
@@ -64,22 +64,31 @@ class Product(models.Model):
 
     @property
     def overall_rating(self):
-        avg = self.reviews.aggregate(avg=Avg("rating"))["avg"] or 0
-        return Decimal(str(avg)).quantize(Decimal(".0"))
+        return self.approved_reviews.aggregate(avg=Avg("rating"))["avg"] or 0
+
+    @property
+    def overall_rating_display(self):
+        return round(self.overall_rating, 1)
 
     @property
     def product_stars(self):
         return range(floor(self.overall_rating))
 
     @property
-    def product_empty_stars(self):
-        return range(floor(5 - self.overall_rating))
+    def has_half_star(self):
+        return (self.overall_rating - floor(self.overall_rating)) >= 0.5
 
     @property
-    def has_half_star(self):
-        rating = self.overall_rating or 0
-        fraction = rating - floor(rating)
-        return 0.25 <= fraction < 0.75
+    def product_empty_stars(self):
+        full = floor(self.overall_rating)
+        half = 1 if self.has_half_star else 0
+        return range(5 - full - half)
+
+    @property
+    def approved_reviews(self):
+        return self.reviews.filter(
+            moderation_status=ProductReview.ModerationStatus.APPROVED
+        )
 
 
 class ProductImage(models.Model):
@@ -140,7 +149,7 @@ class ProductReview(models.Model):
     user = models.ForeignKey(
         CustomUser,
         related_name="reviews",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     rating = models.PositiveSmallIntegerField(
         null=False,
@@ -148,12 +157,29 @@ class ProductReview(models.Model):
         validators=[
             MinValueValidator(1),
             MaxValueValidator(5)
-        ]
+        ],
     )
     title = models.CharField(max_length=100)
     text = models.TextField(null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ProductReviewQuerySet.as_manager()
+    moderation_status = models.PositiveSmallIntegerField(choices=ModerationStatus.choices)
+    moderated_at = models.DateTimeField(null=True, blank=True)
+    moderated_by = models.ForeignKey(
+        "users.CustomUser",
+        null=True,
+        blank=True,
+        related_name="moderated_reviews",
+        on_delete=models.SET_NULL
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "product"],
+                name="unique_user_review_per_product",
+            )
+        ]
 
     def __str__(self):
         return f"{self.user.first_name}{self.user.last_name} - {self.product.name} ({self.rating}/5)"

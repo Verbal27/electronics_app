@@ -13,6 +13,8 @@
     --color-light-gray: #8EA4BB;
     --color-light-gray-dark: #4A6076;
     --color-light-grey-dark: #F3F3F5;
+    --color-yellow: #FFC108;
+    --color-lighter-blue: #ECF6FF;
 
     --color-first-light: color-mix(in srgb, var(--color-first), white 75%);
     --color-second-light: color-mix(in srgb, var(--color-second), white 75%);
@@ -139,6 +141,10 @@ body {
     color: var(--color-sixth);
 }
 
+.text-yellow {
+    color: var(--color-yellow);
+}
+
 .border-promo {
     border-color: #C8FCDD !important;
 }
@@ -181,6 +187,10 @@ body {
 
 .bg-light-blue {
     background-color: var(--color-light-blue) !important;
+}
+
+.bg-lighter-blue {
+    background-color: var(--color-lighter-blue) !important;
 }
 
 .bg-light-green {
