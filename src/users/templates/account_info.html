@@ -1,6 +1,6 @@
 {% extends "cabinet_base.html" %}
 
-{% load crispy_forms_tags %}
+{% load static crispy_forms_tags %}
 
 {% block content %}
     <div class="border border-0 shadow-sm border-light-grey p-3 rounded-3 bg-white mb-4">
@@ -41,4 +41,8 @@
             {% crispy security_form %}
         </div>
     </div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/userProfileSettings.js' %}"></script>
 {% endblock %}

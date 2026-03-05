@@ -5,7 +5,7 @@
             <div class="d-flex gap-2 align-items-baseline">
                 <i class="fa-solid fa-box"></i>
                 <div class="fs-7">
-                    ORD-{{ order.get_year }}-{{ order.id }}
+                    ORD-{{ order.year_created }}-{{ order.id }}
                 </div>
                 <div class="border border-0 bg-dark rounded-4 text-white fs-8 px-2">
                     {{ order.get_status_display }}

@@ -22,28 +22,38 @@ urlpatterns = [
     path("cabinet/", include([
         path("orders/", include([
             path("", OrderListView.as_view(), name="orders"),
-            path("infinite/", OrderInfiniteScrollView.as_view(), name="orders-infinite"),
-            path("<int:pk>/order-detail/", OrderDetailView.as_view(), name="order-detail"),
+            path("infinite-scroll/", OrderInfiniteScrollView.as_view(), name="orders-infinite"),
+            path("<int:pk>/detail/", OrderDetailView.as_view(), name="order-detail"),
         ])),
-        path("account-info/", include([
+
+        path("account/", include([
             path("", AccountInfoView.as_view(), name="account-info"),
-            path("preferences-update/", AdditionalDataView.as_view(), name="preferences-update"),
+            path("preferences/", AdditionalDataView.as_view(), name="preferences-update"),
             path("two-factor/", TwoFactorView.as_view(), name="two-factor"),
-            path("password-change/", CustomPasswordChangeView.as_view(), name="password-change")
+            path("password/", CustomPasswordChangeView.as_view(), name="password-change")
         ])),
+
         path("addresses/", include([
             path("", AddressListView.as_view(), name="addresses"),
-            path("<int:pk>/update-address/", ChangeSavedAddressView.as_view(), name="address-update"),
-            path("<int:pk>/delete-address/", DeleteAddressView.as_view(), name="delete-address")
+            path("<int:pk>/", include([
+                path("", ChangeSavedAddressView.as_view(), name="address-update"),
+                path("delete/", DeleteAddressView.as_view(), name="delete-address")
+            ]))
         ])),
+
         path("payment-methods/", include([
             path("", PaymentListView.as_view(), name="payment-methods"),
-            path("add-payment-method/", AddPaymentView.as_view(), name="add-payment-method"),
-            path("<int:pk>/update-method/", UpdateSavedMethodView.as_view(), name="update-method"),
-            path("<int:pk>/delete-method/", DeleteMethodView.as_view(), name="delete-method"),
-            path("<int:pk>/make-default/", SetDefaultCardView.as_view(), name="make-default")
+            path("add/", AddPaymentView.as_view(), name="add-payment-method"),
+            path("<int:pk>/", include([
+                path("", UpdateSavedMethodView.as_view(), name="update-method"),
+                path("delete/", DeleteMethodView.as_view(), name="delete-method"),
+                path("set-default/", SetDefaultCardView.as_view(), name="make-default")
+            ]))
         ])),
-        path("update-image/", ProfileImageUpdateView.as_view(), name="update-image")
+
+        path("ajax/", include([
+            path("profile/image/", ProfileImageUpdateView.as_view(), name="update-image")
+        ]))
     ])),
     path("subscribe/", SubscribeView.as_view(), name="subscribe"),
     path("search/", SearchView.as_view(), name="search"),
