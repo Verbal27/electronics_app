@@ -37,7 +37,7 @@ class ProductDetailService:
 
     def get_reviews_page(self, page=1, per_page=5):
         reviews = (
-            self.product.reviews
+            self.product.approved_reviews
             .select_related("user")
             .with_verified_purchase()
             .order_by("-created_at")

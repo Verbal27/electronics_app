@@ -2,6 +2,8 @@ from django.apps import apps
 from django.db import models
 from django.db.models import OuterRef, Exists
 
+from src.core.constants.review import ModerationStatus
+
 
 class ProductReviewQuerySet(models.QuerySet):
 
@@ -17,3 +19,6 @@ class ProductReviewQuerySet(models.QuerySet):
         return self.annotate(
             verified_purchase=Exists(verified)
         )
+
+    def approved(self):
+        return self.filter(moderation_status=ModerationStatus.APPROVED)

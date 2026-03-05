@@ -86,9 +86,7 @@ class Product(models.Model):
 
     @property
     def approved_reviews(self):
-        return self.reviews.filter(
-            moderation_status=ProductReview.ModerationStatus.APPROVED
-        )
+        return self.reviews.approved()
 
 
 class ProductImage(models.Model):
@@ -163,7 +161,10 @@ class ProductReview(models.Model):
     text = models.TextField(null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ProductReviewQuerySet.as_manager()
-    moderation_status = models.PositiveSmallIntegerField(choices=ModerationStatus.choices)
+    moderation_status = models.PositiveSmallIntegerField(
+        choices=ModerationStatus.choices,
+        default=ModerationStatus.PENDING
+    )
     moderated_at = models.DateTimeField(null=True, blank=True)
     moderated_by = models.ForeignKey(
         "users.CustomUser",

@@ -11,6 +11,7 @@ from django.views.generic import DetailView, CreateView, ListView
 from src.core.models import Product
 from src.core.models.product import ProductReview
 from src.website.forms.product_detail import ReviewForm
+from src.website.services.moderation import ReviewModerationService
 from src.website.services.product_detail_services import ProductDetailService
 
 
@@ -55,6 +56,7 @@ class PostReviewView(LoginRequiredMixin, CreateView):
                 self.object.product = self.product
                 self.object.user = self.request.user
                 self.object.save()
+                ReviewModerationService.moderate(self.object)
 
                 messages.success(self.request, "Review created successfully!")
                 return redirect(self.get_success_url())
