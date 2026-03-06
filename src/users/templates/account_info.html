@@ -1,0 +1,48 @@
+{% extends "cabinet_base.html" %}
+
+{% load static crispy_forms_tags %}
+
+{% block content %}
+    <div class="border border-0 shadow-sm border-light-grey p-3 rounded-3 bg-white mb-4">
+        {% crispy form %}
+        <div class="border-bottom border-1 my-4"></div>
+        <div class="fs-6 fw-semibold mb-3">
+            Email Preferences
+        </div>
+        {% crispy additional_form %}
+        <div class="border-bottom border-1 my-4"></div>
+        <div class="fs-6 fw-medium">
+            Security
+        </div>
+        <div class="d-flex justify-content-between mt-3">
+            <div class="d-flex flex-column">
+                <div class="fs-7 fw-medium">
+                    Password
+                </div>
+                <div class="fs-8 text-muted fw-medium">
+                    Last changed {{ last_password_change }}
+                </div>
+            </div>
+            <a href="{% url "password-change" %}">
+                <button type="button" class="btn btn-secondary text-dark bg-white border-1 border-light-grey fs-7 change-password-btn">
+                    Change Password
+                </button>
+            </a>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+            <div class="d-flex flex-column">
+                <div class="fs-7 fw-medium">
+                    Two-Factor Authentication
+                </div>
+                <div class="fs-8 text-muted fw-medium">
+                    Add an extra layer of security
+                </div>
+            </div>
+            {% crispy security_form %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/userProfileSettings.js' %}"></script>
+{% endblock %}

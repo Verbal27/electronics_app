@@ -23,11 +23,11 @@
 
     --color-success: #34B748;
 
-    --fs-7: 0.8rem !important;
+    --fs-7: 0.875rem !important;
 
     --border-color-blue: #4477FF;
 
-    --font-size-8: 0.875rem;
+    --font-size-8: 0.7rem;
 }
 
 @media (max-width: 768px) {
@@ -90,6 +90,10 @@ body {
 
 .border-light-grey {
     border-color: var(--color-light-grey);
+}
+
+.border-light-gray {
+    border-color: var(--color-light-gray);
 }
 
 .container-bg {
@@ -208,6 +212,7 @@ body {
 .text-light-gray {
     color: var(--color-light-gray) !important;
 }
+
 .text-light-gray-dark {
     color: var(--color-light-gray-dark) !important;
 }
@@ -800,9 +805,131 @@ body {
     height: 7rem !important;
 }
 
+.active-tab {
+    border: 1px;
+    border-radius: var(--bs-border-radius-xxl) !important;
+    background-color: white;
+}
+
+.nav-link {
+    padding: 0 !important;
+}
+
+.order-card-img {
+    height: 3.5rem !important;
+    width: 3.5rem !important;
+}
+
+.cabinet-profile-image {
+    height: 5rem !important;
+    width: 5rem !important;
+    object-fit: cover;
+}
+
+.profile-image-change {
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: #0d6efd;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+    font-size: .8rem;
+}
+
+.profile-image-change-icon {
+    object-fit: contain;
+}
+
+.order-updates {
+    outline: none;
+    border: none;
+}
+
+.custom-tumbler:checked {
+    background-color: #1b1b1b !important;
+    border-color: #1b1b1b !important;
+}
+
+.custom-tumbler:focus {
+    box-shadow: none !important;
+}
+
+.method-card {
+    width: 38rem !important;
+}
+
+.more-items-card {
+    width: 3.5rem !important;
+    height: 3.5rem !important;
+    overflow: hidden;
+}
+
+.count-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay-text {
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
+.translate-middle {
+    transform: translate(40%, -50%) !important;
+}
+
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    font-size: 1rem;
+    justify-content: center;
+    align-items: center;
+    height: 3.5rem !important;
+}
+
+.ordered-item-card {
+    height: 100%;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.swiper-pagination {
+    position: relative !important;
+    min-height: 20px;
+}
+
 @media (max-width: 767.98px) {
     .container-bg {
         padding: 2.5rem 1rem !important;
+    }
+
+    .custom-nav {
+        display: flex;
+        flex-direction: column;
+        border-radius: 1rem !important;
+    }
+
+    .media-flex-col {
+        flex-direction: column;
     }
 
     .hero-section {
@@ -945,6 +1072,26 @@ body {
         padding: 1rem !important;
     }
 
+    .method-card {
+        width: 100% !important;
+        justify-content: center;
+    }
+
+    .edit-profile-btn {
+        width: 100%;
+    }
+
+    .change-password-btn {
+        font-size: .7rem !important;
+    }
+
+    .media-limit-text {
+        max-width: 6rem !important;
+    }
+
+    .view-detail-btn {
+        justify-content: center !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) {

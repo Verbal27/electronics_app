@@ -1,6 +1,15 @@
 from django.urls import include, path
-
-from src.users.views import RegisterView, UserLoginView, LogoutView
+from src.users.views import (
+    RegisterView,
+    UserLoginView,
+    UserLogoutView,
+    OrderListView,
+    AccountInfoView,
+    AddressListView,
+    ProfileImageUpdateView, OrderInfiniteScrollView, TwoFactorView,
+    CustomPasswordChangeView, AdditionalDataView, ChangeSavedAddressView, DeleteAddressView, PaymentListView,
+    DeleteMethodView, OrderDetailView, AddPaymentView, SetDefaultCardView, UpdateSavedMethodView
+)
 from src.website import views
 from src.website.views.homepage import SubscribeView, SearchView
 
@@ -9,8 +18,43 @@ urlpatterns = [
     path("products/", views.ProductsListView.as_view(), name="products"),
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", UserLoginView.as_view(), name="login"),
-    path("logout/", LogoutView.as_view(), name="logout"),
-    path("cabinet/", views.CabinetTemplateView.as_view(), name="cabinet"),
+    path("logout/", UserLogoutView.as_view(), name="logout"),
+    path("cabinet/", include([
+        path("orders/", include([
+            path("", OrderListView.as_view(), name="orders"),
+            path("infinite-scroll/", OrderInfiniteScrollView.as_view(), name="orders-infinite"),
+            path("<int:pk>/detail/", OrderDetailView.as_view(), name="order-detail"),
+        ])),
+
+        path("account/", include([
+            path("", AccountInfoView.as_view(), name="account-info"),
+            path("preferences/", AdditionalDataView.as_view(), name="preferences-update"),
+            path("two-factor/", TwoFactorView.as_view(), name="two-factor"),
+            path("password/", CustomPasswordChangeView.as_view(), name="password-change")
+        ])),
+
+        path("addresses/", include([
+            path("", AddressListView.as_view(), name="addresses"),
+            path("<int:pk>/", include([
+                path("", ChangeSavedAddressView.as_view(), name="address-update"),
+                path("delete/", DeleteAddressView.as_view(), name="delete-address")
+            ]))
+        ])),
+
+        path("payment-methods/", include([
+            path("", PaymentListView.as_view(), name="payment-methods"),
+            path("add/", AddPaymentView.as_view(), name="add-payment-method"),
+            path("<int:pk>/", include([
+                path("", UpdateSavedMethodView.as_view(), name="update-method"),
+                path("delete/", DeleteMethodView.as_view(), name="delete-method"),
+                path("set-default/", SetDefaultCardView.as_view(), name="make-default")
+            ]))
+        ])),
+
+        path("ajax/", include([
+            path("profile/image/", ProfileImageUpdateView.as_view(), name="update-image")
+        ]))
+    ])),
     path("subscribe/", SubscribeView.as_view(), name="subscribe"),
     path("search/", SearchView.as_view(), name="search"),
     path("<int:pk>/", include([

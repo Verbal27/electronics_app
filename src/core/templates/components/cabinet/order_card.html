@@ -1,0 +1,57 @@
+{% load static %}
+<div class="order-card {{ css_classes }} col col-md-10 d-flex flex-column">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex flex-column mb-2 gap-2">
+            <div class="d-flex gap-2 align-items-baseline">
+                <i class="fa-solid fa-box"></i>
+                <div class="fs-7">
+                    ORD-{{ order.year_created }}-{{ order.id }}
+                </div>
+                <div class="border border-0 bg-dark rounded-4 text-white fs-8 px-2">
+                    {{ order.get_status_display }}
+                </div>
+            </div>
+            <div class="text-muted fs-7">
+                {{ order.date_created }}
+            </div>
+        </div>
+        <div class="d-flex flex-column text-end">
+            <div class="text-muted">
+                Total
+            </div>
+            <div class="fs-7 fw-medium">
+                ${{ payment.amount }}
+            </div>
+        </div>
+    </div>
+    <div class="swiper-container-wrapper pt-2">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper h-auto">
+                {% for item in items %}
+                    <div class="swiper-slide">
+                        <div class="d-flex gap-2 ordered-item-card">
+                            <img src="{{ item.product.image_url }}" class="order-card-img border-0 rounded-3">
+                            <div class="d-flex flex-column fs-8 justify-content-center ordered-item-context text-truncate">
+                                <div class="fs-8 text-nowrap text-truncate">
+                                    {{ item.product_name }}
+                                </div>
+                                <div class="text-muted">
+                                    Qty: {{ item.quantity }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-pagination d-flex mt-4 justify-content-center"></div>
+        </div>
+    </div>
+</div>
+<div class="d-flex col col-md-2 p-2 justify-content-end view-detail-btn">
+    <a href="{% url "order-detail" order.id %}" class="text-decoration-none text-dark">
+        <div class="fs-7 fw-medium text-nowrap">
+            View Details
+            <i class="fa-solid fa-angle-right"></i>
+        </div>
+    </a>
+</div>

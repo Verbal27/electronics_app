@@ -1,0 +1,59 @@
+{% extends "base/website/base.html" %}
+{% load crispy_forms_tags static base_tags %}
+
+{% block website_content %}
+    <div class="min-vh-100 d-flex flex-column">
+        <div class="container mt-4">
+            {% if user.is_authenticated %}
+                <div class="border border-0 shadow-sm rounded-3 row p-2 bg-white">
+                    <div class="col col-md-2 d-flex justify-content-center align-items-center align-self-center">
+                        <div class="position-relative">
+                            <img src="{{ user.profile_image_url }}"
+                                 class="cabinet-profile-image rounded-circle border border-1">
+                            {% crispy update_image %}
+                        </div>
+                    </div>
+                    <div class="col col-md-8">
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex gap-2 fs-6 fw-semibold">
+                                {{ user.first_name }}
+                                {{ user.last_name }}
+                            </div>
+                            <div class="text-muted fs-8">
+                                {{ user.email }}
+                            </div>
+                            <div class="text-muted fs-8">
+                                Member since {{ user.month_year_joined }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-md-2 align-self-center">
+                        <a name="edit_profile" href="{% url 'account-info' %}">
+                            <button class="btn btn-secondary text-dark bg-white border-1 border-light-grey fs-8 edit-profile-btn">
+                                Edit Profile
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <nav class="nav nav-pills nav-fill rounded-5 p-1 bg-light-grey-dark mt-4 mb-4 custom-nav">
+                    <a class="nav-link {% active_nav_class 'orders' 'orders-infinite' 'order-detail' %}"
+                       href="{% url 'orders' %}">Orders</a>
+                    <a class="nav-link {% active_nav_class 'account-info' 'password-change' %}"
+                       href="{% url 'account-info' %}">Account Info</a>
+                    <a class="nav-link {% active_nav_class 'addresses' 'address-update' %}" href="{% url 'addresses' %}">Addresses</a>
+                    <a class="nav-link {% active_nav_class 'payment-methods' 'add-payment-method' 'update-method' %}"
+                       href="{% url 'payment-methods' %}">Payment
+                        Methods</a>
+                </nav>
+                {% block content %}
+                {% endblock %}
+            {% else %}
+                <h1>You are not logged in</h1>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/userProfileImageChange.js' %}"></script>
+{% endblock %}

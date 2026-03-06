@@ -1,5 +1,7 @@
+import uuid
 from datetime import date
 from decimal import Decimal
+from random import randrange
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, Field, Div, HTML, Submit
@@ -9,9 +11,11 @@ from django.urls import reverse
 from phonenumber_field.formfields import PhoneNumberField
 
 from src.core.components.website.icon import Icon
-from src.core.constants import OrderStatus, PaymentStatus
+from src.core.constants import OrderStatus
+from src.core.constants.payment import CardTypes, PaymentMethod
 from src.core.models import Order, Payment, OrderItem, ShippingOption
 from src.core.models.order import SavedAddress
+from src.core.models.payment import PaymentMethods
 
 
 class PaymentMethodChoiceField(forms.RadioSelect):
@@ -79,7 +83,7 @@ class OrderModelForm(ModelForm):
         required=False,
     )
     card_number = forms.CharField(max_length=16, widget=forms.TextInput(), required=False)
-    expiration_date = forms.TypedChoiceField(
+    expiration_month = forms.TypedChoiceField(
         choices=[(i, f"{i:02}") for i in range(1, 13)],
         coerce=int,
         required=False,
@@ -94,6 +98,7 @@ class OrderModelForm(ModelForm):
         widget=forms.TextInput(),
         required=False,
     )
+    save_card = forms.BooleanField(required=False)
 
     class Meta:
         model = Order
@@ -114,6 +119,7 @@ class OrderModelForm(ModelForm):
         self.fields["payment_method"].label = ""
         self.fields["save_address"].label = "Save this address for future use"
         self.fields["zipcode"].label = "Zip Code"
+        self.fields["save_card"].label = "Save card for future use"
         self.fields["cvv"].label = "CVV"
         self.helper.form_method = "post"
         self.helper.form_action = 'checkout'
@@ -205,7 +211,7 @@ class OrderModelForm(ModelForm):
                     Row(
                         Column(
                             Field(
-                                "expiration_date",
+                                "expiration_month",
                                 css_class="form-group mb-0 bg-input fw-medium",
                             )
                         ),
@@ -222,6 +228,7 @@ class OrderModelForm(ModelForm):
                     Field(
                         "name_on_card", css_class="form-group bg-input mb-0 fw-medium"
                     ),
+                    'save_card',
                     Div(
                         Div(
                             HTML(
@@ -270,7 +277,7 @@ class OrderModelForm(ModelForm):
         if payment_method == 2:
             card_fields = [
                 "card_number",
-                "expiration_date",
+                "expiration_month",
                 "expiration_year",
                 "cvv",
                 "name_on_card",
@@ -297,10 +304,31 @@ class OrderModelForm(ModelForm):
         tax = (subtotal + shipping.price) * tax_rate
         total_amount = subtotal + shipping.price + tax
 
+        card_instance = None
+        if self.cleaned_data.get("payment_method") == PaymentMethod.CARD and self.cleaned_data.get("save_card"):
+            token = "pm_" + uuid.uuid4().hex
+            last_4 = self.cleaned_data["card_number"][-4:]
+            brand = self.detect_brand(self.cleaned_data["card_number"])
+            is_default = not PaymentMethods.objects.filter(user=self.user).exists()
+            if brand is not None:
+                card_instance = PaymentMethods.objects.create(
+                    user=self.user,
+                    token=token,
+                    last_4=last_4,
+                    name_on_card=self.cleaned_data["name_on_card"],
+                    expire_month=self.cleaned_data["expiration_month"],
+                    expire_year=self.cleaned_data["expiration_year"],
+                    is_default=is_default,
+                    card_type=brand
+                )
+
+        random_payment_status = randrange(1, 4)
+
         payment = Payment.objects.create(
             payment_method=self.cleaned_data["payment_method"],
             amount=total_amount,
-            status=PaymentStatus.PENDING,
+            status=random_payment_status,
+            card=card_instance
         )
 
         order.first_name = self.cleaned_data["first_name"]
@@ -327,6 +355,9 @@ class OrderModelForm(ModelForm):
                 },
             )
 
+            self.user.phone = order.phone
+            self.user.save(update_fields=["phone"])
+
         order.payment = payment
         order.status = OrderStatus.PENDING
         order.shipping = shipping
@@ -342,6 +373,15 @@ class OrderModelForm(ModelForm):
             )
 
         return order
+
+    def detect_brand(self, number):
+        if number.startswith("4"):
+            return CardTypes.VISA
+        elif number.startswith(("51", "52", "53", "54", "55")):
+            return CardTypes.MASTERCARD
+        elif number.startswith(("34", "37")):
+            return CardTypes.AMEX
+        return CardTypes.UNKNOWN
 
 
 class BuyNowForm(forms.Form):

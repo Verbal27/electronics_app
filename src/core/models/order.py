@@ -45,6 +45,15 @@ class Order(models.Model):
     class Meta:
         verbose_name = "Order"
         verbose_name_plural = "Orders"
+        ordering = ["-created_at"]
+
+    @property
+    def date_created(self):
+        return self.created_at.strftime('%B %d, %Y')
+
+    @property
+    def year_created(self):
+        return self.created_at.strftime('%Y')
 
 
 class OrderItem(models.Model):

@@ -23,6 +23,7 @@ class Icon(RenderComponentMixin):
         ENVELOPE = "fa-regular fa-envelope"
         EYE = "fa-regular fa-eye"
         USER = "fa-regular fa-user"
+        CAMERA = "fa-solid fa-camera"
 
     def __init__(self, icon_type, css_classes=None, css_style=None):
         self.icon_type = icon_type
