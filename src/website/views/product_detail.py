@@ -31,13 +31,13 @@ class PostReviewView(LoginRequiredMixin, CreateView):
     form_class = ReviewForm
 
     def get_success_url(self):
-        return reverse("product_detail", args=[self.object.product.id])
+        return reverse("product_detail", args=[self.product.id])
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         self.product = get_object_or_404(Product, pk=self.kwargs["pk"])
         kwargs["user"] = self.request.user
-        kwargs["product"] = self.product.pk
+        kwargs["product"] = self.product
         return kwargs
 
     def form_valid(self, form):
@@ -50,21 +50,18 @@ class PostReviewView(LoginRequiredMixin, CreateView):
             messages.error(self.request, e.message)
             return redirect("product_detail", pk=self.product.pk)
 
-        if not form.errors:
-            with transaction.atomic():
-                self.object = form.save(commit=False)
-                self.object.product = self.product
-                self.object.user = self.request.user
-                self.object.save()
-                ReviewModerationService.moderate(self.object)
+        with transaction.atomic():
+            self.object = form.save(commit=False)
+            self.object.product = self.product
+            self.object.user = self.request.user
+            self.object.save()
+            ReviewModerationService.moderate(self.object)
 
-                messages.success(self.request, "Review created successfully!")
-                return redirect(self.get_success_url())
+            messages.success(self.request, "Review created successfully!")
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        if form.errors:
-            messages.error(self.request, "Something went wrong")
+        messages.error(self.request, "Something went wrong")
         return super().form_invalid(form)
 
 

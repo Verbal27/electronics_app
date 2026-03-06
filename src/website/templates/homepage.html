@@ -58,9 +58,9 @@
                         <div class="co-auto col-md-6 d-flex justify-content-center">
                             {% if hero_product %}
                                 <div class="hero-section w-100">
-                                    {% if hero_product.image %}
+                                    {% if hero_product.image_url %}
                                         <div class="hero-bg"
-                                             style="background-image: url('{{ hero_product.image }}');"></div>
+                                             style="background-image: url('{{ hero_product.image_url }}');"></div>
                                     {% else %}
                                         <div class="hero-bg"
                                              style="background-image: url('{{ placeholder_image }}');"></div>

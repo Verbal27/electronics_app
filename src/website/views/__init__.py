@@ -1,7 +1,6 @@
 from .checkout import CheckoutCreateView, CheckoutCompleteView, BuyNowView
 from .homepage import HomePageListView
 from .product_detail import ProductDetailView, PostReviewView, ReviewsInfiniteScrollView
-from .cabinet import CabinetTemplateView
 from .cart import (
     CartListView,
     CartAddView,
@@ -13,7 +12,7 @@ from .cart import (
 from .products import ProductsListView, CategoryListView, SubCategoryProductListView
 
 
-__all__ = (
+__all__ = [
     "HomePageListView",
     "ProductDetailView",
     "CategoryListView",
@@ -26,7 +25,6 @@ __all__ = (
     "CartDropView",
     "CheckoutCreateView",
     "CheckoutCompleteView",
-    "CabinetTemplateView",
     "ProductsListView",
     "BuyNowView",
     "PostReviewView",
