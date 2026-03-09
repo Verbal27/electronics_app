@@ -64,8 +64,6 @@ class ProductReviewAdmin(admin.ModelAdmin):
         "moderation_status",
         "rating",
         "created_at",
-        "user",
-        "product"
     )
 
     list_select_related = ("product", "user")

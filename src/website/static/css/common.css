@@ -948,7 +948,7 @@ body {
 
 .reviews-container {
     overflow: auto;
-    height: 16rem !important;
+    height: 26rem !important;
     width: auto;
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;

@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
+from django.db.models import Count
 from django.urls import reverse
-from src.core.models import Product
+from src.core.models import Product, OrderItem
 from src.core.components.website.cards import ProductCard
 from src.core.components.website.icon import Icon
 from src.core.components.website.span import Span
@@ -33,7 +34,7 @@ class ProductDetailService:
         return self.cart_service.cart.cart.get(str(self.product.id), {}).get("quantity", 0)
 
     def get_review_form(self):
-        return ReviewForm(product=self.product.id)
+        return ReviewForm(product=self.product)
 
     def get_reviews_page(self, page=1, per_page=5):
         reviews = (
@@ -53,6 +54,17 @@ class ProductDetailService:
             "icon": Icon(icon_type=Icon.TYPES.CHECK, css_classes=css),
         }
 
+    def get_user_review(self):
+        if not self.request.user.is_authenticated:
+            return None
+
+        return (
+            self.product.approved_reviews
+                .filter(user=self.request.user)
+                .with_verified_purchase()
+                .first()
+        )
+
     def get_related_products(self, limit=2):
         related_products = (
             Product.objects
@@ -65,6 +77,40 @@ class ProductDetailService:
             ProductCard(request=self.request, product=related, css_classes="default")
             for related in related_products
         ]
+
+    def get_rating_distribution(self):
+        ratings = (
+            self.product.approved_reviews
+            .values("rating")
+            .annotate(count=Count("rating"))
+        )
+
+        rating_map = {r["rating"]: r["count"] for r in ratings}
+
+        total = sum(rating_map.values())
+
+        distribution = []
+
+        for star in range(5, 0, -1):
+            count = rating_map.get(star, 0)
+            percent = (count / total * 100) if total else 0
+
+            distribution.append({
+                "star": star,
+                "count": count,
+                "percent": round(percent)
+            })
+
+        return distribution
+
+    def user_purchased_product(self):
+        if not self.request.user.is_authenticated:
+            return False
+
+        return OrderItem.objects.filter(
+            order__user=self.request.user,
+            product=self.product
+        ).exists()
 
     def build_context(self):
         current_qty = self.get_cart_quantity()
@@ -92,6 +138,9 @@ class ProductDetailService:
             "next_reviews_page": reviews_page_obj.next_page_number() if reviews_page_obj.has_next() else None,
             "reviews_count": reviews_count,
             "review_form": self.get_review_form(),
+            "can_review": self.user_purchased_product() and not self.get_user_review(),
+            "get_user_review": self.get_user_review(),
             "product_ratings": reviews_count,
+            "rating_distribution": self.get_rating_distribution()
         }
         return context

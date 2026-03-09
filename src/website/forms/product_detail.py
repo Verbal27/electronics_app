@@ -31,7 +31,10 @@ class ReviewForm(forms.ModelForm):
         self.fields["title"].label = "Review Title"
         self.fields["text"].label = "Review Body"
         self.helper.form_method = "post"
-        self.helper.form_action = reverse("post_review", args=[product])
+        self.helper.form_action = reverse(
+            "post_review",
+            kwargs={"pk": product.id}
+        )
         self.helper.layout = Layout(
             Div(
                 HTML(

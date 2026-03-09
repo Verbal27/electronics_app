@@ -144,7 +144,8 @@
                             Overall Rating
                         </div>
                         <div class="fs-1 fw-bold d-flex justify-content-center">
-                            {% if product.overall_rating_display %}{{ product.overall_rating_display }}{% else %}0{% endif %}
+                            {% if product.overall_rating_display %}{{ product.overall_rating_display }}{% else %}
+                                0{% endif %}
                         </div>
                         <div class="text-warning me-2 d-flex justify-content-center my-2">
                             {% for _ in product.product_stars %}
@@ -166,25 +167,82 @@
                                 id="open-review-btn">
                             Write a review
                         </button>
+                        <div class="rating-distribution mt-3 border border-0 rounded-3 bg-white m-3 p-3">
+
+                            {% for row in rating_distribution %}
+                                <div class="d-flex align-items-center mb-1 gap-2">
+
+                                    <div class="small text-nowrap" style="width:40px">
+                                        {{ row.star }} <i class="fas fa-star text-warning"></i>
+                                    </div>
+
+                                    <div class="progress flex-grow-1" style="height:8px;">
+                                        <div class="progress-bar bg-warning"
+                                             role="progressbar"
+                                             style="width: {{ row.percent }}%">
+                                        </div>
+                                    </div>
+
+                                    <div class="small text-muted text-end" style="width:40px">
+                                        {{ row.percent }}%
+                                    </div>
+
+                                </div>
+                            {% endfor %}
+
+                        </div>
                     </div>
 
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Write a review</h1>
-                                </div>
-                                <div class="d-flex gap-1 px-4 mt-4">
-                                    <div class="text-muted">
-                                        Reviewing:
+
+                                {% if not request.user.is_authenticated %}
+
+                                    <div class="p-4 text-center">
+                                        <div class="fs-5 fw-semibold mb-2">
+                                            Sign in to write a review
+                                        </div>
+                                        <a href="{% url 'login' %}" class="btn btn-dark">
+                                            Login
+                                        </a>
                                     </div>
-                                    <div class="fw-semibold">
-                                        {{ product.name }}
+
+                                {% elif can_review %}
+
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5 fw-bold">Write a review</h1>
                                     </div>
-                                </div>
-                                <div class="modal-body p-0">
-                                    {% crispy review_form %}
-                                </div>
+
+                                    <div class="d-flex gap-1 px-4 mt-4">
+                                        <div class="text-muted">Reviewing:</div>
+                                        <div class="fw-semibold">{{ product.name }}</div>
+                                    </div>
+
+                                    <div class="modal-body p-0">
+                                        {% crispy review_form %}
+                                    </div>
+
+                                {% elif get_user_review %}
+
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5 fw-bold">Your review</h1>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        {% include "components/website/review_item.html" with review=get_user_review %}
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="p-4 text-center">
+                                        <div class="fs-6 text-muted">
+                                            Only customers who purchased this product can leave a review.
+                                        </div>
+                                    </div>
+
+                                {% endif %}
+
                             </div>
                         </div>
                     </div>
