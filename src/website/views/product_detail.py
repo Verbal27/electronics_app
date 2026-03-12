@@ -6,10 +6,8 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils import timezone
 from django.views.generic import DetailView, CreateView, ListView
 
-from electronics_app import settings
 from src.core.models import Product
 from src.core.models.product import ProductReview
 from src.website.forms.product_detail import ReviewForm
@@ -42,29 +40,9 @@ class PostReviewView(LoginRequiredMixin, CreateView):
         kwargs["product"] = self.product
         return kwargs
 
-    def check_cooldown(self, user):
-        last_review = (
-            self.model.objects
-            .filter(user=user)
-            .order_by("-created_at")
-            .first()
-        )
-
-        if not last_review:
-            return
-
-        cooldown_until = last_review.created_at + settings.REVIEW_COOLDOWN
-        now = timezone.now()
-
-        if now < cooldown_until:
-            remaining = cooldown_until - now
-            raise ValidationError(
-                f"You can review again in {remaining.seconds // 60} minutes."
-            )
-
     def form_valid(self, form):
         try:
-            self.check_cooldown(
+            ProductDetailService.check_cooldown(
                 user=self.request.user,
             )
         except ValidationError as e:

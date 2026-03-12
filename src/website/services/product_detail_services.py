@@ -1,6 +1,10 @@
+from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.urls import reverse
+from django.utils import timezone
+
+from electronics_app import settings
 from src.core.models import Product, OrderItem
 from src.core.components.website.cards import ProductCard
 from src.core.components.website.icon import Icon
@@ -53,6 +57,26 @@ class ProductDetailService:
             "label": Span(content=self.product.stock_status, css_classes=css),
             "icon": Icon(icon_type=Icon.TYPES.CHECK, css_classes=css),
         }
+
+    def check_cooldown(self, user):
+        last_review = (
+            self.model.objects
+            .filter(user=user)
+            .order_by("-created_at")
+            .first()
+        )
+
+        if not last_review:
+            return
+
+        cooldown_until = last_review.created_at + settings.REVIEW_COOLDOWN
+        now = timezone.now()
+
+        if now < cooldown_until:
+            remaining = cooldown_until - now
+            raise ValidationError(
+                f"You can review again in {remaining.seconds // 60} minutes."
+            )
 
     def get_user_review(self):
         if not self.request.user.is_authenticated:
