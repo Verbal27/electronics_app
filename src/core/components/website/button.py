@@ -12,6 +12,7 @@ class Button(RenderComponentMixin):
         SECONDARY = "btn-secondary"
         LINK = "btn-link"
         DARK = "btn-dark"
+        LIGHT = "btn-light"
 
     def __init__(
             self,
@@ -22,7 +23,8 @@ class Button(RenderComponentMixin):
             url=None,
             id=None,
             css_class=None,
-            label_classes=''
+            label_classes='',
+            **attrs
     ):
         self.label = label
         self.label_classes = label_classes
@@ -32,6 +34,7 @@ class Button(RenderComponentMixin):
         self.url = url
         self.id = id
         self.css_class = css_class
+        self.attrs = attrs
 
     def get_context(self):
         return {
@@ -43,4 +46,5 @@ class Button(RenderComponentMixin):
             "url": self.url,
             "id": self.id,
             "css_class": self.css_class,
+            "attrs": self.attrs,
         }

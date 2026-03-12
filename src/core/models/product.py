@@ -1,7 +1,18 @@
+from math import floor
+
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import Avg
+from django.utils import timezone
+from django.utils.timesince import timesince
+
 from electronics_app.settings import PRODUCT_PLACEHOLDER_IMAGE
+from .product_review import ProductReviewQuerySet
 from .subcategory import Subcategory
 from django.urls import reverse
 from django.db import models
+
+from ..constants.review import ProductReviewStatus
+from ...users.models import CustomUser
 
 
 class Product(models.Model):
@@ -49,6 +60,32 @@ class Product(models.Model):
             return primary.url
         return PRODUCT_PLACEHOLDER_IMAGE
 
+    @property
+    def overall_rating(self):
+        return self.approved_reviews.aggregate(avg=Avg("rating"))["avg"] or 0
+
+    @property
+    def overall_rating_display(self):
+        return round(self.overall_rating, 1)
+
+    @property
+    def product_stars(self):
+        return range(floor(self.overall_rating))
+
+    @property
+    def has_half_star(self):
+        return (self.overall_rating - floor(self.overall_rating)) >= 0.5
+
+    @property
+    def product_empty_stars(self):
+        full = floor(self.overall_rating)
+        half = 1 if self.has_half_star else 0
+        return range(5 - full - half)
+
+    @property
+    def approved_reviews(self):
+        return self.reviews.approved()
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(
@@ -91,9 +128,69 @@ class Specification(models.Model):
         related_name="specification",
         on_delete=models.CASCADE,
     )
-    specification_name = models.CharField(max_length=50, unique=True)
+    specification_name = models.CharField(max_length=50)
     specification_value = models.CharField(max_length=50)
     specification_measurement_unit = models.CharField(max_length=10, blank=True)
 
     def __str__(self):
         return f"{self.specification_name}: {self.specification_value} {self.specification_measurement_unit}"
+
+
+class ProductReview(models.Model):
+    product = models.ForeignKey(
+        Product,
+        related_name="reviews",
+        on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        CustomUser,
+        related_name="reviews",
+        on_delete=models.CASCADE,
+    )
+    rating = models.PositiveSmallIntegerField(
+        null=False,
+        blank=False,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ],
+    )
+    title = models.CharField(max_length=100)
+    text = models.TextField(null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    objects = ProductReviewQuerySet.as_manager()
+    moderation_status = models.PositiveSmallIntegerField(
+        choices=ProductReviewStatus.choices,
+        default=ProductReviewStatus.PENDING
+    )
+    moderated_at = models.DateTimeField(null=True, blank=True)
+    moderated_by = models.ForeignKey(
+        "users.CustomUser",
+        null=True,
+        blank=True,
+        related_name="moderated_reviews",
+        on_delete=models.SET_NULL
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "product"],
+                name="unique_user_review_per_product",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.user.first_name}{self.user.last_name} - {self.product.name} ({self.rating}/5)"
+
+    @property
+    def time_since(self):
+        return timesince(self.created_at, timezone.now())
+
+    @property
+    def stars(self):
+        return range(self.rating)
+
+    @property
+    def empty_stars(self):
+        return range(5 - self.rating)
