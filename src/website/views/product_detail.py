@@ -44,7 +44,6 @@ class PostReviewView(LoginRequiredMixin, CreateView):
         try:
             ProductDetailService.check_cooldown(
                 user=self.request.user,
-                model=self.model
             )
         except ValidationError as e:
             messages.error(self.request, e.message)

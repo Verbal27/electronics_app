@@ -9,6 +9,7 @@ from src.core.models import Product, OrderItem
 from src.core.components.website.cards import ProductCard
 from src.core.components.website.icon import Icon
 from src.core.components.website.span import Span
+from src.core.models.product import ProductReview
 from src.website.forms.cart import AddToCartDetailForm
 from src.website.forms.checkout import BuyNowForm
 from src.website.forms.product_detail import ReviewForm
@@ -59,9 +60,9 @@ class ProductDetailService:
         }
 
     @staticmethod
-    def check_cooldown(model, user):
+    def check_cooldown(user):
         last_review = (
-            model.objects
+            ProductReview.objects
             .filter(user=user)
             .order_by("-created_at")
             .first()
@@ -70,13 +71,15 @@ class ProductDetailService:
         if not last_review:
             return
 
-        cooldown_until = last_review.created_at + settings.REVIEW_COOLDOWN
         now = timezone.now()
+        cooldown_until = last_review.created_at + settings.REVIEW_COOLDOWN
 
         if now < cooldown_until:
             remaining = cooldown_until - now
+            minutes = int(remaining.total_seconds() // 60)
+
             raise ValidationError(
-                f"You can review again in {remaining.seconds // 60} minutes."
+                f"You can review again in {minutes} minutes."
             )
 
     def get_user_review(self):
