@@ -2,7 +2,7 @@ from django.apps import apps
 from django.db import models
 from django.db.models import OuterRef, Exists
 
-from src.core.constants.review import ModerationStatus
+from src.core.constants.review import ProductReviewStatus
 
 
 class ProductReviewQuerySet(models.QuerySet):
@@ -21,4 +21,4 @@ class ProductReviewQuerySet(models.QuerySet):
         )
 
     def approved(self):
-        return self.filter(moderation_status=ModerationStatus.APPROVED)
+        return self.filter(moderation_status=ProductReviewStatus.APPROVED)

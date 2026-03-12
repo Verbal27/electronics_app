@@ -1,19 +1,17 @@
 from math import floor
 
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Avg
 from django.utils import timezone
 from django.utils.timesince import timesince
 
-from electronics_app import settings
 from electronics_app.settings import PRODUCT_PLACEHOLDER_IMAGE
 from .product_review import ProductReviewQuerySet
 from .subcategory import Subcategory
 from django.urls import reverse
 from django.db import models
 
-from ..constants.review import ModerationStatus
+from ..constants.review import ProductReviewStatus
 from ...users.models import CustomUser
 
 
@@ -162,8 +160,8 @@ class ProductReview(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ProductReviewQuerySet.as_manager()
     moderation_status = models.PositiveSmallIntegerField(
-        choices=ModerationStatus.choices,
-        default=ModerationStatus.PENDING
+        choices=ProductReviewStatus.choices,
+        default=ProductReviewStatus.PENDING
     )
     moderated_at = models.DateTimeField(null=True, blank=True)
     moderated_by = models.ForeignKey(
@@ -196,23 +194,3 @@ class ProductReview(models.Model):
     @property
     def empty_stars(self):
         return range(5 - self.rating)
-
-    @classmethod
-    def check_cooldown(cls, user, product):
-        last_review = (
-            cls.objects
-            .filter(user=user, product=product)
-            .order_by("-created_at")
-            .first()
-        )
-
-        if not last_review:
-            return
-
-        cooldown_until = last_review.created_at + settings.REVIEW_COOLDOWN
-
-        if timezone.now() < cooldown_until:
-            remaining = cooldown_until - timezone.now()
-            raise ValidationError(
-                f"You can review again in {remaining.seconds // 60} minutes."
-            )

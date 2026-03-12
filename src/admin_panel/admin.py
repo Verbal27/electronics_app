@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.contrib import admin
 from django_ckeditor_5.widgets import CKEditor5Widget
 
-from ..core.constants.review import ModerationStatus
+from ..core.constants.review import ProductReviewStatus
 from ..core.models import ShippingOption, Product, ProductImage
 from ..core.models.product import Specification, ProductReview
 
@@ -88,7 +88,7 @@ class ProductReviewAdmin(admin.ModelAdmin):
 
     def approve_reviews(self, request, queryset):
         queryset.update(
-            moderation_status=ModerationStatus.APPROVED,
+            moderation_status=ProductReviewStatus.APPROVED,
             moderated_at=timezone.now(),
             moderated_by=request.user,
         )
@@ -97,7 +97,7 @@ class ProductReviewAdmin(admin.ModelAdmin):
 
     def reject_reviews(self, request, queryset):
         queryset.update(
-            moderation_status=ModerationStatus.REJECTED,
+            moderation_status=ProductReviewStatus.REJECTED,
             moderated_at=timezone.now(),
             moderated_by=request.user,
         )

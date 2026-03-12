@@ -2,10 +2,10 @@ import re
 
 from better_profanity import profanity
 
-from src.core.constants.review import ModerationStatus
+from src.core.constants.review import ProductReviewStatus
 
 
-class ReviewModerationService:
+class ProductReviewModerationService:
     URL_REGEX = re.compile(
         r"(https?://|www\.)[^\s]+",
         re.IGNORECASE
@@ -13,7 +13,7 @@ class ReviewModerationService:
 
     @staticmethod
     def contains_link(text: str) -> bool:
-        return bool(ReviewModerationService.URL_REGEX.search(text))
+        return bool(ProductReviewModerationService.URL_REGEX.search(text))
 
     @staticmethod
     def normalize(text: str) -> str:
@@ -24,8 +24,8 @@ class ReviewModerationService:
         text = cls.normalize(f"{review.title} {review.text}")
 
         if profanity.contains_profanity(text) or cls.contains_link(text):
-            review.moderation_status = ModerationStatus.PENDING
+            review.moderation_status = ProductReviewStatus.PENDING
         else:
-            review.moderation_status = ModerationStatus.APPROVED
+            review.moderation_status = ProductReviewStatus.APPROVED
 
         review.save(update_fields=["moderation_status"])
