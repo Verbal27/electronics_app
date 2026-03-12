@@ -58,9 +58,10 @@ class ProductDetailService:
             "icon": Icon(icon_type=Icon.TYPES.CHECK, css_classes=css),
         }
 
-    def check_cooldown(self, user):
+    @staticmethod
+    def check_cooldown(model, user):
         last_review = (
-            self.model.objects
+            model.objects
             .filter(user=user)
             .order_by("-created_at")
             .first()
