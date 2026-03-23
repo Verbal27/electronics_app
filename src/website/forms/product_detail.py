@@ -6,7 +6,7 @@ from django.urls import reverse
 from src.core.components.website import Icon
 from src.core.components.website.button import Button
 from src.core.components.website.span import Span
-from src.core.models.product import ProductReview
+from src.core.models.product_review import ProductReview
 
 
 class CustomRatingStarsWidget(forms.Widget):

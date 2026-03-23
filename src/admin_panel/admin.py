@@ -5,7 +5,8 @@ from django_ckeditor_5.widgets import CKEditor5Widget
 
 from ..core.constants.review import ProductReviewStatus
 from ..core.models import ShippingOption, Product, ProductImage
-from ..core.models.product import Specification, ProductReview
+from ..core.models.product import Specification
+from ..core.models.product_review import ProductReview
 
 
 @admin.register(ShippingOption)

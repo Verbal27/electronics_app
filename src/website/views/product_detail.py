@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views.generic import DetailView, CreateView, ListView
 
 from src.core.models import Product
-from src.core.models.product import ProductReview
+from src.core.models.product_review import ProductReview
 from src.website.forms.product_detail import ReviewForm
 from src.website.services.moderation import ProductReviewModerationService
 from src.website.services.product_detail_services import ProductDetailService

@@ -9,7 +9,7 @@ from src.core.models import Product, OrderItem
 from src.core.components.website.cards import ProductCard
 from src.core.components.website.icon import Icon
 from src.core.components.website.span import Span
-from src.core.models.product import ProductReview
+from src.core.models.product_review import ProductReview
 from src.website.forms.cart import AddToCartDetailForm
 from src.website.forms.checkout import BuyNowForm
 from src.website.forms.product_detail import ReviewForm
