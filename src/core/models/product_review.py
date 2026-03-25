@@ -5,7 +5,7 @@ from django.db.models import OuterRef, Exists
 from django.utils import timezone
 from django.utils.timesince import timesince
 
-from src.core.constants.review import ProductReviewStatus
+from src.core.constants import ProductReviewStatus
 from src.core.models import Product
 from src.users.models import CustomUser
 

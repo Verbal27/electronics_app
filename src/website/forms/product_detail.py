@@ -4,8 +4,8 @@ from django import forms
 from django.urls import reverse
 
 from src.core.components.website import Icon
-from src.core.components.website.button import Button
-from src.core.components.website.span import Span
+from src.core.components.website import Button
+from src.core.components.website import Span
 from src.core.models.product_review import ProductReview
 
 
