@@ -5,8 +5,8 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, View, CreateView, UpdateView
 
 from src.core.components.cabinet_context import CabinetContextMixin
-from src.core.models.payment import PaymentMethods
-from src.users.forms.payment_methods import (
+from src.core.models import PaymentMethods
+from src.users.forms import (
     RemoveSavedMethodForm,
     AddNewMethod,
     SetDefaultPaymentForm,

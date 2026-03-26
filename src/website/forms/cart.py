@@ -3,9 +3,7 @@ from crispy_forms.layout import Submit, Layout, Div, HTML, Button, Field
 from django import forms
 from django.urls import reverse
 
-from src.core.components.website.icon import Icon
-from src.core.components.website.iconbutton import IconButton
-from src.core.components.website.inputs import SimpleInput
+from src.core.components.website import Icon, IconButton, SimpleInput
 
 
 class AddToCartForm(forms.Form):

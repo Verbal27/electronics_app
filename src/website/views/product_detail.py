@@ -8,11 +8,9 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import DetailView, CreateView, ListView
 
-from src.core.models import Product
-from src.core.models.product_review import ProductReview
-from src.website.forms.product_detail import ReviewForm
-from src.website.services.moderation import ProductReviewModerationService
-from src.website.services.product_detail_services import ProductDetailService
+from src.core.models import Product, ProductReview
+from src.website.forms import ReviewForm
+from src.website.services import ProductReviewModerationService, ProductDetailService
 
 
 class ProductDetailView(DetailView):

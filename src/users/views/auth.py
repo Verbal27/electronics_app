@@ -6,8 +6,8 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from src.website.forms import RegisterForm, UserLoginForm, UserLogoutForm
-from src.users.forms.auth import GoogleLoginForm, GitHubLoginForm
-from src.website.services.auth import AuthService
+from src.users.forms import GoogleLoginForm, GitHubLoginForm
+from src.website.services import AuthService
 
 
 class RegisterView(CreateView):

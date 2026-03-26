@@ -8,8 +8,13 @@ from django.views import View
 from django.views.generic import UpdateView
 
 from src.core.components.cabinet_context import CabinetContextMixin
-from src.users.forms.account_info import UserDataForm, ProfileImageChange, AdditionalDataForm, TwoFactorForm, \
+from src.users.forms import (
+    UserDataForm,
+    ProfileImageChange,
+    AdditionalDataForm,
+    TwoFactorForm,
     ChangePasswordForm
+)
 
 
 class AccountInfoView(LoginRequiredMixin, CabinetContextMixin, UpdateView):

@@ -10,12 +10,16 @@ from django.forms import ModelForm, TypedChoiceField
 from django.urls import reverse
 from phonenumber_field.formfields import PhoneNumberField
 
-from src.core.components.website.icon import Icon
-from src.core.constants import OrderStatus
-from src.core.constants.payment import CardTypes, PaymentMethod
-from src.core.models import Order, Payment, OrderItem, ShippingOption
-from src.core.models.order import SavedAddress
-from src.core.models.payment import PaymentMethods
+from src.core.components.website import Icon
+from src.core.constants import OrderStatus, CardTypes, PaymentMethod
+from src.core.models import (
+    Order,
+    Payment,
+    OrderItem,
+    ShippingOption,
+    SavedAddress,
+    PaymentMethods
+)
 
 
 class PaymentMethodChoiceField(forms.RadioSelect):
