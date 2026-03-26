@@ -5,13 +5,9 @@ from django.urls import reverse
 from django.utils import timezone
 
 from electronics_app import settings
-from src.core.models import Product, OrderItem
-from src.core.components.website.cards import ProductCard
-from src.core.components.website import Icon, Span
-from src.core.models.product_review import ProductReview
-from src.website.forms.cart import AddToCartDetailForm
-from src.website.forms.checkout import BuyNowForm
-from src.website.forms.product_detail import ReviewForm
+from src.core.models import Product, OrderItem, ProductReview
+from src.core.components.website import Icon, Span, ProductCard
+from src.website.forms import AddToCartDetailForm, BuyNowForm, ReviewForm
 from src.website.services import CartService
 
 
