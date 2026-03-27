@@ -6,8 +6,8 @@ from django.views import View
 from django.views.generic import ListView, UpdateView
 
 from src.core.components.cabinet_context import CabinetContextMixin
-from src.core.models.order import SavedAddress
-from src.users.forms.addresses import ChangeSavedAddress, RemoveSavedAddressForm
+from src.core.models import SavedAddress
+from src.users.forms import ChangeSavedAddress, RemoveSavedAddressForm
 
 
 class AddressListView(LoginRequiredMixin, CabinetContextMixin, ListView):

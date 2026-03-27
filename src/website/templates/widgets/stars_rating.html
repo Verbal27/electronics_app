@@ -1,0 +1,14 @@
+<div class="text-warning me-2 d-flex my-2 rating-widget gap-1">
+    <input
+            type="hidden"
+            name="{{ widget.name }}"
+            value="{{ widget.value|default:'' }}"
+    />
+
+    {% for _ in "12345" %}
+        <i class="fa-regular fa-star fs-4"
+           data-value="{{ forloop.counter }}"
+           role="button"
+           style="cursor:pointer;"></i>
+    {% endfor %}
+</div>

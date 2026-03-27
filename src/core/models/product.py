@@ -1,3 +1,5 @@
+from math import floor
+from django.db.models import Avg
 from electronics_app.settings import PRODUCT_PLACEHOLDER_IMAGE
 from .subcategory import Subcategory
 from django.urls import reverse
@@ -49,6 +51,32 @@ class Product(models.Model):
             return primary.url
         return PRODUCT_PLACEHOLDER_IMAGE
 
+    @property
+    def overall_rating(self):
+        return self.approved_reviews.aggregate(avg=Avg("rating"))["avg"] or 0
+
+    @property
+    def overall_rating_display(self):
+        return round(self.overall_rating, 1)
+
+    @property
+    def product_stars(self):
+        return range(floor(self.overall_rating))
+
+    @property
+    def has_half_star(self):
+        return (self.overall_rating - floor(self.overall_rating)) >= 0.5
+
+    @property
+    def product_empty_stars(self):
+        full = floor(self.overall_rating)
+        half = 1 if self.has_half_star else 0
+        return range(5 - full - half)
+
+    @property
+    def approved_reviews(self):
+        return self.reviews.approved()
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(
@@ -91,7 +119,7 @@ class Specification(models.Model):
         related_name="specification",
         on_delete=models.CASCADE,
     )
-    specification_name = models.CharField(max_length=50, unique=True)
+    specification_name = models.CharField(max_length=50)
     specification_value = models.CharField(max_length=50)
     specification_measurement_unit = models.CharField(max_length=10, blank=True)
 

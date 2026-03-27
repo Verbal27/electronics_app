@@ -13,6 +13,8 @@
     --color-light-gray: #8EA4BB;
     --color-light-gray-dark: #4A6076;
     --color-light-grey-dark: #F3F3F5;
+    --color-yellow: #FFC108;
+    --color-lighter-blue: #ECF6FF;
 
     --color-first-light: color-mix(in srgb, var(--color-first), white 75%);
     --color-second-light: color-mix(in srgb, var(--color-second), white 75%);
@@ -23,11 +25,13 @@
 
     --color-success: #34B748;
 
-    --fs-7: 0.875rem !important;
+    --fs-7: 0.8rem;
 
     --border-color-blue: #4477FF;
 
     --font-size-8: 0.7rem;
+
+    --font-size-9: 0.7rem;
 }
 
 @media (max-width: 768px) {
@@ -60,7 +64,7 @@
 }
 
 body {
-    background: #F7FBFC;
+    background-color: #FFFFFF !important;
 }
 
 .bg-primary {
@@ -137,6 +141,10 @@ body {
     color: var(--color-sixth);
 }
 
+.text-yellow {
+    color: var(--color-yellow);
+}
+
 .border-promo {
     border-color: #C8FCDD !important;
 }
@@ -147,6 +155,10 @@ body {
 
 .fs-8 {
     font-size: var(--font-size-8);
+}
+
+.fs-9 {
+    font-size: var(--font-size-9);
 }
 
 .bg-first {
@@ -177,12 +189,20 @@ body {
     background-color: var(--color-light-blue) !important;
 }
 
+.bg-lighter-blue {
+    background-color: var(--color-lighter-blue) !important;
+}
+
 .bg-light-green {
     background-color: var(--color-light-green) !important;
 }
 
 .bg-light-grey {
     background-color: var(--color-light-grey) !important;
+}
+
+.bg-light-gray {
+    background-color: var(--color-light-gray) !important;
 }
 
 .bg-light-grey-dark {
@@ -917,6 +937,37 @@ body {
     min-height: 20px;
 }
 
+.review-card:last-child {
+    border: 0 !important;
+}
+
+.review-user-image {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.reviews-container {
+    overflow: auto;
+    height: 26rem !important;
+    width: auto;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    padding-left: .7rem;
+}
+
+.reviews-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.reviews-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.reviews-container::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+
 @media (max-width: 767.98px) {
     .container-bg {
         padding: 2.5rem 1rem !important;
@@ -1070,6 +1121,10 @@ body {
 
     .custom-login-main-wrapper {
         padding: 1rem !important;
+    }
+
+    .verified-label {
+        font-size: .45rem !important;
     }
 
     .method-card {

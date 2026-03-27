@@ -1,8 +1,7 @@
 from electronics_app.settings import PRODUCT_PLACEHOLDER_IMAGE
 from src.core.utils.subcategory_list import list_subcategories
 from src.core.components.website.cards import ProductCard
-from src.website.forms.newsletter import NewsletterForm
-from src.website.forms.cart import AddToCartForm
+from src.website.forms import NewsletterForm, AddToCartForm
 from django.views.generic import ListView, View
 from django.shortcuts import redirect, render
 from src.website.forms.search import Search

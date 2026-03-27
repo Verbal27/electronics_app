@@ -48,3 +48,4 @@ media/
 *.mo
 
 CLAUDE.md
+backup.sql

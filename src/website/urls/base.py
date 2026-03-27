@@ -11,6 +11,7 @@ from src.users.views import (
     DeleteMethodView, OrderDetailView, AddPaymentView, SetDefaultCardView, UpdateSavedMethodView
 )
 from src.website import views
+from src.website.views import ProductDetailView, PostReviewView, ReviewsInfiniteScrollView
 from src.website.views.homepage import SubscribeView, SearchView
 
 urlpatterns = [
@@ -58,7 +59,11 @@ urlpatterns = [
     path("subscribe/", SubscribeView.as_view(), name="subscribe"),
     path("search/", SearchView.as_view(), name="search"),
     path("<int:pk>/", include([
-        path("product/", views.ProductDetailView.as_view(), name="product_detail"),
+        path("product/", include([
+            path("", ProductDetailView.as_view(), name="product_detail"),
+            path("post-review/", PostReviewView.as_view(), name="post_review"),
+            path("reviews/", ReviewsInfiniteScrollView.as_view(), name="reviews_infinite")
+        ])),
         path("category/", views.CategoryListView.as_view(), name="category_products", ),
         path("subcategory/", views.SubCategoryProductListView.as_view(), name="subcategory_products", ),
     ])),
